@@ -1,0 +1,6 @@
+{{#settings_page}}
+/* settings page container */
+#{{plugin_slug}}-settings-panel {
+	
+}
+{{/settings_page}}
