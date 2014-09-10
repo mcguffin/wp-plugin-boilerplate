@@ -148,7 +148,7 @@ def plugin_classname(plugin_name):
 
 
 usage = '''
-usage ./make.py 'Plugin Name' options
+usage ./plugin.py 'Plugin Name' options
     options can be any of:
         --force         Override existing plugin
         admin_css       Enqueue css globally in admin

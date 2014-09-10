@@ -5,7 +5,8 @@ Create a basic Wordpress plugin from the command line.
 
 Usage:
 ```
-$ python ./plugin.py "Plugin Name" [options]
+$ cd /wordpress/wp-content/plugins
+$ python /path/to/plugin.py "Plugin Name" [options]
 ```
 # options: #
 - `--force`         Override existing plugin
