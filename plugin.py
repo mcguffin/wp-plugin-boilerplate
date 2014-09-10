@@ -1,7 +1,7 @@
 #!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 
-import sys, os, pystache, re, pwd, pprint, shutil,codecs
+import sys, os, pystache, re, pwd, pprint, shutil,codecs,subprocess
 from datetime import date
 from pprint import pprint
 
@@ -9,6 +9,7 @@ class wp_plugin:
 	defaults = {
 		'plugin_name' : '',
 		'plugin_slug' : '',
+		'wp_plugin_slug' : '',
 		'plugin_class_name' : '',
 		'plugin_author' : '',
 		'plugin_author_uri' : '',
@@ -24,7 +25,13 @@ class wp_plugin:
 		'settings_page' : False,
 		'backend' : False,
 		'shortcodes':False,
-		'widget':False
+		'widget':False,
+		'post_type':False,
+		'post_type_slug':False,
+		'post_type_with_caps':False,
+		'post_type_with_caps_slug':False,
+		'github_user':False
+		
 	}
 	_private_defaults = {
 		'settings_assets' : False,
@@ -39,6 +46,7 @@ class wp_plugin:
 	def process_config(self,config):
 		# set names
 		config['plugin_slug'] 		= plugin_slug(config['plugin_name'])
+		config['wp_plugin_slug']	= slugify(config['plugin_name'],'-')
 		config['plugin_class_name'] = plugin_classname(config['plugin_name'])
 		author 						= pwd.getpwuid( os.getuid() ).pw_gecos
 
@@ -56,7 +64,19 @@ class wp_plugin:
 		config['admin_assets'] 		= config['admin_css'] or config['admin_js']
 
 		config['backend'] 			= config['settings'] or config['admin']
+		
+		if config['post_type']:
+			config['post_type_slug'] = slugify(config['post_type'])
 
+		if config['post_type_with_caps']:
+			config['post_type_with_caps_slug'] = slugify(config['post_type_with_caps'])
+		
+		try:
+			config['github_user'] = subprocess.check_output(["git","config","user.name"]).strip()
+			print "github user is",config['github_user']
+		except:
+			pass
+		
 		return config
 	
 	def make(self):
@@ -99,6 +119,16 @@ class wp_plugin:
 			print 'Could not generate shortcode.'
 			print 'shortcode usage is: shortcode:my_shortcode'
 
+		if (self.config['post_type'] and self.config['post_type'] == True):
+			self.config['post_type'] == False
+			print 'Could not generate post_type.'
+			print 'post_type usage is: post_type:"Post Type Name"'
+
+		if (self.config['post_type_with_caps'] and self.config['post_type_with_caps'] == True):
+			self.config['post_type_with_caps'] == False
+			print 'Could not generate post_type_with_caps.'
+			print 'post_type_with_caps usage is: post_type_with_caps:"Post Type Name"'
+
 		self.process_templates(templates);
 		return ''
 
@@ -109,7 +139,7 @@ class wp_plugin:
 	
 
 	def _read_template(self,template):
-		template_path = os.path.dirname(__file__)+'/templates/'+template
+		template_path = os.path.dirname(os.path.realpath(__file__))+'/templates/'+template
 		return self._read_file_contents( template_path )
 
 	def _write_plugin_file( self , template , contents ):
@@ -166,7 +196,10 @@ usage ./plugin.py 'Plugin Name' options
 
         shortcodes:a_shortcode[:another_shortcode[:..]]
                         Add shortcode handler(s)
-
+		post_type:'Post Type name'
+						register post type
+		post_type_with_caps:'Post Type name'
+						register post type having its own capabilities
         widget          Register a Widget
 '''
 
