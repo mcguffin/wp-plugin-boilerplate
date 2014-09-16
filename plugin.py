@@ -30,7 +30,8 @@ class wp_plugin:
 		'post_type_slug':False,
 		'post_type_with_caps':False,
 		'post_type_with_caps_slug':False,
-		'github_user':False
+		'github_user':False,
+		'git':False
 		
 	}
 	_private_defaults = {
@@ -50,6 +51,14 @@ class wp_plugin:
 		config['plugin_class_name'] = plugin_classname(config['plugin_name'])
 		author 						= pwd.getpwuid( os.getuid() ).pw_gecos
 
+		try:
+			github_user = subprocess.check_output(["git","config","user.name"]).strip()
+			print "github user is",github_user
+		except:
+			github_user = ''
+			pass
+		
+		config['github_user'] 		= github_user.decode('utf-8')#.encode('utf-8')
 		config['plugin_author'] 	= author.decode('utf-8')#.encode('utf-8')
 		config['plugin_author_uri'] = ''
 		config['this_year'] 		= date.today().year
@@ -65,18 +74,34 @@ class wp_plugin:
 
 		config['backend'] 			= config['settings'] or config['admin']
 		
+		if config['shortcodes'] and config['shortcodes'] == True:
+			config['shortcodes'] == False
+			print 'Could not generate shortcode.'
+			print 'shortcode usage is: shortcode:my_shortcode'
+
+		if config['post_type'] and config['post_type'] == True:
+			config['post_type'] == False
+			print 'Could not generate post_type.'
+			print 'post_type usage is: post_type:"Post Type Name"'
+
+		if config['post_type_with_caps'] and config['post_type_with_caps'] == True:
+			config['post_type_with_caps'] == False
+			print 'Could not generate post_type_with_caps.'
+			print 'post_type_with_caps usage is: post_type_with_caps:"Post Type Name"'
+		
+		
 		if config['post_type']:
-			config['post_type_slug'] = slugify(config['post_type'])
+			config['post_type'] = map(lambda post_type: {'post_type_slug':slugify(post_type),'post_type_name':post_type}, config['post_type'])
 
 		if config['post_type_with_caps']:
-			config['post_type_with_caps_slug'] = slugify(config['post_type_with_caps'])
+			config['post_type_with_caps'] = map(lambda post_type: {'post_type_slug':slugify(post_type),'post_type_name':post_type,'capabilities':True}, config['post_type_with_caps'])
+			config['has_post_type_caps'] = True
 		
-		try:
-			config['github_user'] = subprocess.check_output(["git","config","user.name"]).strip()
-			print "github user is",config['github_user']
-		except:
-			pass
-		
+		if config['post_type']:
+			config['post_type'] = config['post_type'] + config['post_type_with_caps']
+		else :
+			config['post_type'] = config['post_type_with_caps']
+		config['has_post_types'] = len(config['post_type'])
 		return config
 	
 	def make(self):
@@ -88,48 +113,53 @@ class wp_plugin:
 
 		templates = ['index.php','readme.txt']
 		
-		if ( self.config['frontend_css'] ):
+		if self.config['frontend_css']:
 			templates.append('css/__slug__.css')
-		if ( self.config['frontend_js'] ):
+		if self.config['frontend_js']:
 			templates.append('js/__slug__.js')
 
-		if ( self.config['settings_css'] ):
+		if self.config['settings_css']:
 			templates.append('css/__slug__-settings.css')
-		if ( self.config['settings_js'] ):
+		if self.config['settings_js']:
 			templates.append('js/__slug__-settings.js')
 
-		if ( self.config['admin_css'] ):
+		if self.config['admin_css']:
 			templates.append('css/__slug__-admin.css')
-		if ( self.config['admin_js'] ):
+		if self.config['admin_js']:
 			templates.append('js/__slug__-admin.js')
 
 
-		if (self.config['admin']):
+		if self.config['admin']:
 			templates.append('include/class-__class__Admin.php')
 			
-		if (self.config['widget']):
+		if self.config['widget']:
 			templates.append('include/class-__class___Widget.php')
 			
-		if (self.config['settings']):
+		if self.config['settings']:
 			templates.append('include/class-__class__Settings.php')
-			templates.append('uninstall.php')
 
-		if (self.config['shortcodes'] and self.config['shortcodes'] == True):
-			self.config['shortcodes'] == False
-			print 'Could not generate shortcode.'
-			print 'shortcode usage is: shortcode:my_shortcode'
-
-		if (self.config['post_type'] and self.config['post_type'] == True):
-			self.config['post_type'] == False
-			print 'Could not generate post_type.'
-			print 'post_type usage is: post_type:"Post Type Name"'
-
-		if (self.config['post_type_with_caps'] and self.config['post_type_with_caps'] == True):
-			self.config['post_type_with_caps'] == False
-			print 'Could not generate post_type_with_caps.'
-			print 'post_type_with_caps usage is: post_type_with_caps:"Post Type Name"'
+		if self.config['git']:
+			templates.append('README.md')
+			templates.append('.gitignore')
 
 		self.process_templates(templates);
+		
+		if self.config['git'] and self.config['github_user']:
+			if self.config['github_user']:
+				repo_name = 'git@github.com:%s/%s.git' % ( self.config['github_user'] , self.config['wp_plugin_slug'] )
+				print "Creating git repository %s" % repo_name
+			else:
+				print "Creating git repository"
+			print self.plugin_dir
+			os.chdir(self.plugin_dir);
+			subprocess.call(["git","init"])
+			subprocess.call(["git","add" , '.'])
+			subprocess.call(["git","commit" , '-m "Initial commit"'])
+			if self.config['github_user']:
+				subprocess.call(['git','remote' , 'add' , 'origin' , repo_name ])
+				print 'Git repository created. Now go to github.com and create a repository named `%s`' % ( self.config['wp_plugin_slug'] )
+				print 'Finally come back and type `git push -u origin master` here.'
+
 		return ''
 
 	def process_templates(self,templates):
@@ -201,6 +231,7 @@ usage ./plugin.py 'Plugin Name' options
 		post_type_with_caps:'Post Type name'
 						register post type having its own capabilities
         widget          Register a Widget
+        git             Inits a git repository
 '''
 
 
