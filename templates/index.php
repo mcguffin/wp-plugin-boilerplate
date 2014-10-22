@@ -9,7 +9,7 @@ Version: 1.0.0
 Author URI: {{plugin_author_uri}}
 License: GPL3
 
-Text Domain: {{plugin_slug}}
+Text Domain: {{wp_plugin_slug}}
 Domain Path: /languages/
 */
 
@@ -82,7 +82,7 @@ class {{plugin_class_name}} {
 	 * Load text domain
 	 */
 	public function load_textdomain() {
-		load_plugin_textdomain( '{{plugin_slug}}' , false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+		load_plugin_textdomain( '{{wp_plugin_slug}}' , false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 	}
 	/**
 	 * Init hook.
@@ -94,14 +94,14 @@ class {{plugin_class_name}} {
 {{/frontend_js}}{{#frontend_css}}		wp_register_style( '{{plugin_slug}}' , plugins_url( '/css/{{plugin_slug}}.css' , __FILE__ ) , array() , '1.0' );
 {{/frontend_css}}
 	}
-	/**
+{{#frontend_assets}}	/**
 	 *  Enqueue Frontend Scripts
 	 */
 	function enqueue_assets() {	
 		wp_enqueue_script( '{{plugin_slug}}' );
 		wp_enqueue_style( '{{plugin_slug}}' );
 	}
-
+{{/frontend_assets}}
 {{#shortcodes}}
 	/**
 	 * Init hook.

@@ -9,8 +9,8 @@ class {{plugin_class_name}}_Widget extends WP_Widget {
 	function __construct() {
 		parent::__construct(
 			'foo_widget', // Base ID
-			__('{{plugin_name}}', '{{plugin_slug}}'), // Name
-			array( 'description' => __( 'Widget for {{plugin_name}}', '{{plugin_slug}}' ), ) // Args
+			__('{{plugin_name}}', '{{wp_plugin_slug}}' ), // Name
+			array( 'description' => __( 'Widget for {{plugin_name}}', '{{wp_plugin_slug}}' ), ) // Args
 		);
 	}
 	
@@ -29,7 +29,7 @@ class {{plugin_class_name}}_Widget extends WP_Widget {
 		if ( ! empty( $title ) ) {
 			echo $args['before_title'] . $title . $args['after_title'];
 		}
-		echo __( 'Widget Content', '{{plugin_slug}}' );
+		echo __( 'Widget Content', '{{wp_plugin_slug}}' );
 		echo $args['after_widget'];
 	}
 	
@@ -45,7 +45,7 @@ class {{plugin_class_name}}_Widget extends WP_Widget {
 			$title = $instance[ 'title' ];
 		}
 		else {
-			$title = __( 'New title', 'text_domain' );
+			$title = __( 'New title', '{{wp_plugin_slug}}' );
 		}
 		?>
 		<p>

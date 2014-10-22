@@ -89,6 +89,8 @@ class wp_plugin:
 			print 'Could not generate post_type_with_caps.'
 			print 'post_type_with_caps usage is: post_type_with_caps:"Post Type Name"'
 		
+		if config['frontend_js'] or config['frontend_css']:
+			config['frontend_assets'] = true
 		
 		if config['post_type']:
 			config['post_type'] = map(lambda post_type: {'post_type_slug':slugify(post_type),'post_type_name':post_type}, config['post_type'])
@@ -101,7 +103,7 @@ class wp_plugin:
 			config['post_type'] = config['post_type'] + config['post_type_with_caps']
 		else :
 			config['post_type'] = config['post_type_with_caps']
-		config['has_post_types'] = len(config['post_type'])
+		config['has_post_types'] = bool(config['post_type'])
 		return config
 	
 	def make(self):
@@ -111,7 +113,7 @@ class wp_plugin:
 		except OSError as e:
 			return e
 
-		templates = ['index.php','readme.txt']
+		templates = ['index.php','readme.txt','languages/__wp_plugin_slug__.pot']
 		
 		if self.config['frontend_css']:
 			templates.append('css/__slug__.css')
@@ -173,7 +175,7 @@ class wp_plugin:
 		return self._read_file_contents( template_path )
 
 	def _write_plugin_file( self , template , contents ):
-		template_filename = template.replace('__slug__',self.config['plugin_slug']).replace('__class__',self.config['plugin_class_name']);
+		template_filename = template.replace('__slug__',self.config['plugin_slug']).replace('__class__',self.config['plugin_class_name']).replace('__wp_plugin_slug__',self.config['wp_plugin_slug']);
 		plugin_path = self.plugin_dir + '/'+template_filename
 		return self._write_file_contents( plugin_path , contents )
 	

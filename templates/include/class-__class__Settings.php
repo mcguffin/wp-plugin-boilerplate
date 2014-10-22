@@ -50,7 +50,7 @@ class {{plugin_class_name}}Settings {
 	}
 {{#settings_page}}
 	function admin_menu() {
-		add_options_page( __('{{plugin_name}} Settings','{{plugin_slug}}'),__('{{plugin_name}}','{{plugin_slug}}'),'manage_options',$this->optionset, array( $this, 'settings_page' ) );
+		add_options_page( __('{{plugin_name}} Settings' , '{{wp_plugin_slug}}' ),__('{{plugin_name}}' , '{{wp_plugin_slug}}'),'manage_options',$this->optionset, array( $this, 'settings_page' ) );
 	}
 	function settings_page() {
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -58,13 +58,13 @@ class {{plugin_class_name}}Settings {
 		}
 		?>
 		<div class="wrap">
-			<h2><?php _e('{{plugin_name}} Settings','{{plugin_slug}}') ?></h2>
+			<h2><?php _e('{{plugin_name}} Settings', '{{wp_plugin_slug}}') ?></h2>
 
 			<form action="options.php" method="post">
 				<?php
 				settings_fields(  $this->optionset );
 				do_settings_sections( $this->optionset );
-				submit_button( __('Save Settings','{{plugin_slug}}' ) );
+				submit_button( __('Save Settings' , '{{wp_plugin_slug}}' ) );
 				?>
 			</form>
 		</div><?php
@@ -96,11 +96,11 @@ class {{plugin_class_name}}Settings {
 		// more settings go here ...
 		register_setting( $this->optionset , '{{plugin_slug}}_setting_1' , array( &$this , 'sanitize_setting_1' ) );
 
-		add_settings_section( $settings_section, __( 'Section #1', '{{plugin_slug}}' ), array( &$this, 'section_1_description' ), $this->optionset );
+		add_settings_section( $settings_section, __( 'Section #1',  '{{wp_plugin_slug}}' ), array( &$this, 'section_1_description' ), $this->optionset );
 		// ... and here
 		add_settings_field(
 			'{{plugin_slug}}_setting_1',
-			__( 'Setting #1', '{{plugin_slug}}' ),
+			__( 'Setting #1',  '{{wp_plugin_slug}}' ),
 			array( $this, 'setting_1_ui' ),
 			$this->optionset,
 			$settings_section
@@ -113,7 +113,7 @@ class {{plugin_class_name}}Settings {
 	public function section_1_description() {
 		?>
 		<div class="inside">
-			<p><?php _e( 'Section 1 Description.', '{{plugin_slug}}' ); ?></p>
+			<p><?php _e( 'Section 1 Description.' , '{{wp_plugin_slug}}' ); ?></p>
 		</div>
 		<?php
 	}
