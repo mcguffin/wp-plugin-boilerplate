@@ -69,10 +69,10 @@ class {{plugin_class_name}} {
 		add_action( 'init' , array( &$this , 'init' ) );
 {{#has_post_types}}		add_action( 'init' , array( &$this , 'register_post_types' ) , 0 );
 {{/has_post_types}}
-		add_action( 'wp_enqueue_scripts' , array( &$this , 'enqueue_assets' ) );
-		{{#shortcodes}}
-		add_shortcode( '{{.}}' , array( &$this , 'shortcode_{{.}}' ) );
-		{{/shortcodes}}
+{{#frontend_assets}}		add_action( 'wp_enqueue_scripts' , array( &$this , 'enqueue_assets' ) );
+{{/frontend_assets}}
+{{#shortcodes}}		add_shortcode( '{{.}}' , array( &$this , 'shortcode_{{.}}' ) );
+{{/shortcodes}}
 		register_activation_hook( __FILE__ , array( __CLASS__ , 'activate' ) );
 		register_deactivation_hook( __FILE__ , array( __CLASS__ , 'deactivate' ) );
 		register_uninstall_hook( __FILE__ , array( __CLASS__ , 'uninstall' ) );
