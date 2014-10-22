@@ -113,7 +113,7 @@ class wp_plugin:
 		except OSError as e:
 			return e
 
-		templates = ['index.php','readme.txt','languages/__wp_plugin_slug__.pot']
+		templates = ['index.php','readme.txt'] # ,'languages/__wp_plugin_slug__.pot'
 		
 		if self.config['frontend_css']:
 			templates.append('css/__slug__.css')
