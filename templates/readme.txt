@@ -34,14 +34,28 @@ I personally prefer GitHub. The plugin code is here: [GitHub](https://github.com
 = I want to use the latest files. How can I do this? =
 
 Use the GitHub Repo rather than the WordPress Plugin. Do as follows:
+
 1. If you haven't done so: [Install git](https://help.github.com/articles/set-up-git)
+
 2. in the console cd into Your 'wp-content/plugins' directory
-3. type 'git clone git@github.com:{{github_user}}/{{wp_plugin_slug}}.git'
-4. If you want to update to the latest files (be careful, might be untested on Your WP-Version) type 'git pull'.
+
+3. type `git clone git@github.com:{{github_user}}/{{wp_plugin_slug}}.git`
+
+4. If you want to update to the latest files (be careful, might be untested with your WP-Version) type `git pull`.
 
 = I found a bug and fixed it. How can I let You know? =
 
 Either post it on the [GitHub-repo](https://github.com/{{github_user}}/{{wp_plugin_slug}}) or—if you cloned the repository—send me a pull request.
+
+= Will you accept translations? =
+
+Yep sure! (And a warm thankyou in advance.) It might take some time until your localization 
+will appear in an official plugin release, and it is not unlikely that I will have added 
+or removed some strings in the meantime. 
+
+As soon as there is a [public centralized repository for WordPress plugin translations](https://translate.wordpress.org/projects/wp-plugins) 
+I will migrate all the translation stuff there.
+
 
 == Screenshots ==
 
