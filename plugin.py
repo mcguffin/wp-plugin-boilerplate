@@ -17,6 +17,9 @@ class wp_plugin:
 		'frontend_js' : False,
 		'admin_css' : False,
 		'admin_js' : False,
+		'admin_page' : False,
+		'admin_page_css' : False,
+		'admin_page_js' : False,
 		'settings_css' : False,
 		'settings_js' : False,
 		'admin' : False,
@@ -71,6 +74,10 @@ class wp_plugin:
 		config['settings_section'] 	= not config['settings_page']
 		config['settings_assets'] 	= config['settings_css'] or config['settings_js']
 		config['admin_assets'] 		= config['admin_css'] or config['admin_js']
+
+		config['admin_page']		= config['admin_page'] or config['admin_page_css'] or config['admin_page_js']
+		
+		config['admin']				= config['admin'] or config['admin_page']
 
 		config['backend'] 			= config['settings'] or config['admin']
 		
@@ -129,6 +136,11 @@ class wp_plugin:
 			templates.append('css/__slug__-admin.css')
 		if self.config['admin_js']:
 			templates.append('js/__slug__-admin.js')
+
+		if self.config['admin_page_css']:
+			templates.append('css/__slug__-admin-page.css')
+		if self.config['admin_page_js']:
+			templates.append('js/__slug__-admin-page.js')
 
 
 		if self.config['admin']:
@@ -221,6 +233,10 @@ usage ./plugin.py 'Plugin Name' options
         settings_js     Enqueue js on settings page (only if settings is present)
 
         admin           Create an admin class
+        admin_page      Add an admin page (will create admin also)
+        admin_page_js   Add js to admin page (adds admin_page also)
+        admin_page_css  Add css to admin page (adds admin_page also)
+
         settings | settings_section
                         Create Settings section
         settings_page

@@ -17,6 +17,7 @@ $ python /path/to/plugin.py "Plugin Name" [options]
 - `settings_css`    Enqueue css on settings page (only if settings is present)
 - `settings_js`     Enqueue js on settings page (only if settings is present)
 - `admin` 			Create an admin class
+- `admin_page`		Add Admin page
 - `settings` | `settings_section` Create Settings section
 - `settings_page`	Create Settings page
 - `shortcodes:a_shortcode[:another_shortcode[:..]]` Add shortcode handler(s)
