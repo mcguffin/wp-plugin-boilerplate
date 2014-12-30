@@ -20,6 +20,7 @@ class wp_plugin:
 		'admin_page' : False,
 		'admin_page_css' : False,
 		'admin_page_js' : False,
+		'admin_page_hook' : False,
 		'settings_css' : False,
 		'settings_js' : False,
 		'admin' : False,
@@ -35,12 +36,25 @@ class wp_plugin:
 		'post_type_with_caps_slug':False,
 		'github_user':False,
 		'git':False
-		
 	}
 	_private_defaults = {
 		'settings_assets' : False,
-		'admin_assets' : False
+		'admin_assets' : False,
+		'admin_pages' : False,
+		'shell_command' : False
 	}
+	allowed_admin_pages = [
+		'dashboard',
+		'posts',
+		'media',
+		'links',
+		'pages',
+		'comments',
+		'theme',
+		'plugins',
+		'users',
+		'management'
+	]
 	
 	def __init__(self,config):
 		self.config = self.process_config(config)
@@ -76,6 +90,21 @@ class wp_plugin:
 		config['admin_assets'] 		= config['admin_css'] or config['admin_js']
 
 		config['admin_page']		= config['admin_page'] or config['admin_page_css'] or config['admin_page_js']
+		
+		if isinstance(config['admin_page'],list) :
+			admin_pages					= config['admin_page']
+			if 'all' in admin_pages:
+				config['admin_pages']	= self.allowed_admin_pages
+			else:
+				# replace tools alias
+				admin_pages				= [x if (x != 'tools') else 'management' for x in admin_pages]
+				# unique list, containing only alloewd items
+				config['admin_pages']	= []
+				[config['admin_pages'].append(x) for x in admin_pages if x in self.allowed_admin_pages and x not in config['admin_pages'] ]
+
+			config['admin_page']	= True
+	
+		config['admin_page_hook']	= config['admin_page'] or config['admin_pages']
 		
 		config['admin']				= config['admin'] or config['admin_page']
 
@@ -155,7 +184,6 @@ class wp_plugin:
 		if self.config['git']:
 			templates.append('README.md')
 			templates.append('.gitignore')
-
 		self.process_templates(templates);
 		
 		if self.config['git'] and self.config['github_user']:
@@ -234,6 +262,20 @@ usage ./plugin.py 'Plugin Name' options
 
         admin           Create an admin class
         admin_page      Add an admin page (will create admin also)
+        admin_page:a_page[:a_page]
+                        Add submenu page to admin. a_page can be any of
+                        Page can be any of
+                            dashboard
+						    posts
+						    media
+						    links
+						    pages
+						    comments
+						    theme
+						    plugins
+						    users
+						    management
+						    tools (Alias of management)
         admin_page_js   Add js to admin page (adds admin_page also)
         admin_page_css  Add css to admin page (adds admin_page also)
 
@@ -256,11 +298,13 @@ usage ./plugin.py 'Plugin Name' options
 defaults = config = wp_plugin.defaults
 
 try:
-	config['plugin_name'] = sys.argv[1]
+	config['plugin_name']	= sys.argv[1]
 except IndexError as e:
 	print usage
-	exit()
-	
+	sys.exit(0)
+
+config['shell_args']		= "\"%s\" %s" % ( sys.argv[1] , ' '.join(sys.argv[2:]) )
+
 for arg in sys.argv[2:]:
 	conf = arg.split(':')
 	param = True

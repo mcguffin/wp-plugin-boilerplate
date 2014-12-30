@@ -22,7 +22,7 @@ class {{plugin_class_name}}Settings {
 	 *
 	 * @return object single instance of {{plugin_class_name}}Settings
 	 */
-	public static function get_instance() {
+	public static function instance() {
 		if ( is_null( self::$_instance ) )
 			self::$_instance = new self();
 		return self::$_instance;
@@ -139,5 +139,5 @@ class {{plugin_class_name}}Settings {
 	}
 }
 
-{{plugin_class_name}}Settings::get_instance();
+{{plugin_class_name}}Settings::instance();
 endif;

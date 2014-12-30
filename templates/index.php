@@ -55,7 +55,7 @@ class {{plugin_class_name}} {
 	 *
 	 * @return object single instance of {{plugin_class_name}}
 	 */
-	public static function get_instance() {
+	public static function instance() {
 		if ( is_null( self::$_instance ) )
 			self::$_instance = new self();
 		return self::$_instance;
@@ -223,12 +223,12 @@ class {{plugin_class_name}} {
 	public static function activate() {
 {{#has_post_types}}
 		// register post types, taxonomies
-		self::get_instance()->register_post_types();
+		self::instance()->register_post_types();
 {{/has_post_types}}
 	
 {{#has_post_type_caps}}
 		// create role
-		self::get_instance()->add_custom_capabilities();
+		self::instance()->add_custom_capabilities();
 {{/has_post_type_caps}}
 	
 {{#has_post_types}}
@@ -254,12 +254,12 @@ class {{plugin_class_name}} {
 		delete_option( '{{plugin_slug}}_setting_1' );{{/settings}}
 
 {{#has_post_type_caps}}
-		self::get_instance()->remove_custom_capabilities();{{/has_post_type_caps}}
+		self::instance()->remove_custom_capabilities();{{/has_post_type_caps}}
 
 	}
 
 }
-{{plugin_class_name}}::get_instance();
+{{plugin_class_name}}::instance();
 
 endif;
 

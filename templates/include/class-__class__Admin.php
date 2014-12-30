@@ -10,7 +10,7 @@ class {{plugin_class_name}}Admin {
 	 *
 	 * @return object single instance of {{plugin_class_name}}Admin
 	 */
-	public static function get_instance() {
+	public static function instance() {
 		if ( is_null( self::$_instance ) )
 			self::$_instance = new self();
 		return self::$_instance;
@@ -25,7 +25,7 @@ class {{plugin_class_name}}Admin {
 		add_action( "admin_print_scripts" , array( &$this , 'enqueue_assets' ) );
 {{/admin_assets}}
 {{#admin_page}}
-		add_action( 'admin_menu',array(&$this,'add_admin_page'));
+		add_action( 'admin_menu' , array( &$this , 'add_admin_page' ) );
 {{/admin_page}}
 	}
 {{#admin_page}}	
@@ -33,9 +33,23 @@ class {{plugin_class_name}}Admin {
 	 * Add Admin page to menu
 	 */
 	function add_admin_page() {
-		$page_hook = add_menu_page( __( '{{plugin_name}} Admin' , '{{wp_plugin_slug}}' ), __( '{{plugin_name}}' , '{{wp_plugin_slug}}' ), 'manage_options', '{{plugin_slug}}', array( &$this , 'render_admin_page' ), 'dashicons-admin-generic', 50 );
+{{#admin_pages}}
+		$page_hook = add_{{.}}_page( __( '{{plugin_name}} ({{.}})' , '{{wp_plugin_slug}}' ), __( '{{plugin_name}}' , '{{wp_plugin_slug}}' ), 'manage_options', '{{plugin_slug}}-{{.}}', array( &$this , 'render_{{.}}_page' ) );
 		add_action( "load-$page_hook" , array( &$this , 'enqueue_admin_page_assets' ) );
+{{/admin_pages}}
+{{^admin_pages}}
+		$page_hook = add_menu_page( __( '{{plugin_name}} Admin' , '{{wp_plugin_slug}}' ), __( '{{plugin_name}}' , '{{wp_plugin_slug}}' ), 'manage_options', '{{plugin_slug}}', array( &$this , 'render_admin_page' ), 'dashicons-admin-generic' );
+		add_action( "load-$page_hook" , array( &$this , 'enqueue_admin_page_assets' ) );
+{{/admin_pages}}
 	}
+{{#admin_pages}}
+	function render_{{.}}_page() {
+		?><div class="wrap"><?php
+			?><h2><?php _e( '{{plugin_name}} ({{.}})' , '{{wp_plugin_slug}}' ); ?></h2><?php
+			?><p><?php _e( 'Content for {{.}}' , '{{wp_plugin_slug}}' ); ?></p><?php
+		?></div><?php
+	}
+{{/admin_pages}}
 	
 	/**
 	 * Render Admin page
@@ -81,5 +95,5 @@ class {{plugin_class_name}}Admin {
 
 }
 
-{{plugin_class_name}}Admin::get_instance();
+{{plugin_class_name}}Admin::instance();
 endif;
