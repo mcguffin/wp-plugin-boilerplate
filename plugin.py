@@ -89,7 +89,7 @@ class wp_plugin:
 		config['settings_assets'] 	= config['settings_css'] or config['settings_js']
 		config['admin_assets'] 		= config['admin_css'] or config['admin_js']
 
-		config['admin_page']		= config['admin_page'] or config['admin_page_css'] or config['admin_page_js']
+		config['admin_page'] = config['admin_pages'] = config['admin_page'] or config['admin_page_css'] or config['admin_page_js']
 		
 		if isinstance(config['admin_page'],list) :
 			admin_pages					= config['admin_page']
@@ -151,6 +151,8 @@ class wp_plugin:
 
 		templates = ['index.php','readme.txt'] # ,'languages/__wp_plugin_slug__.pot'
 		
+		templates.append('languages/__slug__.pot')
+
 		if self.config['frontend_css']:
 			templates.append('css/__slug__.css')
 		if self.config['frontend_js']:
@@ -237,7 +239,7 @@ class wp_plugin:
 		f.close()
 
 def rm_wp(str):
-	return re.sub(r'(?i)^(WP|WordPress\s?)','',str).strip()
+	return re.sub(r'(?i)^(WP|WordPress\s?)-?','',str).strip()
 
 def slugify(plugin_name,separator='_'):
 	return re.sub(r'\s',separator,plugin_name.strip()).lower()
