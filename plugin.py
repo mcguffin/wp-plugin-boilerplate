@@ -149,9 +149,9 @@ class wp_plugin:
 		except OSError as e:
 			return e
 
-		templates = ['index.php','readme.txt'] # ,'languages/__wp_plugin_slug__.pot'
+		templates = ['index.php','readme.txt','README.md'] # ,'languages/__wp_plugin_slug__.pot'
 		
-		templates.append('languages/__slug__.pot')
+		templates.append('languages/__wp_plugin_slug__.pot')
 
 		if self.config['frontend_css']:
 			templates.append('css/__slug__.css')
@@ -218,6 +218,7 @@ class wp_plugin:
 
 	def _write_plugin_file( self , template , contents ):
 		template_filename = template.replace('__slug__',self.config['plugin_slug']).replace('__class__',self.config['plugin_class_name']).replace('__wp_plugin_slug__',self.config['wp_plugin_slug']);
+		print template,template_filename
 		plugin_path = self.plugin_dir + '/'+template_filename
 		return self._write_file_contents( plugin_path , contents )
 	
