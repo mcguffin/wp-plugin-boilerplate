@@ -30,19 +30,24 @@ class {{plugin_class_name}}Admin {
 	}
 {{#admin_page}}	
 	/**
-	 * Add Admin page to menu
+	 * 	Add Admin page to menu
+	 *
+	 *	@action	admin_menu
 	 */
 	function add_admin_page() {
 {{#admin_pages}}
 		$page_hook = add_{{.}}_page( __( '{{plugin_name}} ({{.}})' , '{{wp_plugin_slug}}' ), __( '{{plugin_name}}' , '{{wp_plugin_slug}}' ), 'manage_options', '{{plugin_slug}}-{{.}}', array( &$this , 'render_{{.}}_page' ) );
-		add_action( "load-$page_hook" , array( &$this , 'enqueue_admin_page_assets' ) );
+		add_action( "load-{$page_hook}" , array( &$this , 'enqueue_admin_page_assets' ) );
 {{/admin_pages}}
 {{^admin_pages}}
 		$page_hook = add_menu_page( __( '{{plugin_name}} Admin' , '{{wp_plugin_slug}}' ), __( '{{plugin_name}}' , '{{wp_plugin_slug}}' ), 'manage_options', '{{plugin_slug}}', array( &$this , 'render_admin_page' ), 'dashicons-admin-generic' );
-		add_action( "load-$page_hook" , array( &$this , 'enqueue_admin_page_assets' ) );
+		add_action( "load-{$page_hook}" , array( &$this , 'enqueue_admin_page_assets' ) );
 {{/admin_pages}}
 	}
 {{#admin_pages}}
+	/**
+	 * 	Add Admin page to menu
+	 */
 	function render_{{.}}_page() {
 		?><div class="wrap"><?php
 			?><h2><?php _e( '{{plugin_name}} ({{.}})' , '{{wp_plugin_slug}}' ); ?></h2><?php
