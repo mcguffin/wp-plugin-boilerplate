@@ -126,7 +126,7 @@ class wp_plugin:
 			print 'post_type_with_caps usage is: post_type_with_caps:"Post Type Name"'
 		
 		if config['frontend_js'] or config['frontend_css']:
-			config['frontend_assets'] = true
+			config['frontend_assets'] = True
 		
 		if config['post_type']:
 			config['post_type'] = map(lambda post_type: {'post_type_slug':slugify(post_type),'post_type_name':post_type}, config['post_type'])
