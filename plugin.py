@@ -6,6 +6,7 @@ from datetime import date
 from pprint import pprint
 
 class wp_plugin:
+	template_path = '/templates/v1/'
 	defaults = {
 		'plugin_name' : '',
 		'plugin_slug' : '',
@@ -213,7 +214,7 @@ class wp_plugin:
 	
 
 	def _read_template(self,template):
-		template_path = os.path.dirname(os.path.realpath(__file__))+'/templates/'+template
+		template_path = os.path.dirname(os.path.realpath(__file__)) + self.template_path + template
 		return self._read_file_contents( template_path )
 
 	def _write_plugin_file( self , template , contents ):
@@ -221,8 +222,8 @@ class wp_plugin:
 		print template,template_filename
 		plugin_path = self.plugin_dir + '/'+template_filename
 		return self._write_file_contents( plugin_path , contents )
-	
-	
+
+
 	def _read_file_contents( self , file_path ):
 		if not os.path.exists(file_path):
 			return ''
