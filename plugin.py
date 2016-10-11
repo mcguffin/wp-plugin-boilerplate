@@ -6,42 +6,29 @@ from datetime import date
 from pprint import pprint
 
 class wp_plugin:
-	template_path = '/templates/v1/'
+	template_path = '/templates/v2/'
 	defaults = {
 		'plugin_name' : '',
 		'plugin_slug' : '',
 		'wp_plugin_slug' : '',
-		'plugin_class_name' : '',
+		'plugin_namespace' : '',
 		'plugin_author' : '',
 		'plugin_author_uri' : '',
-		'frontend_css' : False,
-		'frontend_js' : False,
-		'admin_css' : False,
-		'admin_js' : False,
-		'admin_page' : False,
-		'admin_page_css' : False,
-		'admin_page_js' : False,
-		'admin_page_hook' : False,
-		'settings_css' : False,
-		'settings_js' : False,
-		'admin' : False,
-		'settings' : False,
-		'settings_section' : False,
-		'settings_page' : False,
-		'backend' : False,
-		'shortcodes':False,
-		'widget':False,
-		'post_type':False,
-		'post_type_slug':False,
-		'post_type_with_caps':False,
-		'post_type_with_caps_slug':False,
-		'github_user':False,
-		'git':False
+
+		# command line args
+		'core'			: True,
+		'admin'			: False,
+		'admin_page'	: False,
+		'settings'		: False,
+		'settings_page'	: False,
+		'shortcode'		: False,
+		'widget'		: False,
+		'post_type'		: False,
+		'git'			: False,
+
+		'github_user':False
 	}
 	_private_defaults = {
-		'settings_assets' : False,
-		'admin_assets' : False,
-		'admin_pages' : False,
 		'shell_command' : False
 	}
 	allowed_admin_pages = [
@@ -56,17 +43,25 @@ class wp_plugin:
 		'users',
 		'management'
 	]
+	allowed_settings_pages = [
+		'general',
+		'writing',
+		'reading',
+		'discussion',
+		'media',
+		'permalink'
+	]
 	
 	def __init__(self,config):
 		self.config = self.process_config(config)
 		self.plugin_dir = os.getcwd()+'/'+slugify(self.config['plugin_name'],'-')
 		pass
-		
+
 	def process_config(self,config):
 		# set names
-		config['plugin_slug'] 		= plugin_slug(config['plugin_name'])
+		config['plugin_slug'] 		= plugin_slug( config['plugin_name'] )
 		config['wp_plugin_slug']	= slugify(config['plugin_name'],'-')
-		config['plugin_class_name'] = plugin_classname(config['plugin_name'])
+		config['plugin_namespace']  = plugin_classname( config['plugin_name'] )
 		author 						= pwd.getpwuid( os.getuid() ).pw_gecos
 
 		try:
@@ -80,69 +75,33 @@ class wp_plugin:
 		config['plugin_author'] 	= author.decode('utf-8')#.encode('utf-8')
 		config['plugin_author_uri'] = ''
 		config['this_year'] 		= date.today().year
-
-		# default is settings section
-		if config['settings'] and not config['settings_page'] and not config['settings_section']:
-			config['settings_section'] = True
-
-		config['settings'] 			= config['settings_page'] or config['settings_section']
-		config['settings_section'] 	= not config['settings_page']
-		config['settings_assets'] 	= config['settings_css'] or config['settings_js']
-		config['admin_assets'] 		= config['admin_css'] or config['admin_js']
-
-		config['admin_page'] = config['admin_pages'] = config['admin_page'] or config['admin_page_css'] or config['admin_page_js']
 		
-		if isinstance(config['admin_page'],list) :
-			admin_pages					= config['admin_page']
-			if 'all' in admin_pages:
-				config['admin_pages']	= self.allowed_admin_pages
-			else:
-				# replace tools alias
-				admin_pages				= [x if (x != 'tools') else 'management' for x in admin_pages]
-				# unique list, containing only alloewd items
-				config['admin_pages']	= []
-				[config['admin_pages'].append(x) for x in admin_pages if x in self.allowed_admin_pages and x not in config['admin_pages'] ]
-
-			config['admin_page']	= True
-	
-		config['admin_page_hook']	= config['admin_page'] or config['admin_pages']
-		
-		config['admin']				= config['admin'] or config['admin_page']
-
-		config['backend'] 			= config['settings'] or config['admin']
-		
-		if config['shortcodes'] and config['shortcodes'] == True:
-			config['shortcodes'] == False
-			print 'Could not generate shortcode.'
-			print 'shortcode usage is: shortcode:my_shortcode'
-
-		if config['post_type'] and config['post_type'] == True:
-			config['post_type'] == False
+		if config['post_type'] and not len( config['post_type'][0] ):
+			config['post_type'] = False
 			print 'Could not generate post_type.'
-			print 'post_type usage is: post_type:"Post Type Name"'
+			print 'post_type usage is: post_type:"Post Type Name"[+caps]'
 
-		if config['post_type_with_caps'] and config['post_type_with_caps'] == True:
-			config['post_type_with_caps'] == False
-			print 'Could not generate post_type_with_caps.'
-			print 'post_type_with_caps usage is: post_type_with_caps:"Post Type Name"'
-		
-		if config['frontend_js'] or config['frontend_css']:
-			config['frontend_assets'] = True
-		
-		if config['post_type']:
-			config['post_type'] = map(lambda post_type: {'post_type_slug':slugify(post_type),'post_type_name':post_type}, config['post_type'])
+		if config['shortcode'] and not len( config['shortcode'][0] ):
+			config['shortcode'] = False
+			print 'Could not generate shortcode.'
+			print 'shortcode usage is: shortcode:a_shortcode'
 
-		if config['post_type_with_caps']:
-			config['post_type_with_caps'] = map(lambda post_type: {'post_type_slug':slugify(post_type),'post_type_name':post_type,'capabilities':True}, config['post_type_with_caps'])
-			config['has_post_type_caps'] = True
+		if config['widget'] and not len( config['widget'][0] ):
+			config['widget'] = False
+			print 'Could not generate widget.'
+			print 'widget usage is: widget:"Widget Name"'
+
+
+		for section in 'admin_page','post_type','settings_page','shortcode','widget':
+			if config[section]:
+				config[section+'?'] = True
+				config[section+'s'] = []
+				for it,flags in config[section][0]:
+					config[section+'s'].append( plugin_classname( it ) )
+
 		
-		if config['post_type']:
-			config['post_type'] = config['post_type'] + config['post_type_with_caps']
-		else :
-			config['post_type'] = config['post_type_with_caps']
-		config['has_post_types'] = bool(config['post_type'])
 		return config
-	
+
 	def make(self):
 		# make plugin dir
 		try:
@@ -150,43 +109,102 @@ class wp_plugin:
 		except OSError as e:
 			return e
 
-		templates = ['index.php','readme.txt','README.md'] # ,'languages/__wp_plugin_slug__.pot'
+		templates = [
+			( 'index.php', self.config ),
+			( 'readme.txt', self.config ),
+			( 'languages/__wp_plugin_slug__.pot', self.config ),
+			( 'include/vendor/autoload.php', self.config )
+			];
 		
-		templates.append('languages/__wp_plugin_slug__.pot')
-
-		if self.config['frontend_css']:
-			templates.append('css/__slug__.css')
-		if self.config['frontend_js']:
-			templates.append('js/__slug__.js')
-
-		if self.config['settings_css']:
-			templates.append('css/__slug__-settings.css')
-		if self.config['settings_js']:
-			templates.append('js/__slug__-settings.js')
-
-		if self.config['admin_css']:
-			templates.append('css/__slug__-admin.css')
-		if self.config['admin_js']:
-			templates.append('js/__slug__-admin.js')
-
-		if self.config['admin_page_css']:
-			templates.append('css/__slug__-admin-page.css')
-		if self.config['admin_page_js']:
-			templates.append('js/__slug__-admin-page.js')
-
 
 		if self.config['admin']:
-			templates.append('include/class-__class__Admin.php')
-			
+			flags = self.config['admin'][1]
+			config_copy = self.config.copy()
+			config_copy.update( dict( (x,True) for x in flags )  )
+			templates.append( ( 'include/__plugin_namespace__/Admin/Admin.php', config_copy ) );
+			if 'css' in flags:
+				templates.append( ( 'css/admin/admin.css', config_copy ) );
+			if 'js' in flags:
+				templates.append( ( 'js/admin/admin.js', config_copy ) );
+
+		if self.config['admin_page']:
+			if self.config['admin_page'][0]:
+				templates.append( ( 'include/__plugin_namespace__/Admin/Page.php', self.config ) );
+
+			for admin_page,flags in self.config['admin_page'][0]:
+				config_copy = self.config.copy()
+				
+				if admin_page == 'tools':
+					wp_page_slug = 'management'
+				else:
+					wp_page_slug = admin_page
+				config_copy.update({
+					'wp_page_slug': wp_page_slug,
+					'plugin_file': admin_page.title(),
+					'plugin_class': plugin_classname( admin_page ),
+					'plugin_asset': admin_page.lower(),
+				})
+				config_copy.update( dict( (x,True) for x in flags ) )
+				templates.append( ( 'include/__plugin_namespace__/Admin/__plugin_file__.php', config_copy ) );
+
+				if 'css' in flags:
+					templates.append( ( 'css/admin/admin-page-__plugin_asset__.css', config_copy ) );
+				if 'js' in flags:
+					templates.append( ( 'js/admin/admin-page-__plugin_asset__.js', config_copy ) );
+
+		if self.config['core']:
+			flags = self.config['core'][1]
+			config_copy = self.config.copy()
+			config_copy.update( dict( (x,True) for x in flags )  )
+			templates.append( ( 'include/__plugin_namespace__/Core.php', config_copy ) );
+			if 'css' in flags:
+				templates.append( ( 'css/frontend.css', config_copy ) );
+			if 'js' in flags:
+				templates.append( ( 'js/frontend.js', config_copy ) );
+			pass
+
+		if self.config['post_type']:
+			if self.config['post_type'][0]:
+				templates.append( ( 'include/__plugin_namespace__/PostType/PostType.php', self.config ) );
+
+			for post_type,flags in self.config['post_type'][0]:
+				config_copy = self.config.copy()
+				
+				config_copy.update({
+					'post_type_slug': slugify( post_type, '-' ),
+					'post_type_name': post_type,
+					'plugin_file': post_type.title(),
+					'plugin_class': plugin_classname( post_type ),
+				})
+				config_copy.update( dict( (x, True) for x in flags ) )
+				templates.append( ( 'include/__plugin_namespace__/PostType/__plugin_file__.php', config_copy ) );
+
+		if self.config['settings_page']:
+			pass
+
+		if self.config['shortcode']:
+			pass
+
 		if self.config['widget']:
-			templates.append('include/class-__class___Widget.php')
-			
-		if self.config['settings']:
-			templates.append('include/class-__class__Settings.php')
+			if self.config['widget'][0]:
+				templates.append( ( 'include/__plugin_namespace__/Widget/Widgets.php', self.config ) );
+
+			for widget,flags in self.config['widget'][0]:
+				config_copy = self.config.copy()
+				
+				config_copy.update({
+					'widget_slug': slugify( widget, '-' ),
+					'widget_name': widget.title(),
+					'plugin_file': plugin_classname( widget ),
+					'plugin_class': plugin_classname( widget ),
+				})
+				templates.append( ( 'include/__plugin_namespace__/Widget/__plugin_file__.php', config_copy ) );
+
 
 		if self.config['git']:
-			templates.append('README.md')
-			templates.append('.gitignore')
+			templates.append( ( 'README.md', self.config ) )
+			templates.append( ( '.gitignore', self.config ) )
+
 		self.process_templates(templates);
 		
 		if self.config['git'] and self.config['github_user']:
@@ -208,18 +226,22 @@ class wp_plugin:
 		return ''
 
 	def process_templates(self,templates):
-		for template in templates:
-			content = pystache.render( self._read_template(template),self.config)
-			self._write_plugin_file(template,content)
+		for template, template_config in templates:
+			content = pystache.render( self._read_template(template), template_config )
+			self._write_plugin_file( template, content, template_config )
 	
 
 	def _read_template(self,template):
 		template_path = os.path.dirname(os.path.realpath(__file__)) + self.template_path + template
 		return self._read_file_contents( template_path )
 
-	def _write_plugin_file( self , template , contents ):
-		template_filename = template.replace('__slug__',self.config['plugin_slug']).replace('__class__',self.config['plugin_class_name']).replace('__wp_plugin_slug__',self.config['wp_plugin_slug']);
-		print template,template_filename
+	def _write_plugin_file( self , template , contents, config ):
+		template_filename = template
+		for confkey in config.keys():
+			if confkey.find('plugin') >= 0:
+				print '__' + confkey + '__', config[confkey]
+				template_filename = template_filename.replace( '__' + confkey + '__', config[confkey] )
+		print 'Process File:',template_filename
 		plugin_path = self.plugin_dir + '/'+template_filename
 		return self._write_file_contents( plugin_path , contents )
 
@@ -247,7 +269,7 @@ def slugify(plugin_name,separator='_'):
 	return re.sub(r'\s',separator,plugin_name.strip()).lower()
 
 def plugin_slug(plugin_name):
-	return slugify(rm_wp(plugin_name))
+	return slugify(rm_wp(plugin_name),'_')
 
 def plugin_classname(plugin_name):
 	return ''.join(x for x in rm_wp(plugin_name).title() if not x.isspace())
@@ -256,46 +278,59 @@ def plugin_classname(plugin_name):
 usage = '''
 usage ./plugin.py 'Plugin Name' options
     options can be any of:
-        --force         Override existing plugin
-        admin_css       Enqueue css globally in admin
-        admin_js        Enqueue js globally in admin
-        frontend_css    Enqueue css in frontend
-        frontend_js     Enqueue js in frontend
-        settings_css    Enqueue css on settings page (only if settings is present)
-        settings_js     Enqueue js on settings page (only if settings is present)
+        core[+css][+js]
+                        Add +css and/or +js to enqueue frontend css / js
+        admin[+css][+js]
+                        Add an admin class. If admin_page, settings or settings_page is
+                        selected, the class will be generated implicitly. Add +css and/or +js
+                        to enqueue css / js in the entire wp admin.
 
-        admin           Create an admin class
-        admin_page      Add an admin page (will create admin also)
-        admin_page:a_page[:a_page]
-                        Add submenu page to admin. a_page can be any of
-                        Page can be any of
+        admin_page[+css][+js]
+                        Add a standalone admin page
+
+        admin_page[:a_page[+css][+js]][:a_page:...]...
+                        Add submenu page to admin. 
+                        `a_page` can be any of
                             dashboard
-						    posts
-						    media
-						    links
-						    pages
-						    comments
-						    theme
-						    plugins
-						    users
-						    management
-						    tools (Alias of management)
-        admin_page_js   Add js to admin page (adds admin_page also)
-        admin_page_css  Add css to admin page (adds admin_page also)
+                            posts
+                            media
+                            links
+                            pages
+                            comments
+                            theme
+                            plugins
+                            users
+                            management
+                            tools (Alias of management)
+                        With `+css` and `+js` appended to the page slug CSS and JS will 
+                        also be enqueued on the given page.
 
-        settings | settings_section
-                        Create Settings section
-        settings_page
-                        Create Settings page
+        settings[:wp_page[+css][+js][:wp_page:...]...
+                        Create a new settings section on a WP settings page.
+                        `wp_page` is the slug of the WordPress settings page and can be any of 
+                            general
+                            writing
+                            reading
+                            discussion
+                            media
+                            permalink
+                        If omitted `wp_page` defaults to `general`.
+                        With `+css` and `+js` appended to the settings slug custom CSS and JS will 
+                        also be enqueued on the given settings page.
+        settings_page[+css][+js]
+                        Create a standalone Settings page
+                        With `+css` and `+js` CSS and JS will also be enqueued on this page.
 
-        shortcodes:a_shortcode[:another_shortcode[:..]]
-                        Add shortcode handler(s)
-		post_type:'Post Type name'
-						register post type
-		post_type_with_caps:'Post Type name'
-						register post type having its own capabilities
-        widget          Register a Widget
+        shortcodes:a_shortcode[:another_shortcode]:...
+                        Add shortcode handlers
+        post_type:'Post Type name'[+caps]:'Another Post type'...
+                        register post type. +caps will register post type's caabilities
+
+        widget:'Widget Name'[:'Another Widget']
+                        Register one or more Widgets
+
         git             Inits a git repository
+        --force         Override existing plugin
 '''
 
 
@@ -309,26 +344,35 @@ except IndexError as e:
 
 config['shell_args']		= "\"%s\" %s" % ( sys.argv[1] , ' '.join(sys.argv[2:]) )
 
+def getflags( param ):
+	paramlist = param.split('+')
+	return paramlist[0],paramlist[1:]
+
 for arg in sys.argv[2:]:
-	conf = arg.split(':')
-	param = True
+	param = []
+	flags = True
+	conf  = arg.split(':')
+	# conf = cmd, param+js+css, param+css, ...
+	# OR conf = cmd+js+css
 	if len(conf) > 1:
 		param = conf[1:]
-		conf = conf[0]
-	elif len(conf) == 1:
-		conf = conf[0]
-	if conf in defaults.keys():
-		config[conf] = param
+	conf = conf[0]
+	# conf = cmd
+	# OR conf = cmd+js+css
+	conf,flags = getflags( conf )
+	param = [ getflags( par ) for par in param ]
 
-if "all" in sys.argv[2:]:
-	for arg in config.keys():
-		if config[arg] == False:
-			config[arg] = True
+	if conf in defaults.keys():
+		config[conf] = param,flags
+pprint(config)
 
 print "Generating Plugin:", config['plugin_name']
 maker = wp_plugin(config)
+
 if '--force' in sys.argv and os.path.exists(maker.plugin_dir):
+	print "remove existing plugin"
 	shutil.rmtree( maker.plugin_dir )
+
 result = maker.make()
 
 if isinstance(result, Exception):
