@@ -116,7 +116,13 @@ class wp_plugin:
 			( 'languages/__wp_plugin_slug__.pot', self.config ),
 			( 'include/vendor/autoload.php', self.config ),
 			( 'include/__plugin_namespace__/Core/Singleton.php', self.config ),
+			( 'scss/mixins/_mixins.scss', self.config ),
+			( 'scss/variables/_variables.scss', self.config ),
+			( 'scss/variables/_dashicons.scss', self.config ),
+			( 'package.json', self.config )
 			];
+		
+		gulp_scss = []
 		
 
 		if self.config['admin']:
@@ -126,6 +132,7 @@ class wp_plugin:
 			templates.append( ( 'include/__plugin_namespace__/Admin/Admin.php', config_copy ) );
 			if 'css' in flags:
 				templates.append( ( 'css/admin/admin.css', config_copy ) );
+				templates.append( ( 'scss/admin/admin.scss', config_copy ) );
 			if 'js' in flags:
 				templates.append( ( 'js/admin/admin.js', config_copy ) );
 
@@ -151,6 +158,8 @@ class wp_plugin:
 
 				if 'css' in flags:
 					templates.append( ( 'css/admin/admin-page-__plugin_asset__.css', config_copy ) );
+					templates.append( ( 'scss/admin/admin-page-__plugin_asset__.scss', config_copy ) );
+					gulp_scss.append( pystache.render( 'admin/admin-page-{{plugin_asset}}', config_copy ) )
 				if 'js' in flags:
 					templates.append( ( 'js/admin/admin-page-__plugin_asset__.js', config_copy ) );
 
@@ -163,6 +172,8 @@ class wp_plugin:
 			templates.append( ( 'include/__plugin_namespace__/Core/Core.php', config_copy ) );
 			if 'css' in flags:
 				templates.append( ( 'css/frontend.css', config_copy ) );
+				templates.append( ( 'scss/frontend.scss', config_copy ) );
+				gulp_scss.append( 'frontend' )
 			if 'js' in flags:
 				templates.append( ( 'js/frontend.js', config_copy ) );
 			pass
@@ -212,10 +223,10 @@ class wp_plugin:
 					templates.append( ( 'js/admin/mce/__plugin_asset__-shortcode.js', config_copy ) );
 					templates.append( ( 'css/admin/mce/__plugin_asset__-shortcode.css', config_copy ) );
 					templates.append( ( 'css/admin/mce/__plugin_asset__-shortcode-mce.css', config_copy ) );
-					pass
-
-				pass
-			pass
+					templates.append( ( 'scss/admin/mce/__plugin_asset__-shortcode.scss', config_copy ) );
+					templates.append( ( 'scss/admin/mce/__plugin_asset__-shortcode-mce.scss', config_copy ) );
+					gulp_scss.append( pystache.render( 'admin/mce/{{plugin_asset}}-shortcode', config_copy ) )
+					gulp_scss.append( pystache.render( 'admin/mce/{{plugin_asset}}-shortcode-mce', config_copy ) )
 
 
 		if self.config['widget']:
@@ -238,6 +249,11 @@ class wp_plugin:
 			templates.append( ( 'README.md', self.config ) )
 			templates.append( ( '.gitignore', self.config ) )
 
+		gulp_config = self.config.copy()
+		gulp_config['scss'] = gulp_scss
+		templates.append( ( 'gulpfile.js', gulp_config ) )
+
+
 		self.process_templates(templates);
 		
 		if self.config['git'] and self.config['github_user']:
@@ -253,8 +269,14 @@ class wp_plugin:
 			subprocess.call(["git","commit" , '-m "Initial commit"'])
 			if self.config['github_user']:
 				subprocess.call(['git','remote' , 'add' , 'origin' , repo_name ])
-				print 'Git repository created. Now go to github.com and create a repository named `%s`' % ( self.config['wp_plugin_slug'] )
+				print 'Git repository created. Now head over to github.com and create a repository named `%s`' % ( self.config['wp_plugin_slug'] )
 				print 'Finally come back and type `git push -u origin master` here.'
+
+		print 'Installing npm dependencies'
+		subprocess.call(["npm","install"])
+
+		print 'cd into `%s`, run `gulp` and have fun coding!' % ( self.config['wp_plugin_slug'] )
+
 
 		return ''
 
