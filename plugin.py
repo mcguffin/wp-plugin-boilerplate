@@ -16,7 +16,7 @@ class wp_plugin:
 		'plugin_author_uri' : '',
 
 		# command line args
-		'core'			: True,
+		'core'			: 'core',
 		'admin'			: False,
 		'admin_page'	: False,
 		'settings'		: False,
@@ -60,6 +60,7 @@ class wp_plugin:
 	def process_config(self,config):
 		# set names
 		config['plugin_slug'] 		= plugin_slug( config['plugin_name'] )
+		config['plugin_slug_upper'] = config['plugin_slug'].upper()
 		config['wp_plugin_slug']	= slugify(config['plugin_name'],'-')
 		config['plugin_namespace']  = plugin_classname( config['plugin_name'] )
 		author 						= pwd.getpwuid( os.getuid() ).pw_gecos
@@ -113,7 +114,8 @@ class wp_plugin:
 			( 'index.php', self.config ),
 			( 'readme.txt', self.config ),
 			( 'languages/__wp_plugin_slug__.pot', self.config ),
-			( 'include/vendor/autoload.php', self.config )
+			( 'include/vendor/autoload.php', self.config ),
+			( 'include/__plugin_namespace__/Core/Singleton.php', self.config ),
 			];
 		
 
@@ -152,16 +154,19 @@ class wp_plugin:
 				if 'js' in flags:
 					templates.append( ( 'js/admin/admin-page-__plugin_asset__.js', config_copy ) );
 
+
 		if self.config['core']:
+			print len(self.config['core'])
 			flags = self.config['core'][1]
 			config_copy = self.config.copy()
 			config_copy.update( dict( (x,True) for x in flags )  )
-			templates.append( ( 'include/__plugin_namespace__/Core.php', config_copy ) );
+			templates.append( ( 'include/__plugin_namespace__/Core/Core.php', config_copy ) );
 			if 'css' in flags:
 				templates.append( ( 'css/frontend.css', config_copy ) );
 			if 'js' in flags:
 				templates.append( ( 'js/frontend.js', config_copy ) );
 			pass
+
 
 		if self.config['post_type']:
 			if self.config['post_type'][0]:
@@ -173,17 +178,45 @@ class wp_plugin:
 				config_copy.update({
 					'post_type_slug': slugify( post_type, '-' ),
 					'post_type_name': post_type,
-					'plugin_file': post_type.title(),
+					'plugin_file': plugin_classname( post_type ),
 					'plugin_class': plugin_classname( post_type ),
 				})
 				config_copy.update( dict( (x, True) for x in flags ) )
 				templates.append( ( 'include/__plugin_namespace__/PostType/__plugin_file__.php', config_copy ) );
 
+
 		if self.config['settings_page']:
 			pass
 
+
 		if self.config['shortcode']:
+			if self.config['shortcode'][0]:
+				templates.append( ( 'include/__plugin_namespace__/Shortcode/Shortcode.php', self.config ) );
+				templates.append( ( 'include/__plugin_namespace__/Admin/Mce/Mce.php', config_copy ) );
+
+			for shortcode,flags in self.config['shortcode'][0]:
+				config_copy = self.config.copy()
+				config_copy.update({
+					'shortcode_slug': slugify( shortcode, '-' ),
+					'shortcode_name': shortcode.title(),
+					'plugin_file': plugin_classname( shortcode ),
+					'plugin_asset': slugify( shortcode, '-' ),
+					'plugin_class': plugin_classname( shortcode ),
+				})
+				config_copy.update( dict( (x, True) for x in flags ) )
+				templates.append( ( 'include/__plugin_namespace__/Shortcode/__plugin_file__.php', config_copy ) );
+
+				if 'mce' in flags:
+					# add mce templates
+					templates.append( ( 'include/__plugin_namespace__/Shortcode/Mce/__plugin_file__.php', config_copy ) );
+					templates.append( ( 'js/admin/mce/__plugin_asset__-shortcode.js', config_copy ) );
+					templates.append( ( 'css/admin/mce/__plugin_asset__-shortcode.css', config_copy ) );
+					templates.append( ( 'css/admin/mce/__plugin_asset__-shortcode-mce.css', config_copy ) );
+					pass
+
+				pass
 			pass
+
 
 		if self.config['widget']:
 			if self.config['widget'][0]:
@@ -239,9 +272,9 @@ class wp_plugin:
 		template_filename = template
 		for confkey in config.keys():
 			if confkey.find('plugin') >= 0:
-				print '__' + confkey + '__', config[confkey]
+#				print '__' + confkey + '__', config[confkey]
 				template_filename = template_filename.replace( '__' + confkey + '__', config[confkey] )
-		print 'Process File:',template_filename
+#		print 'Process File:',template_filename
 		plugin_path = self.plugin_dir + '/'+template_filename
 		return self._write_file_contents( plugin_path , contents )
 
@@ -272,7 +305,7 @@ def plugin_slug(plugin_name):
 	return slugify(rm_wp(plugin_name),'_')
 
 def plugin_classname(plugin_name):
-	return ''.join(x for x in rm_wp(plugin_name).title() if not x.isspace())
+	return ''.join(x for x in rm_wp(plugin_name).title() if x.isalnum())
 
 
 usage = '''
@@ -321,7 +354,7 @@ usage ./plugin.py 'Plugin Name' options
                         Create a standalone Settings page
                         With `+css` and `+js` CSS and JS will also be enqueued on this page.
 
-        shortcodes:a_shortcode[:another_shortcode]:...
+        shortcode:a_shortcode[:another_shortcode]:...
                         Add shortcode handlers
         post_type:'Post Type name'[+caps]:'Another Post type'...
                         register post type. +caps will register post type's caabilities
@@ -364,7 +397,7 @@ for arg in sys.argv[2:]:
 
 	if conf in defaults.keys():
 		config[conf] = param,flags
-pprint(config)
+#pprint(config)
 
 print "Generating Plugin:", config['plugin_name']
 maker = wp_plugin(config)

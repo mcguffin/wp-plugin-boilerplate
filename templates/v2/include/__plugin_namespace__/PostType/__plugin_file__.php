@@ -4,7 +4,9 @@ namespace {{plugin_namespace}}\PostType;
 
 class {{plugin_class}} extends PostType {
 
+/*
 	private static $_instance = null;
+*/
 
 {{#caps}}
 	protected $post_type_caps = array(
@@ -20,27 +22,10 @@ class {{plugin_class}} extends PostType {
 
 
 	/**
-	 * Getting a singleton.
-	 *
-	 * @return object single instance of {{plugin_namespace}}\PostType\{{plugin_class}}
-	 */
-	public static function instance() {
-		if ( is_null( self::$_instance ) )
-			self::$_instance = new self();
-		return self::$_instance;
-	}
-
-	/**
-	 *	Prevent Instantinating
-	 */
-	private function __clone() { }
-	private function __wakeup() { }
-
-
-	/**
 	 * Private constructor
 	 */
-	private function __construct() {
+	protected function __construct() {
+		parent::__construct();
 		add_action( 'init' , array( &$this , 'register_post_types' ) , 0 );
 	}
 

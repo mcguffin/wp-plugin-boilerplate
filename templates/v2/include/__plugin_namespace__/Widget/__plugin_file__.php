@@ -29,7 +29,7 @@ class {{plugin_class}} extends \WP_Widget {
 			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
 		}
 		
-		// print widget content
+		// #### widget content here ####
 		
 		echo $args['after_widget'];
 	}
@@ -41,14 +41,17 @@ class {{plugin_class}} extends \WP_Widget {
 	 */
 	public function form( $instance ) {
 		// outputs the options form on admin
-		$title = ! empty( $instance['title'] ) ? $instance['title'] : __( 'Title', '{{wp_plugin_slug}}' );
-		
+		$title = ! empty( $instance['title'] ) ? $instance['title'] : '';
+
 		?>
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php _e( esc_attr( 'Title:' ) ); ?></label> 
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>">
 		</p>
 		<?php
+
+		// #### widget options here ####
+
 	}
 
 	/**
@@ -60,6 +63,9 @@ class {{plugin_class}} extends \WP_Widget {
 	public function update( $new_instance, $old_instance ) {
 		// processes widget options to be saved
 		$new_instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
+
+		// #### widget option validation here ####
+
 		return $new_instance;
 	}
 

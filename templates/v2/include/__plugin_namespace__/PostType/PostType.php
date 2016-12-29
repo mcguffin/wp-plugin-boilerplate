@@ -1,8 +1,9 @@
 <?php
 
 namespace {{plugin_namespace}}\PostType;
+use {{plugin_namespace}}\Core;
 
-abstract class PostType {
+abstract class PostType extends Core\Singleton {
 	protected $post_type_caps = null;
 	
 	abstract function register_post_types();

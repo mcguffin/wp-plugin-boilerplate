@@ -4,34 +4,15 @@ namespace {{plugin_namespace}}\Admin;
 
 
 class {{plugin_class}} extends Page {
-	private static $_instance = null;
-	
-	/**
-	 * Getting a singleton.
-	 *
-	 * @return object single instance of {{plugin_namespace}}\Admin\{{plugin_class}}
-	 */
-	public static function instance() {
-		if ( is_null( self::$_instance ) )
-			self::$_instance = new self();
-		return self::$_instance;
-	}
-
-	/**
-	 *	Prevent Instantinating
-	 */
-	private function __clone() { }
-	private function __wakeup() { }
-
 
 	/**
 	 * Private constructor
 	 */
-	private function __construct() {
+	protected function __construct() {
+		parent::__construct();
+
 		add_action( 'admin_init' , array( $this, 'admin_init' ) );
-
 		add_action( "admin_print_scripts" , array( $this, 'enqueue_assets' ) );
-
 		add_action( 'admin_menu' , array( $this, 'add_admin_page' ) );
 	}
 	/**
@@ -57,10 +38,10 @@ class {{plugin_class}} extends Page {
 
 	function enqueue_assets() {
 {{#css}}
-		wp_enqueue_style( '{{plugin_slug}}-admin-page-{{plugin_asset}}' , plugins_url( '/css/admin/admin-page-{{plugin_asset}}.css' , dirname(__FILE__) ) );
+		wp_enqueue_style( '{{plugin_slug}}-admin-page-{{plugin_asset}}' , plugins_url( '/css/admin/admin-page-{{plugin_asset}}.css', PLUGIN_FILE ) );
 {{/css}}
 {{#js}}
-		wp_enqueue_script( '{{plugin_slug}}-admin-page-{{plugin_asset}}' , plugins_url( 'js/admin/admin-page-{{plugin_asset}}.js' , dirname(__FILE__) ) );
+		wp_enqueue_script( '{{plugin_slug}}-admin-page-{{plugin_asset}}' , plugins_url( 'js/admin/admin-page-{{plugin_asset}}.js', PLUGIN_FILE ) );
 		wp_localize_script('{{plugin_slug}}-admin-page-{{plugin_asset}}' , '{{plugin_slug}}_admin_page' , array(
 		) );
 {{/js}}

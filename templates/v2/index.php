@@ -38,22 +38,24 @@ Command line args were: `{{{shell_args}}}`
 
 namespace {{plugin_namespace}};
 
-define( 'PLUGIN_FILE', __FILE__ );
-define( 'PLUGIN_DIRECTORY', plugin_dir_path(__FILE__) );
+define( '{{plugin_slug_upper}}_FILE', __FILE__ );
+define( '{{plugin_slug_upper}}_DIRECTORY', plugin_dir_path(__FILE__) );
 
-require_once PLUGIN_DIRECTORY . 'include/vendor/autoload.php';
+require_once {{plugin_slug_upper}}_DIRECTORY . 'include/vendor/autoload.php';
 
-Core::instance();
+Core\Core::instance();
 
 {{#post_types}}
 PostType\{{.}}::instance();
 {{/post_types}}
 
+{{#shortcodes}}
+Shortcode\{{.}}::instance();
+{{/shortcodes}}
+
 {{#widget?}}
 Widget\Widgets::instance();
 {{/widget?}}
-
-
 
 if ( is_admin() || defined( 'DOING_AJAX' ) ) {
 {{#admin?}}
