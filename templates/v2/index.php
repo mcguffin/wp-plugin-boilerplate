@@ -66,6 +66,10 @@ if ( is_admin() || defined( 'DOING_AJAX' ) ) {
 	Admin\{{.}}::instance();
 {{/admin_pages}}
 
+{{#settings_classes}}
+	Settings\{{.}}::instance();
+{{/settings_classes}}
+
 /*
 	Admin\Admin::instance();
 	Admin\Tools::instance();

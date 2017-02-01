@@ -1,57 +1,50 @@
 <?php
 
+namespace {{plugin_namespace}}\Settings;
+use {{plugin_namespace}}\Core;
 
-if ( ! class_exists( '{{plugin_class_name}}Settings' ) ):
-class {{plugin_class_name}}Settings {
-	private static $_instance = null;
-	
-{{#settings_section}}
-	/**
-	 * Setup which to WP options page the Rainbow options will be added.
-	 * 
-	 * Possible values: general | writing | reading | discussion | media | permalink
-	 */
-	private $optionset = 'general'; // writing | reading | discussion | media | permalink
-{{/settings_section}}
-{{#settings_page}}
-	private $optionset = '{{plugin_slug}}_options'; // writing | reading | discussion | media | permalink
-{{/settings_page}}
+class {{settings_class}} extends Settings {
+
+	private $optionset = '{{settings_section}}'; 
+
 
 	/**
-	 * Getting a singleton.
-	 *
-	 * @return object single instance of {{plugin_class_name}}Settings
+	 *	Constructor
 	 */
-	public static function instance() {
-		if ( is_null( self::$_instance ) )
-			self::$_instance = new self();
-		return self::$_instance;
-	}
+	protected function __construct() {
 
-	/**
-	 * Private constructor
-	 */
-	public private function __construct() {
-		add_action( 'admin_init' , array( &$this , 'register_settings' ) );
-{{#settings_assets}}
-
-{{#settings_section}}
+{{#flags}}
+{{#is_section}}
 		add_action( "load-options-{$this->optionset}.php" , array( &$this , 'enqueue_assets' ) );
-{{/settings_section}}
-{{#settings_page}}
+{{/is_section}}
+{{#is_page}}
 		add_action( "settings_page_{$this->optionset}" , array( &$this , 'enqueue_assets' ) );
-{{/settings_page}}
-{{/settings_assets}}
-		
+{{/is_page}}
+{{/flags}}
+
 		add_option( '{{plugin_slug}}_setting_1' , 'Default Value' , '' , False );
-{{#settings_page}}
+
+{{#is_page}}
 		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
-{{/settings_page}}
+{{/is_page}}
+
+		parent::__construct();
+
 	}
-{{#settings_page}}
+
+{{#is_page}}
+	/**
+	 *	Add Settings page
+	 *
+	 *	@action admin_menu
+	 */
 	public function admin_menu() {
 		add_options_page( __('{{plugin_name}} Settings' , '{{wp_plugin_slug}}' ),__('{{plugin_name}}' , '{{wp_plugin_slug}}'),'manage_options',$this->optionset, array( $this, 'settings_page' ) );
 	}
+
+	/**
+	 *	Render Settings page
+	 */
 	public function settings_page() {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
@@ -69,34 +62,48 @@ class {{plugin_class_name}}Settings {
 			</form>
 		</div><?php
 	}
-{{/settings_page}}
+{{/is_page}}
 
+
+{{#flags}}
 	/**
-	 * Enqueue options Assets
+	 * Enqueue settings Assets
+	 *
+{{#is_section}}
+	 *	@action load-options-{$this->optionset}.php
+{{/is_section}}
+{{#is_page}}
+	 *	@action "settings_page_{$this->optionset}
+{{/is_page}}
 	 */
 	public function enqueue_assets() {
-{{#settings_css}}
-		wp_enqueue_style( '{{plugin_slug}}-settings' , plugins_url( '/css/{{plugin_slug}}-settings.css' , dirname(__FILE__) ));
-{{/settings_css}}
+{{#css}}
+		wp_enqueue_style( "{{plugin_slug}}-settings-{$this->optionset}", $this->core->get_asset_url( "css/settings-{$this->optionset}.css" ) );
+{{/css}}
 
-{{#settings_js}}
-		wp_enqueue_script( '{{plugin_slug}}-settings' , plugins_url( 'js/{{plugin_slug}}-settings.js' , dirname(__FILE__) ) );
-		wp_localize_script('{{plugin_slug}}-settings' , '{{plugin_slug}}_settings' , array(
+{{#js}}
+		wp_enqueue_script( "{{plugin_slug}}-settings-{$this->optionset}", $this->core->get_asset_url( "js/settings-{$this->optionset}.js" ) );
+		wp_localize_script("{{plugin_slug}}-settings-{$this->optionset}", '{{plugin_slug}}_settings' , array(
 		) );
-{{/settings_js}}
+{{/js}}
 	}
-	
+{{/flags}}
 
 
 	/**
-	 * Setup options page.
+	 *	Setup options.
+	 *
+	 *	@action admin_init
 	 */
 	public function register_settings() {
+
 		$settings_section = '{{plugin_slug}}_settings';
+
 		// more settings go here ...
 		register_setting( $this->optionset , '{{plugin_slug}}_setting_1' , array( &$this , 'sanitize_setting_1' ) );
 
 		add_settings_section( $settings_section, __( 'Section #1',  '{{wp_plugin_slug}}' ), array( &$this, 'section_1_description' ), $this->optionset );
+
 		// ... and here
 		add_settings_field(
 			'{{plugin_slug}}_setting_1',
@@ -117,16 +124,15 @@ class {{plugin_class_name}}Settings {
 		</div>
 		<?php
 	}
-	
+
 	/**
 	 * Output Theme selectbox
 	 */
-	public function setting_1_ui(){
+	public function setting_1_ui( ) {
 		$setting_name = '{{plugin_slug}}_setting_1';
 		$setting = get_option($setting_name);
 		?><input type="text" name="<?php echo $setting_name ?>" value="<?php esc_attr_e( $setting ) ?>" /><?php
 	}
-	
 
 	/**
 	 * Sanitize value of setting_1
@@ -137,7 +143,5 @@ class {{plugin_class_name}}Settings {
 		// do sanitation here!
 		return $value;
 	}
-}
 
-{{plugin_class_name}}Settings::instance();
-endif;
+}

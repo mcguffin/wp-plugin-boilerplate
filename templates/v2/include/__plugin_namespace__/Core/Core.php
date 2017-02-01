@@ -1,6 +1,9 @@
 <?php
 
 namespace {{plugin_namespace}}\Core;
+{{#post_types?}}
+use {{plugin_namespace}}\PostType;
+{{/post_types?}}
 
 class Core extends Singleton {
 

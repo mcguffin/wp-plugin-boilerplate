@@ -20,13 +20,13 @@ class wp_plugin:
 		'admin'			: False,
 		'admin_page'	: False,
 		'settings'		: False,
-		'settings_page'	: False,
 		'shortcode'		: False,
 		'widget'		: False,
 		'post_type'		: False,
 		'git'			: False,
+		'gulp'			: False,
 
-		'github_user':False
+		'github_user'	: False
 	}
 	_private_defaults = {
 		'shell_command' : False
@@ -43,7 +43,7 @@ class wp_plugin:
 		'users',
 		'management'
 	]
-	allowed_settings_pages = [
+	wp_settings_pages = [
 		'general',
 		'writing',
 		'reading',
@@ -93,7 +93,7 @@ class wp_plugin:
 			print 'widget usage is: widget:"Widget Name"'
 
 
-		for section in 'admin_page','post_type','settings_page','shortcode','widget':
+		for section in 'admin_page','post_type','shortcode','widget':
 			if config[section]:
 				config[section+'?'] = True
 				config[section+'s'] = []
@@ -111,18 +111,19 @@ class wp_plugin:
 			return e
 
 		templates = [
-			( 'index.php', self.config ),
 			( 'readme.txt', self.config ),
 			( 'languages/__wp_plugin_slug__.pot', self.config ),
 			( 'include/vendor/autoload.php', self.config ),
 			( 'include/__plugin_namespace__/Core/Singleton.php', self.config ),
 			( 'scss/mixins/_mixins.scss', self.config ),
 			( 'scss/variables/_variables.scss', self.config ),
-			( 'scss/variables/_dashicons.scss', self.config ),
-			( 'package.json', self.config )
+			( 'scss/variables/_dashicons.scss', self.config )
 			];
+
+		if self.config['gulp']:
+			templates.append( ( 'package.json', self.config ) )
 		
-		gulp_scss = []
+			gulp_scss = []
 		
 
 		if self.config['admin']:
@@ -159,13 +160,13 @@ class wp_plugin:
 				if 'css' in flags:
 					templates.append( ( 'css/admin/admin-page-__plugin_asset__.css', config_copy ) );
 					templates.append( ( 'scss/admin/admin-page-__plugin_asset__.scss', config_copy ) );
-					gulp_scss.append( pystache.render( 'admin/admin-page-{{plugin_asset}}', config_copy ) )
+					if self.config['gulp']:
+						gulp_scss.append( pystache.render( 'admin/admin-page-{{plugin_asset}}', config_copy ) )
 				if 'js' in flags:
 					templates.append( ( 'js/admin/admin-page-__plugin_asset__.js', config_copy ) );
 
 
 		if self.config['core']:
-			print len(self.config['core'])
 			flags = self.config['core'][1]
 			config_copy = self.config.copy()
 			config_copy.update( dict( (x,True) for x in flags )  )
@@ -173,7 +174,8 @@ class wp_plugin:
 			if 'css' in flags:
 				templates.append( ( 'css/frontend.css', config_copy ) );
 				templates.append( ( 'scss/frontend.scss', config_copy ) );
-				gulp_scss.append( 'frontend' )
+				if self.config['gulp']:
+					gulp_scss.append( 'frontend' )
 			if 'js' in flags:
 				templates.append( ( 'js/frontend.js', config_copy ) );
 			pass
@@ -195,9 +197,48 @@ class wp_plugin:
 				config_copy.update( dict( (x, True) for x in flags ) )
 				templates.append( ( 'include/__plugin_namespace__/PostType/__plugin_file__.php', config_copy ) );
 
+		admin_settings_classes = [];
+		
+		if self.config['settings']:
 
-		if self.config['settings_page']:
-			pass
+			flags = self.config['settings'][1]
+
+			templates.append( ( 'include/__plugin_namespace__/Settings/Settings.php', config ) );
+
+			for settings,flags in self.config['settings'][0]:
+				config_copy = self.config.copy()
+				config_copy.update( dict( (x,True) for x in flags )  )
+				if settings in self.wp_settings_pages:
+					classname = plugin_classname( 'Settings ' + settings )
+					section = settings
+				else:
+					classname = plugin_classname( 'Settings Page ' + settings )
+					section = slugify( settings, '_' )
+
+				config_copy.update({
+					'settings_section'	: section,
+					'settings_class'	: classname,
+					'plugin_file'		: classname,
+					'is_page'			: settings not in self.wp_settings_pages,
+					'is_section'		: settings in self.wp_settings_pages,
+				})
+
+				templates.append( ( 'include/__plugin_namespace__/Settings/__plugin_file__.php', config_copy ) );
+				
+				admin_settings_classes.append( classname )
+					
+#			templates.append( ( 'include/__plugin_namespace__/Settings/Settings.php', config_copy ) );
+#			templates.append( ( 'include/__plugin_namespace__/Settings/__settings_file__.php', config_copy ) );
+			# settings_section: 
+			#			@section: general | writing | reading | discussion | media | permalink
+			#			@page: {{plugin_slug}}_options
+			# 
+			# settings_class = plugin_file
+			#			@section: ucword($section) + 'Settings'
+			#			@page: {{plugin_slug}} + 'SettingsPage'
+			# is_page = ! is_section
+			# is_section = ! is_page
+
 
 
 		if self.config['shortcode']:
@@ -225,8 +266,9 @@ class wp_plugin:
 					templates.append( ( 'css/admin/mce/__plugin_asset__-shortcode-mce.css', config_copy ) );
 					templates.append( ( 'scss/admin/mce/__plugin_asset__-shortcode.scss', config_copy ) );
 					templates.append( ( 'scss/admin/mce/__plugin_asset__-shortcode-mce.scss', config_copy ) );
-					gulp_scss.append( pystache.render( 'admin/mce/{{plugin_asset}}-shortcode', config_copy ) )
-					gulp_scss.append( pystache.render( 'admin/mce/{{plugin_asset}}-shortcode-mce', config_copy ) )
+					if self.config['gulp']:
+						gulp_scss.append( pystache.render( 'admin/mce/{{plugin_asset}}-shortcode', config_copy ) )
+						gulp_scss.append( pystache.render( 'admin/mce/{{plugin_asset}}-shortcode-mce', config_copy ) )
 
 
 		if self.config['widget']:
@@ -244,14 +286,21 @@ class wp_plugin:
 				})
 				templates.append( ( 'include/__plugin_namespace__/Widget/__plugin_file__.php', config_copy ) );
 
+		config_copy = self.config.copy()
+		config_copy.update({
+			'settings_classes'	: admin_settings_classes,
+		})
+
+		templates.append( ( 'index.php', config_copy ) )
 
 		if self.config['git']:
 			templates.append( ( 'README.md', self.config ) )
 			templates.append( ( '.gitignore', self.config ) )
 
-		gulp_config = self.config.copy()
-		gulp_config['scss'] = gulp_scss
-		templates.append( ( 'gulpfile.js', gulp_config ) )
+		if self.config['gulp']:
+			gulp_config = self.config.copy()
+			gulp_config['scss'] = gulp_scss
+			templates.append( ( 'gulpfile.js', gulp_config ) )
 
 
 		self.process_templates(templates);
@@ -272,10 +321,11 @@ class wp_plugin:
 				print 'Git repository created. Now head over to github.com and create a repository named `%s`' % ( self.config['wp_plugin_slug'] )
 				print 'Finally come back and type `git push -u origin master` here.'
 
-		print 'Installing npm dependencies'
-		subprocess.call(["npm","install"])
+		if self.config['gulp']:
+			print 'Installing npm dependencies'
+			subprocess.call(["npm","install"])
 
-		print 'cd into `%s`, run `gulp` and have fun coding!' % ( self.config['wp_plugin_slug'] )
+			print 'cd into `%s`, run `gulp` and have fun coding!' % ( self.config['wp_plugin_slug'] )
 
 
 		return ''
@@ -360,21 +410,18 @@ usage ./plugin.py 'Plugin Name' options
                         With `+css` and `+js` appended to the page slug CSS and JS will 
                         also be enqueued on the given page.
 
-        settings[:wp_page[+css][+js][:wp_page:...]...
+        settings:page[+css][+js][:page:...]...
                         Create a new settings section on a WP settings page.
-                        `wp_page` is the slug of the WordPress settings page and can be any of 
+                        `page` can be any of the WordPress settings page slugs:
                             general
                             writing
                             reading
                             discussion
                             media
                             permalink
-                        If omitted `wp_page` defaults to `general`.
+                        For any other value a standalone settings page will be generated
                         With `+css` and `+js` appended to the settings slug custom CSS and JS will 
                         also be enqueued on the given settings page.
-        settings_page[+css][+js]
-                        Create a standalone Settings page
-                        With `+css` and `+js` CSS and JS will also be enqueued on this page.
 
         shortcode:a_shortcode[:another_shortcode]:...
                         Add shortcode handlers
@@ -385,6 +432,8 @@ usage ./plugin.py 'Plugin Name' options
                         Register one or more Widgets
 
         git             Inits a git repository
+
+        gulp            Use gulp
         --force         Override existing plugin
 '''
 

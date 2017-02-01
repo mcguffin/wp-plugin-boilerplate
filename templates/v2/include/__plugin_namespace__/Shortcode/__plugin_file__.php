@@ -20,7 +20,7 @@ class {{plugin_class}} extends Shortcode {
 	}
 {{/mce}}
 
-	function do_shortcode( $atts, $content ) {
+	public function do_shortcode( $atts, $content ) {
 		return sprintf( '<pre>%s</pre><p>%s</p>', var_export( $atts, true ), $content );
 	}
 
