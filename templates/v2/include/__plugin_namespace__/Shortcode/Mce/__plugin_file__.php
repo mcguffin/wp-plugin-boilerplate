@@ -2,6 +2,7 @@
 
 
 namespace {{plugin_namespace}}\Shortcode\Mce;
+use {{plugin_namespace}}\Core;
 use {{plugin_namespace}}\Admin\Mce;
 
 class {{plugin_class}} extends Mce\Mce {

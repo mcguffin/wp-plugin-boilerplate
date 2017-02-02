@@ -29,10 +29,10 @@ class Core extends Singleton {
 	 */
 	public function wp_enqueue_style() {
 {{#css}}
-		wp_enqueue_style( '{{wp_plugin_slug}}-style', plugins_url( 'css/frontend.css', {{plugin_slug_upper}}_FILE ) );
+		wp_enqueue_style( '{{wp_plugin_slug}}-style', $this->get_asset_url( 'css/frontend.css' ) );
 {{/css}}
 {{#js}}
-		wp_enqueue_script( '{{wp_plugin_slug}}-script', plugins_url( 'js/frontend.js', {{plugin_slug_upper}}_FILE ), array( 'jquery' ) );
+		wp_enqueue_script( '{{wp_plugin_slug}}-script', $this->get_asset_url( 'js/frontend.js' ), array( 'jquery' ) );
 {{/js}}
 	}
 
@@ -61,7 +61,7 @@ class Core extends Singleton {
 	 *	@return wp_enqueue_editor
 	 */
 	public function get_asset_url( $asset ) {
-		return plugins_url( $asset, PLUGIN_FILE );
+		return plugins_url( $asset, {{plugin_slug_upper}}_FILE );
 	}
 
 

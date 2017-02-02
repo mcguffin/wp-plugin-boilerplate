@@ -2,6 +2,7 @@
 
 
 namespace {{plugin_namespace}}\Shortcode;
+use {{plugin_namespace}}\Core;
 
 class {{plugin_class}} extends Shortcode {
 	

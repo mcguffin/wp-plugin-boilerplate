@@ -18,6 +18,15 @@ class {{plugin_class_name}}Settings {
 {{/settings_page}}
 
 	/**
+	 * Private constructor
+	 */
+	protected function __construct() {
+		parent::__construct();
+
+		$this->core = Core\Core::instance();
+	}
+
+	/**
 	 * Getting a singleton.
 	 *
 	 * @return object single instance of {{plugin_class_name}}Settings
@@ -76,11 +85,11 @@ class {{plugin_class_name}}Settings {
 	 */
 	public function enqueue_assets() {
 {{#settings_css}}
-		wp_enqueue_style( '{{plugin_slug}}-settings' , plugins_url( '/css/{{plugin_slug}}-settings.css' , dirname(__FILE__) ));
+		wp_enqueue_style( '{{plugin_slug}}-settings' , $this->core->get_asset_url( '/css/{{plugin_slug}}-settings.css' ));
 {{/settings_css}}
 
 {{#settings_js}}
-		wp_enqueue_script( '{{plugin_slug}}-settings' , plugins_url( 'js/{{plugin_slug}}-settings.js' , dirname(__FILE__) ) );
+		wp_enqueue_script( '{{plugin_slug}}-settings' , $this->core->get_asset_url( 'js/{{plugin_slug}}-settings.js' ) );
 		wp_localize_script('{{plugin_slug}}-settings' , '{{plugin_slug}}_settings' , array(
 		) );
 {{/settings_js}}

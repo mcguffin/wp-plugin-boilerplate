@@ -1,6 +1,7 @@
 <?php
 
 namespace {{plugin_namespace}}\PostType;
+use {{plugin_namespace}}\Core;
 
 class {{plugin_class}} extends PostType {
 

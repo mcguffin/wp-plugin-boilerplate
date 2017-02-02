@@ -1,6 +1,7 @@
 <?php
 
 namespace {{plugin_namespace}}\Widget;
+use {{plugin_namespace}}\Core;
 
 class {{plugin_class}} extends \WP_Widget {
 

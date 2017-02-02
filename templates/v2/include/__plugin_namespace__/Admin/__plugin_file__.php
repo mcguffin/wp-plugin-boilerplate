@@ -1,6 +1,7 @@
 <?php
 
 namespace {{plugin_namespace}}\Admin;
+use {{plugin_namespace}}\Core;
 
 
 class {{plugin_class}} extends Page {
@@ -10,6 +11,8 @@ class {{plugin_class}} extends Page {
 	 */
 	protected function __construct() {
 		parent::__construct();
+
+		$this->core = Core\Core::instance();
 
 		add_action( 'admin_init' , array( $this, 'admin_init' ) );
 		add_action( "admin_print_scripts" , array( $this, 'enqueue_assets' ) );
@@ -38,10 +41,10 @@ class {{plugin_class}} extends Page {
 
 	function enqueue_assets() {
 {{#css}}
-		wp_enqueue_style( '{{plugin_slug}}-admin-page-{{plugin_asset}}' , plugins_url( '/css/admin/admin-page-{{plugin_asset}}.css', PLUGIN_FILE ) );
+		wp_enqueue_style( '{{plugin_slug}}-admin-page-{{plugin_asset}}' , $this->core->get_asset_url( '/css/admin/admin-page-{{plugin_asset}}.css' ) );
 {{/css}}
 {{#js}}
-		wp_enqueue_script( '{{plugin_slug}}-admin-page-{{plugin_asset}}' , plugins_url( 'js/admin/admin-page-{{plugin_asset}}.js', PLUGIN_FILE ) );
+		wp_enqueue_script( '{{plugin_slug}}-admin-page-{{plugin_asset}}' , $this->core->get_asset_url( 'js/admin/admin-page-{{plugin_asset}}.js' ) );
 		wp_localize_script('{{plugin_slug}}-admin-page-{{plugin_asset}}' , '{{plugin_slug}}_admin_page' , array(
 		) );
 {{/js}}
