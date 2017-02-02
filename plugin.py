@@ -115,6 +115,8 @@ class wp_plugin:
 			( 'languages/__wp_plugin_slug__.pot', self.config ),
 			( 'include/vendor/autoload.php', self.config ),
 			( 'include/__plugin_namespace__/Core/Singleton.php', self.config ),
+			( 'include/__plugin_namespace__/Ajax/Ajax.php', self.config ),
+			( 'include/__plugin_namespace__/Ajax/AjaxHandler.php', self.config ),
 			( 'scss/mixins/_mixins.scss', self.config ),
 			( 'scss/variables/_variables.scss', self.config ),
 			( 'scss/variables/_dashicons.scss', self.config )
