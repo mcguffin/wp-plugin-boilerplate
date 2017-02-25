@@ -97,27 +97,34 @@ class {{settings_class}} extends Settings {
 	 */
 	public function register_settings() {
 
-		$settings_section = '{{plugin_slug}}_settings';
+		$settings_section	= '{{plugin_slug}}_settings';
+
+		add_settings_section( $settings_section, __( 'Section #1',  '{{wp_plugin_slug}}' ), array( $this, 'section_1_description' ), $this->optionset );
+
+
 
 		// more settings go here ...
-		register_setting( $this->optionset , '{{plugin_slug}}_setting_1' , array( &$this , 'sanitize_setting_1' ) );
-
-		add_settings_section( $settings_section, __( 'Section #1',  '{{wp_plugin_slug}}' ), array( &$this, 'section_1_description' ), $this->optionset );
-
-		// ... and here
+		$option_name		= '{{plugin_slug}}_setting_1';
+		register_setting( $this->optionset , $option_name, array( $this , 'sanitize_setting_1' ) );
 		add_settings_field(
-			'{{plugin_slug}}_setting_1',
+			$option_name,
 			__( 'Setting #1',  '{{wp_plugin_slug}}' ),
 			array( $this, 'setting_1_ui' ),
 			$this->optionset,
-			$settings_section
+			$settings_section,
+			array(
+				'option_name'			=> $option_name,
+				'option_label'			=> __( 'Setting #1',  '{{wp_plugin_slug}}' ),
+				'option_description'	=> __( 'Setting #1 description',  '{{wp_plugin_slug}}' ),
+			)
 		);
 	}
 
 	/**
 	 * Print some documentation for the optionset
 	 */
-	public function section_1_description() {
+	public function section_1_description( $args ) {
+
 		?>
 		<div class="inside">
 			<p><?php _e( 'Section 1 Description.' , '{{wp_plugin_slug}}' ); ?></p>
@@ -128,10 +135,23 @@ class {{settings_class}} extends Settings {
 	/**
 	 * Output Theme selectbox
 	 */
-	public function setting_1_ui( ) {
-		$setting_name = '{{plugin_slug}}_setting_1';
-		$setting = get_option($setting_name);
-		?><input type="text" name="<?php echo $setting_name ?>" value="<?php esc_attr_e( $setting ) ?>" /><?php
+	public function setting_1_ui( $args ) {
+
+		@list( $option_name, $label, $description ) = array_values( $args );
+
+		$option_value = get_option( $option_name );
+
+		?>
+			<label for="<?php echo $option_name ?>">
+				<input type="text" id="<?php echo $option_name ?>" name="<?php echo $option_name ?>" value="<?php esc_attr_e( $option_value ) ?>" />
+				<?php echo $label ?>
+			</label>
+			<?php
+			if ( ! empty( $description ) ) {
+				printf( '<p class="description">%s</p>', $description );
+			}
+			?>
+		<?php
 	}
 
 	/**

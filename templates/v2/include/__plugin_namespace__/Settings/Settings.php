@@ -5,8 +5,6 @@ use {{plugin_namespace}}\Core;
 
 abstract class Settings extends Core\Singleton {
 
-	protected $shortcode = false;
-
 	/**
 	 *	Constructor
 	 */
@@ -28,7 +26,7 @@ abstract class Settings extends Core\Singleton {
 	 *	@param $args	array( $option_name, $label )
 	 */
 	public function checkbox_ui( $args ) {
-		@list( $option_name, $label, $description ) = $args;
+		@list( $option_name, $label, $description ) = array_values( $args );
 		
 		$option_value = get_option( $option_name );
 		
