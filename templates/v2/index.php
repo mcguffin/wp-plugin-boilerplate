@@ -75,11 +75,6 @@ if ( is_admin() || defined( 'DOING_AJAX' ) ) {
 	Admin\Tools::instance();
 	Admin\Settings::instance();
 
-	// Compatibility plugins
-	$compat = glob(plugin_dir_path(__FILE__) . 'include/compat/*.php');
-	foreach ( $compat as $compat_file ) {
-		require_once $compat_file;
-	}
 */
 }
 

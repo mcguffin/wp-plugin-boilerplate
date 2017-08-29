@@ -2,3 +2,6 @@
 
 @import '../mixins/mixins';
 
+{{#scss_admin}}
+@import '{{.}}';
+{{/scss_admin}}

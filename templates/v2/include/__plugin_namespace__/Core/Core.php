@@ -12,6 +12,7 @@ class Core extends Singleton {
 	 */
 	protected function __construct() {
 		add_action( 'plugins_loaded' , array( $this , 'load_textdomain' ) );
+		add_action( 'plugins_loaded' , array( $this , 'init_compat' ), 0 );
 		add_action( 'init' , array( $this , 'init' ) );
 		add_action( 'wp_enqueue_scripts' , array( $this , 'wp_enqueue_style' ) );
 
@@ -36,14 +37,26 @@ class Core extends Singleton {
 {{/js}}
 	}
 
-	
+	/**
+	 *	Load Compatibility classes
+	 * 
+	 *  @action plugins_loaded
+	 */
+	public function init_compat() {
+		if ( class_exists( 'Polylang' ) ) {
+			Compat\Polylang::instance();
+		}
+	}
+
+
 	/**
 	 *	Load text domain
 	 * 
 	 *  @action plugins_loaded
 	 */
 	public function load_textdomain() {
-		load_plugin_textdomain( '{{wp_plugin_slug}}' , false, {{plugin_slug_upper}}_DIRECTORY . '/languages/' );
+		$path = pathinfo( dirname( {{plugin_slug_upper}}_FILE ), PATHINFO_FILENAME );
+		load_plugin_textdomain( '{{wp_plugin_slug}}' , false, $path . '/languages' );
 	}
 
 	/**
