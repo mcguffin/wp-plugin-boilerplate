@@ -4,11 +4,14 @@ Plugin Scaffold
 Create a basic Wordpress plugin from the command line.
 
 Usage:
+
 ```
 $ cd /wordpress/wp-content/plugins
 $ python /path/to/plugin.py "Plugin Name" [options]
 ```
-# options: #
+
+# Options: #
+
 ```
     core[+css][+js]
               Add +css and/or +js to enqueue frontend css / js
