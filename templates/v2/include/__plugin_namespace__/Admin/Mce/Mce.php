@@ -36,7 +36,7 @@ abstract class Mce extends Core\Singleton {
 	 *	@type array
 	 */
 	protected $plugin_params = false;
-	
+
 	/**
 	 *	Load custom css for toolbar.
 	 *	@type boolean
@@ -48,14 +48,14 @@ abstract class Mce extends Core\Singleton {
 	 *	@type boolean
 	 */
 	protected $editor_css = false;
-	
-	
+
+
 	/**
 	 *	Load custom css for editor.
 	 *	@type {{plugin_namespace}}\Core\Core
 	 */
 	private $core = null;
-	
+
 	/**
 	 * Private constructor
 	 */
@@ -103,7 +103,7 @@ abstract class Mce extends Core\Singleton {
 	 *	@filter mce_external_plugins
 	 */
 	public function add_plugin( $plugins_array ) {
-		$plugins_array[ $this->module_name ] = $this->core->get_asset_url( sprintf( 'js/admin/mce/%s.js', $this->module_name ) );
+		$plugins_array[ $this->sanitize_varname( $this->module_name )  ] = $this->core->get_asset_url( sprintf( 'js/admin/mce/%s.js', $this->module_name ) );
 		return $plugins_array;
 	}
 
@@ -134,7 +134,7 @@ abstract class Mce extends Core\Singleton {
 	 */
 	public function enqueue_toolbar_css() {
 		$asset_id = sprintf( 'tinymce-%s-toolbar-css', $this->module_name );
-		$asset_url = $this->core->get_asset_url( sprintf( 'css/admin/mce/%s.css', $this->module_name ) );
+		$asset_url = $this->core->get_asset_url( sprintf( 'css/admin/mce/%s-mce-toolbar.css', $this->module_name ) );
 		wp_enqueue_style( $asset_id, $asset_url );
 	}
 
@@ -144,7 +144,7 @@ abstract class Mce extends Core\Singleton {
 	 *	@filter mce_css
 	 */
 	public function mce_css( $styles ) {
-		$mce_css = $this->core->get_asset_url( sprintf( 'css/admin/mce/%s-mce.css', $this->module_name ) );
+		$mce_css = $this->core->get_asset_url( sprintf( 'css/admin/mce/%s-mce-editor.css', $this->module_name ) );
 		$styles .= ','. $mce_css;
 		return $styles;
 	}
@@ -163,12 +163,12 @@ abstract class Mce extends Core\Singleton {
     	}
 	}
 
-	
+
 	/**
 	 *	@access private
 	 */
 	private function sanitize_varname( $str ) {
 		return preg_replace( '/[^a-z0-9_]/imsU', '_', $str );
 	}
-	
+
 }

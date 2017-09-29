@@ -3,27 +3,68 @@
 namespace {{plugin_namespace}}\PostType;
 use {{plugin_namespace}}\Core;
 
-abstract class PostType extends Core\Singleton {
+abstract class PostType extends Core\PluginComponent {
+
 	protected $post_type_caps = null;
-	
+
 	abstract function register_post_types();
 
-	public static function activate() {
-		$self = get_called_class();
-		$inst = $self::instance();
-		$inst->register_post_types();
-		$inst->add_custom_capabilities();
+	/**
+	 *	@inheritdoc
+	 */
+	public function activate() {
+		// register post types, taxonomies
+		$this->register_post_types();
+
+		// flush rewrite rules
 		flush_rewrite_rules();
+
+		return array(
+			'success'	=> true,
+			'messages'	=> array(),
+		);
 	}
 
-	public static function deactivate() {
+	/**
+	 *	@inheritdoc
+	 */
+	public function deactivate() {
+		// flush rewrite rules
 		flush_rewrite_rules();
+		return array(
+			'success'	=> true,
+			'messages'	=> array(),
+		);
 	}
 
-	public static function uninstall() {
-		$self = get_called_class();
-		$inst = $self::instance();
-		$inst->remove_custom_capabilities();
+	/**
+	 *	@inheritdoc
+	 */
+	public function uninstall() {
+	
+		$deleted_posts = 0;
+		$posts = get_posts(array(
+			'post_type' 		=> $this->post_type_slug,
+			'post_status'		=> 'any',
+			'posts_per_page'	=> -1,
+		));
+		foreach ( $posts as $post ) {
+			wp_delete_post( $post->ID, true );
+			$deleted_posts++;
+		}
+
+		return array(
+			'success'	=> true,
+			'messages'	=> array(
+				sprintf( _n( 'Deleted %d Post',  'Deleted %d Posts', $deleted_posts, '{{plugin_slug}}' ), $deleted_posts ),
+			),
+		);
+	}
+
+	/**
+	 *	@inheritdoc
+	 */
+	public function upgrade( $new_version, $old_version ) {
 	}
 
 
@@ -39,10 +80,11 @@ abstract class PostType extends Core\Singleton {
 					}
 				}
 			} else {
-				// error case! 
+				// error case!
 			}
 		}
 	}
+
 	/**
 	 *	Remove custom capabilities from all roles
 	 */
@@ -62,4 +104,3 @@ abstract class PostType extends Core\Singleton {
 	}
 
 }
-

@@ -3,9 +3,9 @@
 namespace {{plugin_namespace}}\Settings;
 use {{plugin_namespace}}\Core;
 
-class {{settings_class}} extends Settings {
+class Settings{{settings_class}} extends Settings {
 
-	private $optionset = '{{settings_section}}'; 
+	private $optionset = '{{settings_section}}';
 
 
 	/**
@@ -159,7 +159,7 @@ class {{settings_class}} extends Settings {
 	 *
 	 * @return string sanitized value
 	 */
-	public function sanitize_setting_1( $value ) {	
+	public function sanitize_setting_1( $value ) {
 		// do sanitation here!
 		return $value;
 	}

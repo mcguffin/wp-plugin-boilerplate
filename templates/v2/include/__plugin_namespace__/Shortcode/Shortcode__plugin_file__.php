@@ -4,8 +4,8 @@
 namespace {{plugin_namespace}}\Shortcode;
 use {{plugin_namespace}}\Core;
 
-class {{plugin_class}} extends Shortcode {
-	
+class Shortcode{{plugin_class}} extends Shortcode {
+
 	protected $shortcode = '{{shortcode_slug}}';
 
 {{#mce}}
@@ -17,7 +17,7 @@ class {{plugin_class}} extends Shortcode {
 	protected function __construct() {
 		parent::__construct();
 
-		$this->mce = MCE\{{plugin_class}}::instance();
+		$this->mce = Mce\Mce{{plugin_class}}::instance();
 	}
 {{/mce}}
 

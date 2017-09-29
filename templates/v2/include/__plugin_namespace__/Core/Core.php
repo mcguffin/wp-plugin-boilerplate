@@ -1,25 +1,19 @@
 <?php
 
 namespace {{plugin_namespace}}\Core;
-{{#post_types?}}
-use {{plugin_namespace}}\PostType;
-{{/post_types?}}
 
-class Core extends Singleton {
+class Core extends Plugin {
 
 	/**
 	 *	Private constructor
 	 */
 	protected function __construct() {
+
 		add_action( 'plugins_loaded' , array( $this , 'load_textdomain' ) );
 		add_action( 'plugins_loaded' , array( $this , 'init_compat' ), 0 );
 		add_action( 'init' , array( $this , 'init' ) );
 		add_action( 'wp_enqueue_scripts' , array( $this , 'wp_enqueue_style' ) );
 
-		register_activation_hook( {{plugin_slug_upper}}_FILE, array( __CLASS__ , 'activate' ) );
-		register_deactivation_hook( {{plugin_slug_upper}}_FILE, array( __CLASS__ , 'deactivate' ) );
-		register_uninstall_hook( {{plugin_slug_upper}}_FILE, array( __CLASS__ , 'uninstall' ) );
-		
 		parent::__construct();
 	}
 
@@ -39,19 +33,19 @@ class Core extends Singleton {
 
 	/**
 	 *	Load Compatibility classes
-	 * 
+	 *
 	 *  @action plugins_loaded
 	 */
 	public function init_compat() {
-		if ( class_exists( 'Polylang' ) ) {
-			Compat\Polylang::instance();
-		}
+		// if ( class_exists( 'Polylang' ) ) {
+		// 	Compat\Polylang::instance();
+		// }
 	}
 
 
 	/**
 	 *	Load text domain
-	 * 
+	 *
 	 *  @action plugins_loaded
 	 */
 	public function load_textdomain() {
@@ -61,7 +55,7 @@ class Core extends Singleton {
 
 	/**
 	 *	Init hook.
-	 * 
+	 *
 	 *  @action init
 	 */
 	public function init() {
@@ -78,31 +72,5 @@ class Core extends Singleton {
 	}
 
 
-	/**
-	 *	Fired on plugin activation
-	 */
-	public static function activate() {
-{{#post_types}}
-		PostType\{{.}}::activate();
-{{/post_types}}
-	}
-
-	/**
-	 *	Fired on plugin deactivation
-	 */
-	public static function deactivate() {
-{{#post_types}}
-		PostType\{{.}}::deactivate();
-{{/post_types}}
-	}
-
-	/**
-	 *	Fired on plugin deinstallation
-	 */
-	public static function uninstall() {
-{{#post_types}}
-		PostType\{{.}}::uninstall();
-{{/post_types}}
-	}
 
 }

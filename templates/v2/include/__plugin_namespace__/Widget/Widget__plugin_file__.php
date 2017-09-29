@@ -3,7 +3,7 @@
 namespace {{plugin_namespace}}\Widget;
 use {{plugin_namespace}}\Core;
 
-class {{plugin_class}} extends \WP_Widget {
+class Widget{{plugin_class}} extends \WP_Widget {
 
 
 
@@ -11,7 +11,7 @@ class {{plugin_class}} extends \WP_Widget {
 	 * Widget Constructor
 	 */
 	public function __construct() {
-		$widget_ops = array( 
+		$widget_ops = array(
 			'classname'		=> '{{plugin_class}}',
 			'description'	=> __( '{{widget_name}} Description...', '{{wp_plugin_slug}}' ),
 		);
@@ -29,9 +29,9 @@ class {{plugin_class}} extends \WP_Widget {
 		if ( ! empty( $instance['title'] ) ) {
 			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
 		}
-		
+
 		// #### widget content here ####
-		
+
 		echo $args['after_widget'];
 	}
 
@@ -46,7 +46,7 @@ class {{plugin_class}} extends \WP_Widget {
 
 		?>
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php _e( esc_attr( 'Title:' ) ); ?></label> 
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php _e( esc_attr( 'Title:' ) ); ?></label>
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>">
 		</p>
 		<?php
@@ -72,4 +72,3 @@ class {{plugin_class}} extends \WP_Widget {
 
 
 }
-

@@ -1,14 +1,12 @@
-tinymce.PluginManager.add( '{{shortcode_slug}}' , function( editor ) {
+tinymce.PluginManager.add( '{{shortcode_slug}}_shortcode' , function( editor ) {
 
 	var placeholder_img			= tinymce.Env.transparentSrc,
-		placeholder_img			= 'data:image/svg+xml;base64,' + window.btoa('<svg version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="500px" height="40px" viewBox="0 0 500 40"><text transform="matrix(1 0 0 1 12.5127 22.9082)" font-family="-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Oxygen-Sans,Ubuntu,Cantarell,\'Helvetica Neue\',sans-serif" font-size="12" style="fill: #FFFFFF;stroke:none;font-weight:bold;">'+mce_catcal.l10n.catcal+'</text></svg>'),
-		/*
-		the_shortcode			= /\[{{shortcode_slug}} ?(([^\]]+)\]/g, // matches shortcodes without content [shortcodes attr="1"]
-		/*/
-		the_shortcode			= /\[{{shortcode_slug}} ?([^\]]*)\](.*)\[\/{{shortcode_slug}}\]/g, // matches shortcodes with content [shortcodes attr="1"]
-		//*/
-		the_visible_shortcode	= '<img title="'+mce_catcal.l10n.catcal+'" data-attr="{attr}" data-wp-entity="cateringcalendar" src="'+placeholder_img+'" data-mce-resize="false" data-mce-placeholder="1" />',
-		l10n					= {{shortcode_slug}}.l10n;
+		l10n					= mce_{{shortcode_slug}}_shortcode.l10n,
+		placeholder_img			= 'data:image/svg+xml;base64,' + window.btoa('<svg version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="500px" height="40px" viewBox="0 0 500 40"><text transform="matrix(1 0 0 1 12.5127 22.9082)" font-family="-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Oxygen-Sans,Ubuntu,Cantarell,\'Helvetica Neue\',sans-serif" font-size="12" style="fill: #FFFFFF;stroke:none;font-weight:bold;">'+l10n.name+'</text></svg>'),
+
+		// https://stackoverflow.com/questions/34393501/regex-for-processing-wordpress-shortcode
+		the_shortcode			= /\[{{shortcode_slug}}([^\]]*)\]([\s\S]*?)\[\/{{shortcode_slug}}\]/g,
+		the_visible_shortcode	= '<img title="'+l10n.name+'" data-attr="{attr}" data-wp-entity="cateringcalendar" src="'+placeholder_img+'" data-mce-resize="false" data-mce-placeholder="1" />';
 
 	function nodeStr( node ) {
 		var txt, ax, $el = jQuery("<div />");
@@ -16,9 +14,8 @@ tinymce.PluginManager.add( '{{shortcode_slug}}' , function( editor ) {
 		return $el.html();
 	}
 
-
 	function replaceShortcodes( content ) {
-		return content.replace( the_catcal, function( all, attr ) {
+		return content.replace( the_shortcode, function( all, attr ) {
 			var attr = window.encodeURIComponent( attr );
 			return the_visible_shortcode.replace('{attr}', attr );
 		});
@@ -38,8 +35,8 @@ tinymce.PluginManager.add( '{{shortcode_slug}}' , function( editor ) {
 			}
 			return match;
 		});
-	}	
-	function openLunchcalDialog( callback, values ) {
+	}
+	function openShortcodeDialog( callback, values ) {
 		var sel		= editor.selection.getNode(),
 			$sel	= jQuery( sel ),
 			d = {
@@ -57,12 +54,12 @@ tinymce.PluginManager.add( '{{shortcode_slug}}' , function( editor ) {
 			title: l10n.dialogTitle,
 			body: [
 // 				{
-// 					type	: 'label', 
-// 					text	: mce_catcal.l10n.url
+// 					type	: 'label',
+// 					text	: 'some...'
 // 				},
 // 				{
-// 					type		: 'textbox', 
-// 					name		: 'sources', 
+// 					type		: 'textbox',
+// 					name		: 'sources',
 // 					multiline	: true,
 // 					layout		: 'flow',
 // 					minWidth	: 320,
@@ -74,8 +71,8 @@ tinymce.PluginManager.add( '{{shortcode_slug}}' , function( editor ) {
 // 					name	: 'period',
 // 					value	: d.period,
 // 					values : [
-// 						{ text: mce_catcal.l10n.this_week, 		value: 'this-week' },
-// 						{ text: mce_catcal.l10n.next_week, 		value: 'next-week' }
+// 						{ text: 'some...', 		value: 'this-week' },
+// 						{ text: 'some...', 		value: 'next-week' }
 // 					]
 // 				},
 			],
@@ -83,24 +80,24 @@ tinymce.PluginManager.add( '{{shortcode_slug}}' , function( editor ) {
 		});
 	}
 
-	editor.addCommand( 'cmd_{{shortcode_slug}}', function() {
-		openLunchcalDialog( function(e){
+	editor.addCommand( 'cmd_{{shortcode_slug}}_shortcode', function() {
+		openShortcodeDialog( function(e){
 			var shortcode = '[{{shortcode_slug}}]';
 			editor.insertContent( shortcode );
 		} );
 	});
 
-	editor.addButton('{{shortcode_slug}}', {
-		icon: '{{shortcode_slug}}-icon',
-		tooltip: mce_catcal.l10n.catcal,
-		cmd : 'cmd_{{shortcode_slug}}',
-// 		onPostRender: function() {
-// 			var cateringcalendarBtn = this;
-// 			editor.on( 'nodechange', function( event ) {
-// 				var cateringcalendar_around = false;
-// 				cateringcalendarBtn.disabled( ! editor.selection.isCollapsed() && ! cateringcalendar_around );
-// 			});
-// 		}
+	editor.addButton('{{shortcode_slug}}_shortcode', {
+		icon: '{{shortcode_slug}}-shortcode-icon',
+		tooltip: l10n.insert,
+		cmd : 'cmd_{{shortcode_slug}}_shortcode',
+		onPostRender: function() {
+			var btn = this;
+			editor.on( 'nodechange', function( event ) {
+				var shortcode_around = false;
+				btn.disabled( ! editor.selection.isCollapsed() && ! shortcode_around );
+			});
+		}
 	});
 
 	editor.on('BeforeSetcontent', function(event) {
@@ -111,4 +108,3 @@ tinymce.PluginManager.add( '{{shortcode_slug}}' , function( editor ) {
 	});
 
 } );
-

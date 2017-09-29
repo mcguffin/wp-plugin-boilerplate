@@ -3,13 +3,17 @@
 namespace {{plugin_namespace}}\PostType;
 use {{plugin_namespace}}\Core;
 
-class {{plugin_class}} extends PostType {
+class PostType{{plugin_class}} extends PostType {
 
-/*
-	private static $_instance = null;
-*/
+	/**
+	 *	@var string
+	 */
+	protected $post_type_slug = '{{post_type_slug}}';
 
 {{#caps}}
+	/**
+	 *	@var array
+	 */
 	protected $post_type_caps = array(
 			'edit_{{post_type_slug}}',
 			'read_{{post_type_slug}}',
@@ -23,7 +27,7 @@ class {{plugin_class}} extends PostType {
 
 
 	/**
-	 * Private constructor
+	 *	Constructor
 	 */
 	protected function __construct() {
 		parent::__construct();
@@ -31,8 +35,9 @@ class {{plugin_class}} extends PostType {
 	}
 
 	/**
-	 * Register Post Types
-	 * 
+	 *	Register Post Type
+	 *
+	 *	@action init
 	 */
 	public function register_post_types( ) {
 		// register post type {{post_type_name}}
@@ -93,4 +98,3 @@ class {{plugin_class}} extends PostType {
 	}
 
 }
-

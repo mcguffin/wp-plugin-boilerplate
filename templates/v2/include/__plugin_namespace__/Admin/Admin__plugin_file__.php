@@ -4,7 +4,7 @@ namespace {{plugin_namespace}}\Admin;
 use {{plugin_namespace}}\Core;
 
 
-class {{plugin_class}} extends Page {
+class Admin{{plugin_class}} extends Page {
 
 	/**
 	 * Private constructor
@@ -37,14 +37,14 @@ class {{plugin_class}} extends Page {
 			?><p><?php _e( 'Content for {{plugin_class}}' , '{{wp_plugin_slug}}' ); ?></p><?php
 		?></div><?php
 	}
-	
+
 
 	function enqueue_assets() {
 {{#css}}
-		wp_enqueue_style( '{{plugin_slug}}-admin-page-{{plugin_asset}}' , $this->core->get_asset_url( '/css/admin/admin-page-{{plugin_asset}}.css' ) );
+		wp_enqueue_style( '{{plugin_slug}}-admin-page-{{plugin_asset}}' , $this->core->get_asset_url( '/css/admin/page/{{plugin_asset}}.css' ) );
 {{/css}}
 {{#js}}
-		wp_enqueue_script( '{{plugin_slug}}-admin-page-{{plugin_asset}}' , $this->core->get_asset_url( 'js/admin/admin-page-{{plugin_asset}}.js' ) );
+		wp_enqueue_script( '{{plugin_slug}}-admin-page-{{plugin_asset}}' , $this->core->get_asset_url( 'js/admin/page/{{plugin_asset}}.js' ) );
 		wp_localize_script('{{plugin_slug}}-admin-page-{{plugin_asset}}' , '{{plugin_slug}}_admin_page' , array(
 		) );
 {{/js}}

@@ -12,10 +12,10 @@ class Widgets extends Core\Singleton {
 		parent::__construct();
 		add_action('widgets_init', array( $this, 'widgets_init' ) );
 	}
-	
+
 	public function widgets_init(){
 {{#widgets}}
-		register_widget("{{plugin_namespace}}\Widget\{{.}}");
+		register_widget("{{plugin_namespace}}\Widget\Widget{{.}}");
 {{/widgets}}
 	}
 

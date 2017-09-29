@@ -16,7 +16,7 @@ Domain Path: /languages/
 /*  Copyright {{this_year}}  {{plugin_author}}
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2, as 
+    it under the terms of the GNU General Public License, version 2, as
     published by the Free Software Foundation.
 
     This program is distributed in the hope that it will be useful,
@@ -41,16 +41,20 @@ namespace {{plugin_namespace}};
 define( '{{plugin_slug_upper}}_FILE', __FILE__ );
 define( '{{plugin_slug_upper}}_DIRECTORY', plugin_dir_path(__FILE__) );
 
-require_once {{plugin_slug_upper}}_DIRECTORY . 'include/vendor/autoload.php';
+require_once {{plugin_slug_upper}}_DIRECTORY . 'include/autoload.php';
 
 Core\Core::instance();
 
 {{#post_types}}
-PostType\{{.}}::instance();
+PostType\PostType{{.}}::instance();
 {{/post_types}}
 
+{{#taxonomies}}
+Taxonomy\Taxonomy{{.}}::instance();
+{{/taxonomies}}
+
 {{#shortcodes}}
-Shortcode\{{.}}::instance();
+Shortcode\Shortcode{{.}}::instance();
 {{/shortcodes}}
 
 {{#widget?}}
@@ -63,18 +67,11 @@ if ( is_admin() || defined( 'DOING_AJAX' ) ) {
 {{/admin?}}
 
 {{#admin_pages}}
-	Admin\{{.}}::instance();
+	Admin\Admin{{.}}::instance();
 {{/admin_pages}}
 
 {{#settings_classes}}
 	Settings\{{.}}::instance();
 {{/settings_classes}}
 
-/*
-	Admin\Admin::instance();
-	Admin\Tools::instance();
-	Admin\Settings::instance();
-
-*/
 }
-

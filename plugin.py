@@ -23,6 +23,7 @@ class wp_plugin:
 		'shortcode'		: False,
 		'widget'		: False,
 		'post_type'		: False,
+		'taxonomy'		: False,
 		'git'			: False,
 		'gulp'			: False,
 
@@ -72,16 +73,21 @@ class wp_plugin:
 		except:
 			github_user = ''
 			pass
-		
+
 		config['github_user'] 		= github_user.decode('utf-8')#.encode('utf-8')
 		config['plugin_author'] 	= author.decode('utf-8')#.encode('utf-8')
 		config['plugin_author_uri'] = ''
 		config['this_year'] 		= date.today().year
-		
+
 		if config['post_type'] and not len( config['post_type'][0] ):
 			config['post_type'] = False
 			print 'Could not generate post_type.'
 			print 'post_type usage is: post_type:"Post Type Name"[+caps]'
+
+		if config['taxonomy'] and not len( config['taxonomy'][0] ):
+			config['taxonomy'] = False
+			print 'Could not generate Taxonomy.'
+			print 'taxonomy usage is:taxonomy:"taxonomy Name"'
 
 		if config['shortcode'] and not len( config['shortcode'][0] ):
 			config['shortcode'] = False
@@ -101,7 +107,7 @@ class wp_plugin:
 				for it,flags in config[section][0]:
 					config[section+'s'].append( plugin_classname( it ) )
 
-		
+
 		return config
 
 	def make(self):
@@ -113,17 +119,23 @@ class wp_plugin:
 
 		self.templates.append( ( 'readme.txt', self.config ) )
 		self.templates.append( ( 'languages/__wp_plugin_slug__.pot', self.config ) )
-		self.templates.append( ( 'include/vendor/autoload.php', self.config ) )
+		self.templates.append( ( 'include/autoload.php', self.config ) )
+		self.templates.append( ( 'include/__plugin_namespace__/Core/Core.php', self.config ) )
 		self.templates.append( ( 'include/__plugin_namespace__/Core/Singleton.php', self.config ) )
-		self.templates.append( ( 'include/__plugin_namespace__/Compat/Polylang.php', self.config ) )
+		self.templates.append( ( 'include/__plugin_namespace__/Core/Plugin.php', self.config ) )
+		self.templates.append( ( 'include/__plugin_namespace__/Core/PluginComponent.php', self.config ) )
+		self.templates.append( ( 'include/__plugin_namespace__/Compat/Sample.php', self.config ) )
 		self.templates.append( ( 'include/__plugin_namespace__/Ajax/Ajax.php', self.config ) )
 		self.templates.append( ( 'include/__plugin_namespace__/Ajax/AjaxHandler.php', self.config ) )
+		self.templates.append( ( 'include/__plugin_namespace__/Cron/Cron.php', self.config ) )
+		self.templates.append( ( 'include/__plugin_namespace__/Cron/Job.php', self.config ) )
 		self.templates.append( ( 'src/scss/mixins/_mixins.scss', self.config ) )
 		self.templates.append( ( 'src/scss/variables/_variables.scss', self.config ) )
 		self.templates.append( ( 'src/scss/variables/_dashicons.scss', self.config ) )
+		self.templates.append( ( 'src/scss/variables/_colors.scss', self.config ) )
 
 		if self.config['gulp']:
-		
+
 			self.gulp_scss = []
 			self.gulp_scss_admin = []
 			self.gulp_js = []
@@ -142,19 +154,19 @@ class wp_plugin:
 			if 'css' in flags:
 				self.templates.append( ( 'src/scss/admin/admin.scss', config_copy ) );
 				if self.config['gulp']:
-					self.gulp_scss_admin.append('admin')
+					self.gulp_scss_admin.append('admin/admin')
 			if 'js' in flags:
 				self.templates.append( ( 'src/js/admin/admin.js', config_copy ) );
 				if self.config['gulp']:
-					self.gulp_js_admin.append( 'admin' )
+					self.gulp_js_admin.append( 'admin/admin' )
 
 		if self.config['admin_page']:
 			if self.config['admin_page'][0]:
 				self.templates.append( ( 'include/__plugin_namespace__/Admin/Page.php', self.config ) );
-			pprint(self.config['admin_page'])
+
 			for admin_page,flags in self.config['admin_page'][0]:
 				config_copy = self.config.copy()
-				
+
 				if admin_page == 'tools':
 					wp_page_slug = 'management'
 				else:
@@ -166,16 +178,16 @@ class wp_plugin:
 					'plugin_asset': admin_page.lower(),
 				})
 				config_copy.update( dict( (x,True) for x in flags ) )
-				self.templates.append( ( 'include/__plugin_namespace__/Admin/__plugin_file__.php', config_copy ) );
+				self.templates.append( ( 'include/__plugin_namespace__/Admin/Admin__plugin_file__.php', config_copy ) );
 
 				if 'css' in flags:
-					self.templates.append( ( 'src/scss/admin/admin-page-__plugin_asset__.scss', config_copy ) );
+					self.templates.append( ( 'src/scss/admin/page/__plugin_asset__.scss', config_copy ) );
 					if self.config['gulp']:
-						self.gulp_scss_admin.append( pystache.render( 'admin-page-{{plugin_asset}}', config_copy ) )
+						self.gulp_scss_admin.append( pystache.render( 'admin/page/{{plugin_asset}}', config_copy ) )
 				if 'js' in flags:
-					self.templates.append( ( 'src/js/admin/admin-page-__plugin_asset__.js', config_copy ) );
+					self.templates.append( ( 'src/js/admin/page/__plugin_asset__.js', config_copy ) );
 					if self.config['gulp']:
-						self.gulp_js_admin.append( pystache.render( 'admin-page-{{plugin_asset}}', config_copy ) )
+						self.gulp_js_admin.append( pystache.render( 'admin/page/{{plugin_asset}}', config_copy ) )
 
 
 		if self.config['core']:
@@ -200,7 +212,7 @@ class wp_plugin:
 
 			for post_type,flags in self.config['post_type'][0]:
 				config_copy = self.config.copy()
-				
+
 				config_copy.update({
 					'post_type_slug': slugify( post_type, '-' ),
 					'post_type_name': post_type,
@@ -208,10 +220,26 @@ class wp_plugin:
 					'plugin_class': plugin_classname( post_type ),
 				})
 				config_copy.update( dict( (x, True) for x in flags ) )
-				self.templates.append( ( 'include/__plugin_namespace__/PostType/__plugin_file__.php', config_copy ) );
+				self.templates.append( ( 'include/__plugin_namespace__/PostType/PostType__plugin_file__.php', config_copy ) );
+
+		if self.config['taxonomy']:
+			if self.config['taxonomy'][0]:
+				self.templates.append( ( 'include/__plugin_namespace__/Taxonomy/Taxonomy.php', self.config ) );
+
+			for taxonomy,flags in self.config['taxonomy'][0]:
+				config_copy = self.config.copy()
+
+				config_copy.update({
+					'taxonomy_slug': slugify( taxonomy, '-' ),
+					'taxonomy_name': taxonomy,
+					'plugin_file': plugin_classname( taxonomy ),
+					'plugin_class': plugin_classname( taxonomy ),
+				})
+				config_copy.update( dict( (x, True) for x in flags ) )
+				self.templates.append( ( 'include/__plugin_namespace__/Taxonomy/Taxonomy__plugin_file__.php', config_copy ) );
 
 		admin_settings_classes = [];
-		
+
 		if self.config['settings']:
 
 			flags = self.config['settings'][1]
@@ -236,9 +264,18 @@ class wp_plugin:
 					'is_section'		: settings in self.wp_settings_pages,
 				})
 
-				self.templates.append( ( 'include/__plugin_namespace__/Settings/__plugin_file__.php', config_copy ) );
-				
+				self.templates.append( ( 'include/__plugin_namespace__/Settings/Settings__plugin_file__.php', config_copy ) );
+
 				admin_settings_classes.append( classname )
+
+				if 'css' in flags:
+					self.templates.append( ( 'src/scss/admin/settings/__plugin_asset__.scss', config_copy ) );
+					if self.config['gulp']:
+						self.gulp_scss_admin.append( pystache.render( 'admin/settings/{{plugin_asset}}', config_copy ) )
+				if 'js' in flags:
+					self.templates.append( ( 'src/js/admin/settings/__plugin_asset__.js', config_copy ) );
+					if self.config['gulp']:
+						self.gulp_js_admin.append( pystache.render( 'admin/settings/{{plugin_asset}}', config_copy ) )
 
 
 
@@ -257,18 +294,18 @@ class wp_plugin:
 					'plugin_class': plugin_classname( shortcode ),
 				})
 				config_copy.update( dict( (x, True) for x in flags ) )
-				self.templates.append( ( 'include/__plugin_namespace__/Shortcode/__plugin_file__.php', config_copy ) );
+				self.templates.append( ( 'include/__plugin_namespace__/Shortcode/Shortcode__plugin_file__.php', config_copy ) );
 
 				if 'mce' in flags:
 					# add mce templates
-					self.templates.append( ( 'include/__plugin_namespace__/Shortcode/Mce/__plugin_file__.php', config_copy ) );
+					self.templates.append( ( 'include/__plugin_namespace__/Shortcode/Mce/Mce__plugin_file__.php', config_copy ) );
 					self.templates.append( ( 'src/js/admin/mce/__plugin_asset__-shortcode.js', config_copy ) );
-					self.templates.append( ( 'src/scss/admin/mce/__plugin_asset__-shortcode.scss', config_copy ) );
-					self.templates.append( ( 'src/scss/admin/mce/__plugin_asset__-shortcode-mce.scss', config_copy ) );
+					self.templates.append( ( 'src/scss/admin/mce/__plugin_asset__-shortcode-mce-editor.scss', config_copy ) );
+					self.templates.append( ( 'src/scss/admin/mce/__plugin_asset__-shortcode-mce-toolbar.scss', config_copy ) );
 					if self.config['gulp']:
-						self.gulp_scss_admin.append( pystache.render( 'mce/{{plugin_asset}}-shortcode', config_copy ) )
-						self.gulp_scss_admin.append( pystache.render( 'mce/{{plugin_asset}}-shortcode-mce', config_copy ) )
-						self.gulp_js_admin.append( pystache.render( 'mce/{{plugin_asset}}-shortcode', config_copy ) )
+						self.gulp_scss_admin.append( pystache.render( 'admin/mce/{{plugin_asset}}-shortcode-mce-editor', config_copy ) )
+						self.gulp_scss_admin.append( pystache.render( 'admin/mce/{{plugin_asset}}-shortcode-mce-toolbar', config_copy ) )
+						self.gulp_js_admin.append( pystache.render( 'admin/mce/{{plugin_asset}}-shortcode', config_copy ) )
 
 
 		if self.config['widget']:
@@ -277,14 +314,14 @@ class wp_plugin:
 
 			for widget,flags in self.config['widget'][0]:
 				config_copy = self.config.copy()
-				
+
 				config_copy.update({
 					'widget_slug': slugify( widget, '-' ),
 					'widget_name': widget.title(),
 					'plugin_file': plugin_classname( widget ),
 					'plugin_class': plugin_classname( widget ),
 				})
-				self.templates.append( ( 'include/__plugin_namespace__/Widget/__plugin_file__.php', config_copy ) );
+				self.templates.append( ( 'include/__plugin_namespace__/Widget/Widget__plugin_file__.php', config_copy ) );
 
 		config_copy = self.config.copy()
 		config_copy.update({
@@ -292,7 +329,6 @@ class wp_plugin:
 		})
 
 		self.templates.append( ( 'index.php', config_copy ) )
-
 
 		self.init_gulp()
 
@@ -305,6 +341,7 @@ class wp_plugin:
 		return ''
 
 	def init_gulp(self):
+
 		if self.config['gulp']:
 			gulp_config = self.config.copy()
 			gulp_config['scss'] = self.gulp_scss
@@ -316,6 +353,7 @@ class wp_plugin:
 			self.templates.append( ( 'package.json', self.config ) )
 
 	def do_gulp(self):
+		if self.config['gulp']:
 			print 'Installing npm dependencies'
 
 			subprocess.call( [ "npm","install", "--prefix", "./" + self.config['wp_plugin_slug'] ] )
@@ -347,7 +385,7 @@ class wp_plugin:
 		for template, template_config in self.templates:
 			content = pystache.render( self._read_template(template), template_config )
 			self._write_plugin_file( template, content, template_config )
-	
+
 
 	def _read_template(self,template):
 		template_path = os.path.dirname(os.path.realpath(__file__)) + self.template_path + template
@@ -399,11 +437,11 @@ usage ./plugin.py 'Plugin Name' options
     core[+css][+js]
               Add +css and/or +js to enqueue frontend css / js
     admin[+css][+js]
-              Add an admin class. Add +css and/or +js to enqueue css / js 
+              Add an admin class. Add +css and/or +js to enqueue css / js
               in the entire wp admin.
 
     admin_page[:a_page[+css][+js]][:a_page:...]...
-              Add submenu page to admin. 
+              Add submenu page to admin.
               `a_page` can either be any of
                 dashboard
                 posts
@@ -416,9 +454,9 @@ usage ./plugin.py 'Plugin Name' options
                 users
                 management
                 tools (Alias of management)
-              or you can use a custom page slug.
+                (or any custom page slug.)
 
-              With `+css` and `+js` appended to the page slug CSS and 
+              With `+css` and `+js` appended to the page slug CSS and
               JS will also be enqueued on the given page.
 
     settings:page[+css][+js][:page:...]...
@@ -431,14 +469,17 @@ usage ./plugin.py 'Plugin Name' options
                 media
                 permalink
               For any other value a standalone settings page will be generated
-              With `+css` and `+js` appended to the settings slug custom CSS and JS will 
+              With `+css` and `+js` appended to the settings slug custom CSS and JS will
               also be enqueued on the given settings page.
 
     shortcode:a_shortcode[:another_shortcode]:...
               Add shortcode handlers
 
     post_type:'Post Type name'[+caps]:'Another Post type'...
-              register post type. +caps will register post type's caabilities
+              Register post type. +caps will register post type's capabilities
+
+    taxonomy:'Taxonomy'[:'Another Taxonomy']...
+              Register taxonomies
 
     widget:'Widget Name'[:'Another Widget']
               Register one or more Widgets
@@ -446,6 +487,7 @@ usage ./plugin.py 'Plugin Name' options
     git       Inits a git repository
 
     gulp      Use gulp
+
     --force   Override existing plugin
 '''
 
