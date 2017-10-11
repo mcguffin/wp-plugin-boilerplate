@@ -24,6 +24,7 @@ class wp_plugin:
 		'widget'		: False,
 		'post_type'		: False,
 		'taxonomy'		: False,
+		'model'			: False,
 		'git'			: False,
 		'gulp'			: False,
 
@@ -277,6 +278,19 @@ class wp_plugin:
 					if self.config['gulp']:
 						self.gulp_js_admin.append( pystache.render( 'admin/settings/{{plugin_asset}}', config_copy ) )
 
+		if self.config['model']:
+			if self.config['model'][0]:
+				self.templates.append( ( 'include/__plugin_namespace__/Model/Model.php', self.config ) );
+
+			for model,flags in self.config['model'][0]:
+				config_copy = self.config.copy()
+				config_copy.update({
+					'model_slug': slugify( model, '-' ),
+					'model_name': model.title(),
+					'plugin_file': plugin_classname( model ),
+					'plugin_class': plugin_classname( model ),
+				})
+				self.templates.append( ( 'include/__plugin_namespace__/Model/Model__plugin_file__.php', config_copy ) );
 
 
 		if self.config['shortcode']:
@@ -439,6 +453,9 @@ usage ./plugin.py 'Plugin Name' options
     admin[+css][+js]
               Add an admin class. Add +css and/or +js to enqueue css / js
               in the entire wp admin.
+
+    model:a_model[:another_model]
+              Add a model class.
 
     admin_page[:a_page[+css][+js]][:a_page:...]...
               Add submenu page to admin.
