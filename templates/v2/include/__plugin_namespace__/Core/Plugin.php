@@ -25,7 +25,29 @@ class Plugin extends Singleton {
 		register_deactivation_hook( {{plugin_slug_upper}}_FILE, array( __CLASS__ , 'deactivate' ) );
 		register_uninstall_hook( {{plugin_slug_upper}}_FILE, array( __CLASS__ , 'uninstall' ) );
 
+		add_action( 'plugins_loaded', array( $this, 'maybe_upgrade' ) );
+
 		parent::__construct();
+	}
+
+	/**
+	 *	@action plugins_loaded
+	 */
+	public function maybe_upgrade() {
+		// trigger upgrade
+		$meta = get_plugin_data( {{plugin_slug_upper}}_FILE );
+		$new_version = $meta['Version'];
+		$old_version = get_option( '{{plugin_slug}}_version' );
+
+		// call upgrade
+		if ( version_compare($new_version, $old_version, '>' ) ) {
+
+			$this->upgrade( $new_version, $old_version );
+
+			update_option( '{{plugin_slug}}_version', $new_version );
+
+		}
+
 	}
 
 	/**
@@ -33,10 +55,6 @@ class Plugin extends Singleton {
 	 */
 	public static function activate() {
 
-		// trigger upgrade
-		$meta = get_plugin_data( {{plugin_slug_upper}}_FILE );
-		$new_version = $meta['Version'];
-		$old_version = get_site_option( 'calendar_importer_version' );
 
 		update_site_option( '{{plugin_slug_lower}}_version', $new_version );
 
@@ -45,12 +63,6 @@ class Plugin extends Singleton {
 			$comp->activate();
 		}
 
-		// call upgrade
-		if ( version_compare($new_version, $old_version, '>' ) ) {
-
-			self::upgrade( $new_version, $old_version );
-
-		}
 
 	}
 
@@ -65,7 +77,7 @@ class Plugin extends Singleton {
 	 *		'messages' => array,
 	 * )
 	 */
-	public static function upgrade( $new_version, $old_version ) {
+	public function upgrade( $new_version, $old_version ) {
 
 		$result = array(
 			'success'	=> true,

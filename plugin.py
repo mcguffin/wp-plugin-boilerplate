@@ -101,7 +101,7 @@ class wp_plugin:
 			print 'widget usage is: widget:"Widget Name"'
 
 
-		for section in 'admin_page','post_type','shortcode','widget':
+		for section in 'admin_page','post_type','shortcode','widget','git':
 			if config[section]:
 				config[section+'?'] = True
 				config[section+'s'] = []
@@ -117,7 +117,7 @@ class wp_plugin:
 			os.mkdir(self.plugin_dir)
 		except OSError as e:
 			return e
-
+		print self.config
 		self.templates.append( ( 'readme.txt', self.config ) )
 		self.templates.append( ( 'languages/__wp_plugin_slug__.pot', self.config ) )
 		self.templates.append( ( 'include/autoload.php', self.config ) )
@@ -126,6 +126,8 @@ class wp_plugin:
 		self.templates.append( ( 'include/__plugin_namespace__/Core/Plugin.php', self.config ) )
 		self.templates.append( ( 'include/__plugin_namespace__/Core/PluginComponent.php', self.config ) )
 		self.templates.append( ( 'include/__plugin_namespace__/Compat/Sample.php', self.config ) )
+		self.templates.append( ( 'include/__plugin_namespace__/AutoUpdate/AutoUpdate.php', self.config ) )
+		self.templates.append( ( 'include/__plugin_namespace__/AutoUpdate/AutoUpdateGithub.php', self.config ) )
 		self.templates.append( ( 'include/__plugin_namespace__/Ajax/Ajax.php', self.config ) )
 		self.templates.append( ( 'include/__plugin_namespace__/Ajax/AjaxHandler.php', self.config ) )
 		self.templates.append( ( 'include/__plugin_namespace__/Cron/Cron.php', self.config ) )

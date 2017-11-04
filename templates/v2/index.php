@@ -5,10 +5,12 @@ Plugin Name: {{plugin_name}}
 Plugin URI: http://wordpress.org/
 Description: Enter description here.
 Author: {{plugin_author}}
-Version: 1.0.0
+Version: 0.0.1
 Author URI: {{plugin_author_uri}}
 License: GPL3
-
+{{#git?}}
+Github Repository: {{github_user}}/{{wp_plugin_slug}}
+{{/git?}}
 Text Domain: {{wp_plugin_slug}}
 Domain Path: /languages/
 */
@@ -62,6 +64,9 @@ Widget\Widgets::instance();
 {{/widget?}}
 
 if ( is_admin() || defined( 'DOING_AJAX' ) ) {
+
+	AutoUpdate\AutoUpdateGithub::instance();
+
 {{#admin?}}
 	Admin\Admin::instance();
 {{/admin?}}
