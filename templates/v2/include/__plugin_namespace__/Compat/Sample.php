@@ -2,6 +2,11 @@
 
 namespace {{plugin_namespace}}\Compat;
 
+if ( ! defined('ABSPATH') ) {
+	die('FU!');
+}
+
+
 use {{plugin_namespace}}\Core;
 
 
@@ -14,7 +19,7 @@ class Sample extends Core\PluginComponent {
 	 *	@inheritdoc
 	 */
 	 public function activate(){
-		 
+
 	 }
 
 	 /**

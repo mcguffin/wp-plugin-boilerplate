@@ -2,6 +2,11 @@
 
 namespace CalendarImporter\Cron;
 
+if ( ! defined('ABSPATH') ) {
+	die('FU!');
+}
+
+
 class Job {
 
 	/**

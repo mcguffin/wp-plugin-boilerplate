@@ -1,6 +1,11 @@
 <?php
 
 namespace {{plugin_namespace}}\PostType;
+
+if ( ! defined('ABSPATH') ) {
+	die('FU!');
+}
+
 use {{plugin_namespace}}\Core;
 
 class PostType{{plugin_class}} extends PostType {

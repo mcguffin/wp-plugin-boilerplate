@@ -3,6 +3,11 @@
 
 namespace {{plugin_namespace}}\Model;
 
+if ( ! defined('ABSPATH') ) {
+	die('FU!');
+}
+
+
 use {{plugin_namespace}}\Core;
 
 abstract class Model extends Core\PluginComponent {

@@ -3,6 +3,11 @@
 
 namespace {{plugin_namespace}}\Model;
 
+if ( ! defined('ABSPATH') ) {
+	die('FU!');
+}
+
+
 class ModelSchedules extends Model {
 
 	/**

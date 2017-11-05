@@ -40,6 +40,11 @@ Command line args were: `{{{shell_args}}}`
 
 namespace {{plugin_namespace}};
 
+if ( ! defined('ABSPATH') ) {
+	die('FU!');
+}
+
+
 define( '{{plugin_slug_upper}}_FILE', __FILE__ );
 define( '{{plugin_slug_upper}}_DIRECTORY', plugin_dir_path(__FILE__) );
 

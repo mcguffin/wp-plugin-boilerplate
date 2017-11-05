@@ -2,6 +2,11 @@
 
 
 namespace {{plugin_namespace}}\Shortcode\Mce;
+
+if ( ! defined('ABSPATH') ) {
+	die('FU!');
+}
+
 use {{plugin_namespace}}\Core;
 use {{plugin_namespace}}\Admin\Mce;
 

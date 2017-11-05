@@ -2,6 +2,11 @@
 
 namespace {{plugin_namespace}};
 
+if ( ! defined('ABSPATH') ) {
+	die('FU!');
+}
+
+
 function __autoload( $class ) {
 
 	if ( false === ( $pos = strpos( $class, '\\' ) ) ) {

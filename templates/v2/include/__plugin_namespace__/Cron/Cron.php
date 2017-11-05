@@ -2,6 +2,11 @@
 
 namespace {{plugin_namespace}}\Cron;
 
+if ( ! defined('ABSPATH') ) {
+	die('FU!');
+}
+
+
 use {{plugin_namespace}}\Core;
 
 class Cron extends Core\PluginComponent {

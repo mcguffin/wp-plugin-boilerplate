@@ -2,6 +2,10 @@
 
 namespace {{plugin_namespace}}\AutoUpdate;
 
+if ( ! defined('ABSPATH') ) {
+	die('FU!');
+}
+
 use {{plugin_namespace}}\Core;
 
 class AutoUpdateGithub extends AutoUpdate {
@@ -13,9 +17,17 @@ class AutoUpdateGithub extends AutoUpdate {
 	 */
 	public function get_release_info() {
 		if ( $release_info_url = $this->get_release_info_url() ) {
+
 			$response = wp_remote_get( $release_info_url, array() );
+
 			if ( ! is_wp_error( $response ) ) {
+
 				$release_info = json_decode( wp_remote_retrieve_body( $response ) );
+
+				if ( ! is_object( $release_info ) || ! isset( $release_info->tag_name ) ) {
+					return false;
+				}
+
 				$id = sprintf( 'github.com/%s', $this->get_github_repo() );
 				$version = preg_replace( '/^([^0-9]+)/ims', '', $release_info->tag_name );
 				return array(
@@ -25,6 +37,7 @@ class AutoUpdateGithub extends AutoUpdate {
 				);
 			}
 		}
+
 		return false;
 	}
 

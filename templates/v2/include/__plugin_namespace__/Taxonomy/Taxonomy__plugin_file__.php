@@ -19,6 +19,11 @@
 
 namespace {{plugin_namespace}}\PostType;
 
+if ( ! defined('ABSPATH') ) {
+	die('FU!');
+}
+
+
 class Taxonomy{{plugin_class}} extends Taxonomy {
 
 	/**

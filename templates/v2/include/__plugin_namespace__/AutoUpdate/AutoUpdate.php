@@ -2,6 +2,11 @@
 
 namespace {{plugin_namespace}}\AutoUpdate;
 
+if ( ! defined('ABSPATH') ) {
+	die('FU!');
+}
+
+
 use {{plugin_namespace}}\Core;
 
 abstract class AutoUpdate extends Core\Singleton {

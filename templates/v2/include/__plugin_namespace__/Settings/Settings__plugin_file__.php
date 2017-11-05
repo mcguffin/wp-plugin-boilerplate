@@ -1,6 +1,11 @@
 <?php
 
 namespace {{plugin_namespace}}\Settings;
+
+if ( ! defined('ABSPATH') ) {
+	die('FU!');
+}
+
 use {{plugin_namespace}}\Core;
 
 class Settings{{settings_class}} extends Settings {

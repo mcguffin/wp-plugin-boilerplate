@@ -1,6 +1,11 @@
 <?php
 
 namespace {{plugin_namespace}}\Widget;
+
+if ( ! defined('ABSPATH') ) {
+	die('FU!');
+}
+
 use {{plugin_namespace}}\Core;
 
 class Widget{{plugin_class}} extends \WP_Widget {

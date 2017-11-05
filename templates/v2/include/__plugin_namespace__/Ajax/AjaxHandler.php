@@ -1,10 +1,15 @@
 <?php
 
 namespace {{plugin_namespace}}\Ajax;
+
+if ( ! defined('ABSPATH') ) {
+	die('FU!');
+}
+
 use {{plugin_namespace}}\Core;
 
 class AjaxHandler {
-	
+
 	private $_action	= null;
 
 	private $options	= null;
@@ -14,7 +19,7 @@ class AjaxHandler {
 	public function __construct( $action, $args ) {
 
 		$this->_action	= $action;
-		
+
 		$defaults = array(
 			'public'		=> false,
 			'use_nonce'		=> true,
@@ -31,7 +36,7 @@ class AjaxHandler {
 
 		add_action( "wp_ajax_{$this->action}", array( $this, 'ajax_callback' ) );
 	}
-	
+
 	public function __get( $prop ) {
 		if ( $prop === 'nonce' ) {
 			return $this->get_nonce();
@@ -57,7 +62,7 @@ class AjaxHandler {
 		$params = wp_parse_args( $_POST, array(
 			'nonce'	=> false,
 		));
-		
+
 		// check nonce
 		if ( $this->use_nonce && ( ! $params['nonce'] || ! $this->verify_nonce($_POST['nonce']) ) ) {
 			return false;
@@ -86,5 +91,5 @@ class AjaxHandler {
 		}
 		remove_action( "wp_ajax_{$this->action}", array( $this, 'ajax_callback' ) );
 	}
-	
+
 }

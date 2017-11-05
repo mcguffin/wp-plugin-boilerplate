@@ -1,6 +1,11 @@
 <?php
 
 namespace {{plugin_namespace}}\Admin\Mce;
+
+if ( ! defined('ABSPATH') ) {
+	die('FU!');
+}
+
 use {{plugin_namespace}}\Core;
 
 abstract class Mce extends Core\Singleton {

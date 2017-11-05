@@ -2,6 +2,11 @@
 
 
 namespace {{plugin_namespace}}\Shortcode;
+
+if ( ! defined('ABSPATH') ) {
+	die('FU!');
+}
+
 use {{plugin_namespace}}\Core;
 
 class Shortcode{{plugin_class}} extends Shortcode {

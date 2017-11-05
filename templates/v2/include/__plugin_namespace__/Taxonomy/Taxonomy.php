@@ -2,6 +2,11 @@
 
 namespace {{plugin_namespace}}\Taxonomy;
 
+if ( ! defined('ABSPATH') ) {
+	die('FU!');
+}
+
+
 use {{plugin_namespace}}\Core;
 
 abstract class Taxonomy extends Core\PluginComponent {

@@ -1,6 +1,11 @@
 <?php
 
 namespace {{plugin_namespace}}\Shortcode;
+
+if ( ! defined('ABSPATH') ) {
+	die('FU!');
+}
+
 use {{plugin_namespace}}\Core;
 
 abstract class Shortcode extends Core\Singleton {
@@ -12,7 +17,7 @@ abstract class Shortcode extends Core\Singleton {
 		if ( $this->shortcode ) {
 			add_shortcode( $this->shortcode, array( $this, 'do_shortcode' ) );
 		}
-	}	
+	}
 
 	abstract function do_shortcode( $atts, $content );
 

@@ -2,6 +2,11 @@
 
 namespace {{plugin_namespace}}\Core;
 
+if ( ! defined('ABSPATH') ) {
+	die('FU!');
+}
+
+
 abstract class Singleton {
 
 	/**

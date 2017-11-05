@@ -1,6 +1,11 @@
 <?php
 
 namespace {{plugin_namespace}}\PostType;
+
+if ( ! defined('ABSPATH') ) {
+	die('FU!');
+}
+
 use {{plugin_namespace}}\Core;
 
 abstract class PostType extends Core\PluginComponent {
@@ -41,7 +46,7 @@ abstract class PostType extends Core\PluginComponent {
 	 *	@inheritdoc
 	 */
 	public function uninstall() {
-	
+
 		$deleted_posts = 0;
 		$posts = get_posts(array(
 			'post_type' 		=> $this->post_type_slug,
