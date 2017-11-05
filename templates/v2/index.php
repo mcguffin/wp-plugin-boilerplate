@@ -70,7 +70,12 @@ Widget\Widgets::instance();
 
 if ( is_admin() || defined( 'DOING_AJAX' ) ) {
 
-	AutoUpdate\AutoUpdateGithub::instance();
+{{#git?}}
+	// don't WP-Update actual repos!
+	if ( ! file_exists( ACFQUICKEDIT_DIRECTORY . '/.git/' ) ) {
+		AutoUpdate\AutoUpdateGithub::instance();
+	}
+{{/git?}}
 
 {{#admin?}}
 	Admin\Admin::instance();
