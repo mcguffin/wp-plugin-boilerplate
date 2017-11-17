@@ -20,6 +20,29 @@ abstract class AutoUpdate extends Core\Singleton {
 
 		add_filter( 'upgrader_source_selection', array( $this, 'source_selection' ), 10, 4 );
 
+		add_action( 'upgrader_process_complete', array( $this, 'upgrade_completed' ), 10, 2 );
+
+	}
+
+	/**
+	 *	@action upgrader_process_complete
+	 */
+	public function upgrade_completed( $wp_upgrader, $hook_extra ) {
+
+		$plugin = plugin_basename( {{plugin_slug_upper}}_FILE );
+
+		if ( $hook_extra['action'] === 'update' && $hook_extra['type'] === 'plugin' && in_array( $plugin, $hook_extra['plugins'] ) ) {
+
+			$plugin_info = get_plugin_data( {{plugin_slug_upper}}_FILE );
+
+			$old_version = get_option( '{{plugin_slug}}_version' );
+			$new_version = $plugin_info['Version'];
+
+			do_action( '{{plugin_slug}}_upgraded', $new_version, $old_version );
+
+			update_option( '{{plugin_slug}}_version', $plugin_info['Version'] );
+
+		}
 	}
 
 	/**
