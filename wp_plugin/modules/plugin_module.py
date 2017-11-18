@@ -2,6 +2,7 @@ import pprint, sys
 import wp_plugin.file_template as f
 
 class plugin_module:
+	override = False
 	templates = None
 	_config = None
 	template_vars = None
@@ -14,9 +15,13 @@ class plugin_module:
 
 		pass
 
-	def add_template(self, template, template_vars = False, override = True ):
+	def set_override(self,override):
+		self.override = override
+
+
+	def add_template(self, template, template_vars = False, unique = True ):
 		key = template
-		if not override:
+		if not unique:
 			i = 1
 			while key in self.templates:
 				key = '%s-%d' % ( template ,i )
@@ -58,7 +63,7 @@ class plugin_module:
 			if self.plugin != False:
 				template_vars.update(self.plugin.template_vars)
 
-			f.file_template( template['file'], template_vars, self.target_dir ).process()
+			f.file_template( template['file'], template_vars, self.target_dir ).process( self.override )
 
 	def post_process(self):
 		pass

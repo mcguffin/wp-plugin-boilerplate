@@ -8,6 +8,8 @@ import wp_plugin.modules.factory as factory
 
 class plugin( m.plugin_module ):
 
+	override = False
+
 	_modules = {}
 
 	_config = {
@@ -45,8 +47,11 @@ class plugin( m.plugin_module ):
 			self.add_module( m, mconf )
 
 	def add_module( self, mod, module_config):
-
-		self._modules[mod] = factory.factory.get( mod )
+		module = factory.factory.get( mod )
+		if not module:
+			print('No module named %s' % (mod))
+			return
+		self._modules[mod] = module
 		self._modules[mod].config( module_config, self.target_dir, plugin=self )
 		self._config['modules'][mod] = module_config
 
@@ -76,7 +81,6 @@ class plugin( m.plugin_module ):
 			module.post_process()
 
 		super().post_process()
-		pprint( self.template_vars )
 #		pprint.pprint( self._config )
 		f = codecs.open( self.target_dir + '/wp-plugin-boilerplate.json', 'w' )
 		f.write( json.dumps(self._config, indent=2, sort_keys=True) )

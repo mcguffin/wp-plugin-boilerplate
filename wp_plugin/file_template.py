@@ -16,13 +16,18 @@ class file_template:
 	def set_config( self, key, value ):
 		self.config[key] = value
 
-	def process(self):
+	def process( self, override = True ):
 		template = self.read()
 		content = pystache.render( template, self.config )
 		filename = pystache.render( self.filename, self.config )
 		file_path = self.target_dir + '/' + filename
-		self.write(content,file_path)
-		pass
+
+		if override or not os.path.exists(file_path):
+			print('Write file: %s' % (filename))
+			self.write(content,file_path)
+		else:
+			print('File exists: %s' % (filename))
+			pass
 
 	def read(self):
 		file_path = self.source_dir + '/' + self.filename

@@ -2,10 +2,6 @@ import re
 
 __all__ = ['plugin','modules','file_template']
 
-def getflags( param ):
-	paramlist = param.split('+')
-	return paramlist[0],paramlist[1:]
-
 def rm_wp(str):
 	return re.sub(r'(?i)^(WP|WordPress\s?)-?','',str).strip()
 

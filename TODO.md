@@ -5,7 +5,6 @@ Plugin Scaffold ToDo
  - [x] Save json config
  - [ ] Gulp JS assets
  - [ ] Code Docs
- - [ ] Include Developer Todo
  - [x] Modularize python
- - [ ] Add feature
+ - [x] Add feature
  - [ ] PHP: Add Rest Classes

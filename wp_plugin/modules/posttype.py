@@ -1,5 +1,5 @@
 
-from wp_plugin import getflags, plugin_slug, plugin_classname, slugify
+from wp_plugin import plugin_slug, plugin_classname, slugify
 import wp_plugin.modules.plugin_module as m
 
 class posttype(m.plugin_module):
