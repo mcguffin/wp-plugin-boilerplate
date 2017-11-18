@@ -2,3 +2,6 @@
 
 @import 'mixins/mixins';
 
+{{#_modules.widget.items}}
+@import 'widget/{{module.slug}}';
+{{/_modules.widget.items}}

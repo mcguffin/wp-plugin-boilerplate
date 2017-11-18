@@ -52,41 +52,46 @@ require_once {{plugin_slug_upper}}_DIRECTORY . 'include/autoload.php';
 
 Core\Core::instance();
 
-{{#post_types}}
-PostType\PostType{{.}}::instance();
-{{/post_types}}
+{{#modules.model.items}}
+Model\Model{{module.classname}}::instance();
+{{/modules.model.items}}
 
-{{#taxonomies}}
-Taxonomy\Taxonomy{{.}}::instance();
-{{/taxonomies}}
 
-{{#shortcodes}}
-Shortcode\Shortcode{{.}}::instance();
-{{/shortcodes}}
+{{#modules.posttype.items}}
+PostType\PostType{{module.classname}}::instance();
+{{/modules.posttype.items}}
 
-{{#widget?}}
+{{#modules.taxonomy.items}}
+Taxonomy\Taxonomy{{module.classname}}::instance();
+{{/modules.taxonomy.items}}
+
+{{#modules.shortcode.items}}
+Shortcode\Shortcode{{module.classname}}::instance();
+{{/modules.shortcode.items}}
+
+{{#modules.widget}}
 Widget\Widgets::instance();
-{{/widget?}}
+{{/modules.widget}}
 
 if ( is_admin() || defined( 'DOING_AJAX' ) ) {
 
-{{#git?}}
+{{#modules.autoupdate}}
 	// don't WP-Update actual repos!
 	if ( ! file_exists( ACFQUICKEDIT_DIRECTORY . '/.git/' ) ) {
 		AutoUpdate\AutoUpdateGithub::instance();
 	}
-{{/git?}}
+{{/modules.autoupdate}}
 
-{{#admin?}}
+{{#modules.admin}}
 	Admin\Admin::instance();
-{{/admin?}}
+{{/modules.admin}}
 
-{{#admin_pages}}
-	Admin\Admin{{.}}::instance();
-{{/admin_pages}}
+{{#modules.admin_page.items}}
+	Admin\AdminPage{{module.classname}}::instance();
+{{/modules.admin_page.items}}
 
-{{#settings_classes}}
-	Settings\{{.}}::instance();
-{{/settings_classes}}
+{{#modules.settings.items}}
+	Settings\Settings{{module.classname}}::instance();
+{{/modules.settings.items}}
 
 }
