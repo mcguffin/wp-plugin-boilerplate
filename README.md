@@ -109,7 +109,7 @@ widget
 ```
 $ mkdir ~/.scripts
 $ cd ~/.scripts
-$ git clone git@github.com:mcguffin/wp-plugin-scaffold.git
-$ ln -s ./wp-plugin-scaffold/plugin.py ./wp-plugin
+$ git clone git@github.com:mcguffin/wp-plugin-boilerplate.git
+$ ln -s ./wp-plugin-boilerplate/plugin.py ./wp-plugin
 ```
 Finally add `~/.scripts/` to the PATH variable in your `~/.bash_profile`
