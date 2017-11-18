@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import sys, pprint, codecs, json
+import sys, codecs, json
+from pprint import pprint
 #from wp_plugin.modules import plugin_module
 import wp_plugin.modules.plugin_module as m
 import wp_plugin.modules.factory as factory
@@ -16,10 +17,11 @@ class plugin( m.plugin_module ):
 		'plugin_namespace'	: '',
 		'plugin_author'		: '',
 		'plugin_author_uri'	: '',
+		'this_year'			: '',
 	}
 
 	def __init__( self ):
-		m.plugin_module.__init__(self)
+		super().__init__()
 
 		self.add_template('readme.txt')
 		self.add_template('index.php')
@@ -31,16 +33,16 @@ class plugin( m.plugin_module ):
 		self.add_template('include/{{plugin_namespace}}/Core/PluginComponent.php')
 
 	def config(self, config, target_dir, plugin=False ):
-		m.plugin_module.config( self, config, target_dir, plugin )
 
-		if not 'modules' in self._config:
+		super().config( config, target_dir, plugin )
+
+		if 'modules' not in self._config:
 			self._config['modules'] = {} # cli arg module config
+
+		self.template_vars['modules'] = {} # generated module config
 
 		for m,mconf in self._config['modules'].items():
 			self.add_module( m, mconf )
-
-
-		self.template_vars['modules'] = {} # generated module config
 
 	def add_module( self, mod, module_config):
 
@@ -60,21 +62,21 @@ class plugin( m.plugin_module ):
 		for mod,module in self._modules.items():
 			module.pre_process()
 
-		m.plugin_module.pre_process(self)
+		super().pre_process()
 
 	def process(self):
 
 		for mod,module in self._modules.items():
 			module.process()
 
-		m.plugin_module.process(self)
+		super().process()
 
 	def post_process(self):
 		for mod,module in self._modules.items():
 			module.post_process()
 
-		m.plugin_module.post_process(self)
-		pprint.pprint( self.template_vars )
+		super().post_process()
+		pprint( self.template_vars )
 #		pprint.pprint( self._config )
 		f = codecs.open( self.target_dir + '/wp-plugin-boilerplate.json', 'w' )
 		f.write( json.dumps(self._config, indent=2, sort_keys=True) )

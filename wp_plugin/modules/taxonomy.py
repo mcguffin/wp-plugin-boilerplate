@@ -5,7 +5,7 @@ import wp_plugin.modules.plugin_module as m
 class taxonomy(m.plugin_module):
 
 	def pre_process(self):
-		m.plugin_module.pre_process(self)
+		super().pre_process()
 		self.add_template('include/{{plugin_namespace}}/Taxonomy/Taxonomy.php')
 
 
@@ -31,6 +31,6 @@ class taxonomy(m.plugin_module):
 			self.add_template('include/{{plugin_namespace}}/Taxonomy/Taxonomy{{module.classname}}.php', template_vars, False )
 
 
-		m.plugin_module.config( self, config, target_dir, plugin )
+		super().config( config, target_dir, plugin )
 
 		self.template_vars = {'items' : items }

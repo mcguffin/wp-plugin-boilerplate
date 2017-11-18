@@ -5,13 +5,13 @@ import wp_plugin.modules.plugin_module as m
 class gulp(m.plugin_module):
 
 	def pre_process(self):
-		m.plugin_module.pre_process(self)
+		super().pre_process()
 		self.add_template('package.json')
 		self.add_template('gulpfile.js', self.plugin._config)
 
 	def process(self):
 
-		m.plugin_module.process(self)
+		super().process()
 
 		subprocess.call( [ "npm","install", "--prefix", "./" + self.plugin._config['wp_plugin_slug'] ] )
 

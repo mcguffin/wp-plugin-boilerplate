@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import sys, os, pystache, re, pwd, shutil, codecs, subprocess, json, string
+import sys, os, codecs, pwd, shutil#, pystache, re, subprocess, json, string
 from datetime import date
 
-from wp_plugin import getflags, plugin_slug, plugin_classname, slugify
+from wp_plugin import getflags, plugin_slug, plugin_classname, slugify, usage
 import wp_plugin.plugin as p
 
+
+if len(sys.argv) == 1 or sys.argv[1] == '?':
+	print(usage)
+	sys.exit(0)
 
 def parse_argv(args):
 	config = {}
@@ -62,6 +66,7 @@ except IOError as a:
 		'plugin_author'		: author,
 		'plugin_author_uri'	: '',
 		'modules'			: parse_argv( sys.argv[2:] ),
+		'this_year'			: date.today().year
 	}
 
 	do_create = True

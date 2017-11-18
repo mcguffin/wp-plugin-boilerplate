@@ -5,7 +5,7 @@ import wp_plugin.modules.plugin_module as m
 class git(m.plugin_module):
 
 	def pre_process(self):
-		m.plugin_module.pre_process(self)
+		super().pre_process()
 		self.add_template('README.md')
 		self.add_template('.gitattributes')
 		self.add_template('.gitignore')
@@ -14,15 +14,17 @@ class git(m.plugin_module):
 		github_user = subprocess.check_output(["git","config","user.name"]).strip().decode('ascii')
 		print( "github user is",github_user)
 
-		m.plugin_module.config( self, config, target_dir, plugin )
+		super().config( config, target_dir, plugin )
 
 		if github_user:
+			self.plugin.template_vars['plugin_author_uri'] = 'https://github.com/%s' % (github_user)
 			self.template_vars = {
 				'github_user' : github_user,
 				'github_repo' : '%s/%s' % ( github_user, plugin._config['wp_plugin_slug'] )
 			}
 
 	def post_process(self):
+		super().post_process()
 		os.chdir(self.target_dir);
 		subprocess.call(["git","init"])
 		subprocess.call(["git","add" , '.'])

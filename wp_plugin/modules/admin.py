@@ -3,7 +3,7 @@ import wp_plugin.modules.plugin_module as m
 class admin(m.plugin_module):
 
 	def pre_process(self):
-		m.plugin_module.pre_process(self)
+		super().pre_process()
 		self.add_template('include/{{plugin_namespace}}/Admin/Admin.php')
 
 
@@ -19,4 +19,4 @@ class admin(m.plugin_module):
 		if 'js' in config:
 			self.add_template('src/js/admin/admin.js')
 
-		m.plugin_module.config( self, config, target_dir, plugin )
+		super().config( config, target_dir, plugin )
