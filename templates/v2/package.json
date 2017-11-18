@@ -1,0 +1,29 @@
+{
+  "name": "{{wp_plugin_slug}}",
+  "version": "0.0.1",
+  "description": "Plugin description",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/{{github_user}}/{{wp_plugin_slug}}.git"
+  },
+  "author": "Jörn Lund",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/{{github_user}}/{{wp_plugin_slug}}/issues"
+  },
+  "homepage": "https://github.com/{{github_user}}/{{wp_plugin_slug}}#readme",
+  "devDependencies": {
+    "gulp": "*",
+    "gulp-autoprefixer": "*",
+    "gulp-concat": "*",
+    "gulp-rename": "*",
+    "gulp-sass": "*",
+    "gulp-sourcemaps": "*",
+    "gulp-uglify": "*",
+    "gulp-util": "*"
+  }
+}

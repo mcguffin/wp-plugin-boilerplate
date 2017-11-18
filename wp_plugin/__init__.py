@@ -1,15 +1,34 @@
-WP Plugin Boilerplate
-=====================
+import re
 
+__all__ = ['plugin','modules','file_template']
+
+def getflags( param ):
+	paramlist = param.split('+')
+	return paramlist[0],paramlist[1:]
+
+def rm_wp(str):
+	return re.sub(r'(?i)^(WP|WordPress\s?)-?','',str).strip()
+
+def slugify(plugin_name,separator='_'):
+	return re.sub(r'\s',separator,plugin_name.strip()).lower()
+
+def plugin_slug(plugin_name):
+	return slugify(rm_wp(plugin_name),'_')
+
+def plugin_classname(plugin_name):
+	return ''.join(x for x in rm_wp(plugin_name).title() if x.isalnum())
+
+
+usage = '''
 CLI usage
----------
+=========
 
 From anywhere:
-$ `wp-plugin "Plugin Name" features`
+`$ wp-plugin "Plugin Name" features`
 Will create a plugin with given features
 
 Inside a plugin directory
-$ `wp-plugin features`
+`$ wp-plugin features`
 Will add selected features to plugin_name
 
 Features syntax:
@@ -24,7 +43,6 @@ Example:
 
 Available features
 ------------------
-```
 admin_page
   Add submenu page to admin.
   Takes multiple arguments.
@@ -101,15 +119,5 @@ widget
     argument: Widget name
     flags:    js  Enqueue js
               css Enqueue css
-```
 
-
-
-# Make plugin.py available from everywhere #
-```
-$ mkdir ~/.scripts
-$ cd ~/.scripts
-$ git clone git@github.com:mcguffin/wp-plugin-scaffold.git
-$ ln -s ./wp-plugin-scaffold/plugin.py ./wp-plugin
-```
-Finally add `~/.scripts/` to the PATH variable in your `~/.bash_profile`
+'''
