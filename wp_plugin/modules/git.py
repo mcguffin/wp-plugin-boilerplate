@@ -1,5 +1,5 @@
 
-import os,subprocess
+import sys, os, subprocess
 import wp_plugin.modules.plugin_module as m
 
 class git(m.plugin_module):
@@ -25,6 +25,10 @@ class git(m.plugin_module):
 
 	def post_process(self):
 		super().post_process()
+
+		if os.path.exists(self.target_dir+'/.git'):
+			return
+
 		os.chdir(self.target_dir);
 		subprocess.call(["git","init"])
 		subprocess.call(["git","add" , '.'])

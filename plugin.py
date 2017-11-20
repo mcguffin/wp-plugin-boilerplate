@@ -24,13 +24,14 @@ def parse_arg(arg):
 	# conf = cmd:arg+js+css:arg+css:...
 	# OR conf = cmd+js+css
 	mod,flags = get_flags( parts[0] )
-
+	print(parts[0])
+	print(flags)
 	conf = {}
 	for flag in flags:
 		conf[flag] = True
 
 	if len(parts) == 1:
-		return mod,{}
+		return mod,conf
 
 	for part in parts[1:]:
 		prt,flags = get_flags( part )

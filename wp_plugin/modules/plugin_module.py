@@ -35,6 +35,9 @@ class plugin_module:
 
 		if not isinstance( config, dict ):
 			config = {}
+		if 'force' in config:
+			self.set_override(True)
+			config.pop('force')
 
 		self._config = config
 		self.target_dir = target_dir
@@ -62,7 +65,7 @@ class plugin_module:
 
 			if self.plugin != False:
 				template_vars.update(self.plugin.template_vars)
-
+			print(template['file'],self.override)
 			f.file_template( template['file'], template_vars, self.target_dir ).process( self.override )
 
 	def post_process(self):

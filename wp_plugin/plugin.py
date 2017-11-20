@@ -42,6 +42,7 @@ class plugin( m.plugin_module ):
 			self._config['modules'] = {} # cli arg module config
 
 		self.template_vars['modules'] = {} # generated module config
+		self.template_vars['plugin_slug_upper'] = self._config['plugin_slug'].upper()
 
 		for m,mconf in self._config['modules'].items():
 			self.add_module( m, mconf )
@@ -60,7 +61,6 @@ class plugin( m.plugin_module ):
 		else:
 			mod_vars = True
 		self.template_vars['modules'][mod] = mod_vars
-#		self.template_vars['_modules'][mod] = self._modules[mod]._config
 
 
 	def pre_process(self):
