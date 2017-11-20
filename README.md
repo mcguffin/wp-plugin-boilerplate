@@ -1,8 +1,7 @@
 WP Plugin Boilerplate
 =====================
 
-Create WordPress plugin Scaffolds from the command line.
-
+Create WordPress Plugins from the command line.
 
 
 Install
