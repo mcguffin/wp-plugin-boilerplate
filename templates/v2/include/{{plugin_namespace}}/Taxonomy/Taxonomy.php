@@ -15,6 +15,26 @@ abstract class Taxonomy extends Core\PluginComponent {
 
 	abstract function register_taxonomy();
 
+
+
+	/**
+	 *	Register Posttype for Taxonomy
+	 *
+	 *	@param PostType $post_type
+	 *	@return Taxonomy
+	 */
+	public function add_post_type( PostType\PostType $post_type ) {
+		register_taxonomy_for_object_type( $this->get_slug(), $post_type->get_slug() );
+		return $this;
+	}
+
+	/**
+	 *	@return string
+	 */
+	public function get_slug() {
+		return $this->taxonomy_slug;
+	}
+
 	/**
 	 *	@inheritdoc
 	 */
