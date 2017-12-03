@@ -17,7 +17,27 @@ abstract class PostType extends Core\PluginComponent {
 	 */
 	protected function __construct() {
 		parent::__construct();
-		add_action( 'init' , array( &$this , 'register_post_types' ) , 0 );
+		add_action( 'init' , array( $this , 'register_post_types' ) , 0 );
+	}
+
+
+	/**
+	 *	@return string
+	 */
+	public function get_slug() {
+		return $this->post_type_slug;
+	}
+
+
+	/**
+	 *	Register Taxonomy for Posttype
+	 *
+	 *	@param Taxonomy $taxonomy
+	 *	@return PostType
+	 */
+	public function add_taxonomy( Taxonomy\Taxonomy $taxonomy ) {
+		register_taxonomy_for_object_type( $taxonomy->get_slug(), $this->get_slug() );
+		return $this;
 	}
 
 	/**
