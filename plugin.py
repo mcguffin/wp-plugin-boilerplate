@@ -56,7 +56,7 @@ source_dir = os.path.dirname(os.path.realpath(__file__))
 
 first,conf = parse_arg(sys.argv[1])
 
-if first in p.factory.factory.modules:
+if first == '--force' or first in p.factory.factory.modules:
 	# first arg is a module
 	plugin_name = False
 	module_argv = sys.argv[1:]
@@ -76,6 +76,8 @@ try:
 	f.close()
 	plugin_name = config['plugin_name']
 	module_args = parse_args( module_argv )
+	if module_args == None:
+		module_args = {}
 
 	# add module args
 	for mod_key,module in config['modules'].items():

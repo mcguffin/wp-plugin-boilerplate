@@ -34,6 +34,11 @@ class plugin( m.plugin_module ):
 		self.add_template('include/{{plugin_namespace}}/Core/Plugin.php')
 		self.add_template('include/{{plugin_namespace}}/Core/PluginComponent.php')
 
+	def set_override(self,override):
+		super().set_override(override)
+		for mod,module in self._modules.items():
+			module.set_override(override)
+
 	def config(self, config, target_dir, plugin=False ):
 
 		super().config( config, target_dir, plugin )
