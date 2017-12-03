@@ -65,7 +65,7 @@ class plugin_module:
 
 			if self.plugin != False:
 				template_vars.update(self.plugin.template_vars)
-			print(template['file'],self.override)
+
 			f.file_template( template['file'], template_vars, self.target_dir ).process( self.override )
 
 	def post_process(self):
