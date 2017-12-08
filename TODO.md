@@ -8,3 +8,4 @@ Plugin Scaffold ToDo
  - [x] Modularize python
  - [x] Add feature
  - [ ] PHP: Add Rest Classes
+ - [ ] AutoUpdate: do network upgrade

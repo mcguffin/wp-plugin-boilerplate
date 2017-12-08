@@ -48,7 +48,7 @@ abstract class AutoUpdate extends Core\Singleton {
 
 			do_action( '{{plugin_slug}}_upgraded', $new_version, $old_version );
 
-			update_option( '{{plugin_slug}}_version', $plugin_info['Version'] );
+		//	update_option( '{{plugin_slug}}_version', $plugin_info['Version'] );
 
 		}
 	}
@@ -213,7 +213,11 @@ abstract class AutoUpdate extends Core\Singleton {
 	 *	@return array(
 	 *		'id'			=> '...'
 	 *		'version'		=> '...'
-	 *		'download_url'	=> 'https://...'
+	 *		'download_link'	=> 'https://...'
+	 *		'tested'		=> <WP version>
+	 *		'requires'		=> <Min WP version>
+	 *		'requires_php'	=> <Min PHP version>
+	 *		'last_updated'	=> <date>
 	 *	)
 	 */
 	abstract function get_remote_release_info();
