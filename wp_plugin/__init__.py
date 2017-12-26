@@ -116,4 +116,14 @@ widget
     flags:    js  Enqueue js
               css Enqueue css
 
+wpcli
+  Add WP-CLI Command
+  Takes multiple arguments.
+    argument: command
+
+wprest
+  Add rest route
+  Takes multiple arguments.
+    argument: endpoint
+
 '''

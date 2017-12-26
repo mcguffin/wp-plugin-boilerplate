@@ -4,6 +4,7 @@ __all__ = [
 'ajax',
 'autoupdate',
 'compat',
+'core',
 'gulp',
 'git'
 'factory',
@@ -14,4 +15,6 @@ __all__ = [
 'shortcode',
 'taxonomy',
 'widget',
+'wpcli',
+'wprest',
 ]

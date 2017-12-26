@@ -14,6 +14,8 @@ class factory:
 		'shortcode',
 		'taxonomy',
 		'widget',
+		'wpcli',
+		'wprest',
 	]
 
 	def get( mod ):

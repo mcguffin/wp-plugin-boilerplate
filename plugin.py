@@ -24,8 +24,6 @@ def parse_arg(arg):
 	# conf = cmd:arg+js+css:arg+css:...
 	# OR conf = cmd+js+css
 	mod,flags = get_flags( parts[0] )
-	print(parts[0])
-	print(flags)
 	conf = {}
 	for flag in flags:
 		conf[flag] = True
@@ -45,7 +43,7 @@ def parse_args(args):
 	config = {}
 	for arg in args:
 		if arg[:2] == '--':
-			return
+			continue
 		mod, conf = parse_arg(arg)
 		config[mod] = conf
 
@@ -66,8 +64,6 @@ else:
 	plugin_name = sys.argv[1]
 	module_argv = sys.argv[2:]
 	plugin_dir = os.getcwd() + '/' + slugify( plugin_name, '-' )
-
-
 
 try:
 	# update existing
@@ -117,85 +113,3 @@ plug.process()
 plug.post_process()
 
 sys.exit(0)
-
-
-
-try:
-	# existsing plugin
-	f = codecs.open('wp-plugin-boilerplate.json','rb',encoding='utf-8')
-
-	config = json.loads(f.read())
-
-	f.close()
-
-	modules = parse_args( sys.argv[1:] )
-	config['modules'].update(modules)
-
-	plugin_dir = os.getcwd()
-
-	print( "Found plugin:", config['plugin_name'])
-
-except IOError as a:
-	# create plugin
-	plugin_name = sys.argv[1]
-	plugin_dir = os.getcwd() + '/' + slugify( plugin_name, '-' )
-	author = pwd.getpwuid( os.getuid() ).pw_gecos
-
-	# new plugin
-	config = {
-		'plugin_name' 		: plugin_name,
-		'plugin_slug' 		: plugin_slug( plugin_name ),
-		'wp_plugin_slug'	: slugify( plugin_name, '-' ),
-		'plugin_namespace'	: plugin_classname( plugin_name ),
-		'plugin_author'		: author,
-		'plugin_author_uri'	: '',
-		'modules'			: parse_args( sys.argv[2:] ),
-		'this_year'			: date.today().year
-	}
-
-	print( "Create plugin:", config['plugin_name'])
-
-
-
-#
-# defaults = config = wp_plugin.defaults
-#
-# try:
-# 	config['plugin_name']	= sys.argv[1]
-# except IndexError as e:
-# 	print usage
-# 	sys.exit(0)
-#
-# config['shell_args']		= "\"%s\" %s" % ( sys.argv[1] , ' '.join(sys.argv[2:]) )
-#
-#
-# for arg in sys.argv[2:]:
-# 	param = []
-# 	flags = True
-# 	conf  = arg.split(':')
-# 	# conf = cmd, param+js+css, param+css, ...
-# 	# OR conf = cmd+js+css
-# 	if len(conf) > 1:
-# 		param = conf[1:]
-# 	conf = conf[0]
-# 	# conf = cmd
-# 	# OR conf = cmd+js+css
-# 	conf,flags = getflags( conf )
-# 	param = [ getflags( par ) for par in param ]
-#
-# 	if conf in defaults.keys():
-# 		config[conf] = param,flags
-# #pprint(config)
-#
-# print "Generating Plugin:", config['plugin_name']
-# maker = wp_plugin(config)
-#
-# if '--force' in sys.argv and os.path.exists(maker.plugin_dir):
-# 	print "remove existing plugin"
-# 	shutil.rmtree( maker.plugin_dir )
-#
-# result = maker.make()
-#
-# if isinstance(result, Exception):
-# 	print 'Plugin exists:',result
-# 	print 'use --force to override existing plugin'

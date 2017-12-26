@@ -73,6 +73,10 @@ Shortcode\Shortcode{{module.classname}}::instance();
 Widget\Widgets::instance();
 {{/modules.widget}}
 
+{{#modules.wprest}}
+WPRest\WPRest::instance();
+{{/modules.wprest}}
+
 if ( is_admin() || defined( 'DOING_AJAX' ) ) {
 
 {{#modules.autoupdate}}
@@ -95,3 +99,11 @@ if ( is_admin() || defined( 'DOING_AJAX' ) ) {
 {{/modules.settings.items}}
 
 }
+
+{{#modules.wpcli}}
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+{{#modules.wpcli.items}}
+	WPCLI\WPCLI{{module.classname}}::instance();	
+{{/modules.wpcli.items}}
+}
+{{/modules.wpcli}}

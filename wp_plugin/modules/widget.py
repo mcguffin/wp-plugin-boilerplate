@@ -10,19 +10,6 @@ class widget(m.plugin_module):
 
 	def config( self, config, target_dir, plugin=False ):
 
-		wp_page_slugs = [
-			'dashboard',
-			'posts',
-			'media',
-			'links',
-			'pages',
-			'comments',
-			'theme',
-			'plugins',
-			'users',
-			'management',
-			'options',
-		]
 		items = []
 		for name, cnf in config.items():
 			widget_config = {}
