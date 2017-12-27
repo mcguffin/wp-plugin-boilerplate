@@ -72,7 +72,7 @@ abstract class Model extends Core\PluginComponent {
 		if ( ! isset( $this->fields[$field] ) ) {
 			return null;
 		}
-		$format = $this->fields[$field]
+		$format = $this->fields[$field];
 
 		foreach ( $wpdb->get_results( $wpdb->prepare("SELECT * FROM $table WHERE $field = $format LIMIT 1", $value ) ) as $result ) {
 			return $result;
@@ -98,7 +98,7 @@ abstract class Model extends Core\PluginComponent {
 			return null;
 		}
 
-		$format = $this->fields[$field]
+		$format = $this->fields[$field];
 
 		return $wpdb->get_results( $wpdb->prepare("SELECT * FROM $table WHERE $field = $format", $value );
 	}
