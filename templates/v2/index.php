@@ -47,6 +47,7 @@ if ( ! defined('ABSPATH') ) {
 
 define( '{{plugin_slug_upper}}_FILE', __FILE__ );
 define( '{{plugin_slug_upper}}_DIRECTORY', plugin_dir_path(__FILE__) );
+define( '{{plugin_slug_upper}}_PLUGIN', pathinfo( {{plugin_slug_upper}}_DIRECTORY, PATHINFO_FILENAME ) . '/' . pathinfo( __FILE__, PATHINFO_BASENAME ) );
 
 require_once {{plugin_slug_upper}}_DIRECTORY . 'include/autoload.php';
 
@@ -103,7 +104,7 @@ if ( is_admin() || defined( 'DOING_AJAX' ) ) {
 {{#modules.wpcli}}
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
 {{#modules.wpcli.items}}
-	WPCLI\WPCLI{{module.classname}}::instance();	
+	WPCLI\WPCLI{{module.classname}}::instance();
 {{/modules.wpcli.items}}
 }
 {{/modules.wpcli}}

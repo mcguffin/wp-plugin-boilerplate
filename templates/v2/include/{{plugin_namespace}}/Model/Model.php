@@ -100,8 +100,9 @@ abstract class Model extends Core\PluginComponent {
 
 		$format = $this->fields[$field];
 
-		return $wpdb->get_results( $wpdb->prepare("SELECT * FROM $table WHERE $field = $format", $value );
+		return $wpdb->get_results( $wpdb->prepare("SELECT * FROM $table WHERE $field = $format", $value ) );
 	}
+
 
 	/**
 	 *	WPDB Wrapper

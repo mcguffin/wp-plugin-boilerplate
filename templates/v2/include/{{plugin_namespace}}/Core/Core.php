@@ -46,9 +46,9 @@ class Core extends Plugin {
 	 *  @action plugins_loaded
 	 */
 	public function init_compat() {
-		// if ( class_exists( 'Polylang' ) ) {
-		// 	Compat\Polylang::instance();
-		// }
+		if ( is_multisite() && is_plugin_active_for_network( {{plugin_slug_upper}}_PLUGIN ) ) {
+			Compat\WPMU::instance();
+		}
 	}
 {{/modules.compat}}
 

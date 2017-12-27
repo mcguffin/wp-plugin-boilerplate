@@ -14,7 +14,9 @@ class WPRest{{module.classname}} extends Core\Singleton {
 	 */
 	protected function __construct() {
 
-		register_rest_route( '{{plugin_slug}}/v1', '/{{module.slug}}', array(
+		$namespace = WPRest::instance()->get_namespace();
+
+		register_rest_route( $namespace, '/{{module.slug}}', array(
 			array(
 				'methods'				=> \WP_REST_Server::READABLE,
 				'permission_callback'	=> array( $this, 'get_permissions' ),

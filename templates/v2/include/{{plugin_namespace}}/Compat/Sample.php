@@ -10,7 +10,7 @@ if ( ! defined('ABSPATH') ) {
 use {{plugin_namespace}}\Core;
 
 
-class Sample extends Core\PluginComponent {
+class WPMU extends Core\PluginComponent {
 
 	protected function __construct() {
 	}

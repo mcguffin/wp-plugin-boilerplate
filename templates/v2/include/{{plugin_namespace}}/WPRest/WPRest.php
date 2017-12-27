@@ -19,6 +19,13 @@ class WPRest extends Core\Singleton {
 	}
 
 	/**
+	 *	@return string
+	 */
+	public function get_namespace() {
+		return '{{plugin_slug}}/v1';
+	}
+
+	/**
 	 *	@action widgets_init
 	 */
 	public function rest_api_init(){
