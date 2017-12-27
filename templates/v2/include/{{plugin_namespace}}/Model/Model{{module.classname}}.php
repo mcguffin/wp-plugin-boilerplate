@@ -10,6 +10,13 @@ if ( ! defined('ABSPATH') ) {
 
 class Model{{module.classname}} extends Model {
 
+	protected $fields = array(
+		'ID'	=> '%d',
+//		'title'	=> '%s',
+//		...
+	);
+
+
 	/**
 	 *	@inheritdoc
 	 */
@@ -39,7 +46,7 @@ class Model{{module.classname}} extends Model {
 		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
 		$sql = "CREATE TABLE $wpdb->{{module.slug}} (
-			`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			`ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 			PRIMARY KEY (`id`)
 		) $charset_collate;";
 
