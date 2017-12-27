@@ -56,6 +56,54 @@ abstract class Model extends Core\PluginComponent {
 	}
 
 	/**
+	 *	Fetch one result
+	 *
+	 *	@param	string 		$field
+	 *	@param	string|int	$value
+	 *	@return	null|object
+	 */
+	public function fetch_one_by( $field, $value ) {
+		global $wpdb;
+		$table = $this->table;
+		// check fields
+		if ( $field == 'id' ) {
+			$field = 'ID';
+		}
+		if ( ! isset( $this->fields[$field] ) ) {
+			return null;
+		}
+		$format = $this->fields[$field]
+
+		foreach ( $wpdb->get_results( $wpdb->prepare("SELECT * FROM $table WHERE $field = $format LIMIT 1", $value ) ) as $result ) {
+			return $result;
+		};
+		return null;
+	}
+
+	/**
+	 *	Fetch results
+	 *
+	 *	@param	string 	$field
+	 *	@param	mixed	$value
+	 *	@return	null|object
+	 */
+	public function fetch_by( $field, $value ) {
+		global $wpdb;
+		$table = $this->table;
+		// check fields
+		if ( $field == 'id' ) {
+			$field = 'ID';
+		}
+		if ( ! isset( $this->fields[$field] ) ) {
+			return null;
+		}
+
+		$format = $this->fields[$field]
+
+		return $wpdb->get_results( $wpdb->prepare("SELECT * FROM $table WHERE $field = $format", $value );
+	}
+
+	/**
 	 *	WPDB Wrapper
 	 *
 	 *	@param	array 		$data
