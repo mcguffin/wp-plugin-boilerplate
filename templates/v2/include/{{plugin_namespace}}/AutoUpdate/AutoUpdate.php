@@ -124,9 +124,12 @@ abstract class AutoUpdate extends Core\Singleton {
 			$plugin_dirname = pathinfo( $hook_extra['plugin'], PATHINFO_DIRNAME );
 
 			if ( $source_dirname !== $plugin_dirname ) {
-				$new_source = $remote_source . '/' . $plugin_dirname;
-				rename( $source, $new_source );
-				$source = $new_source;
+
+				$new_source = pathinfo( $remote_source, PATHINFO_DIRNAME )  . '/' . $plugin_dirname;
+
+				if ( rename( $source, $new_source ) ) {
+					$source = $new_source;
+				}
 			}
 
 		}
