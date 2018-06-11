@@ -63,6 +63,8 @@ class Plugin extends Singleton {
 	 */
 	public static function activate() {
 
+		$meta = get_plugin_data( {{plugin_slug_upper}}_FILE );
+		$new_version = $meta['Version'];
 
 		update_site_option( '{{plugin_slug_lower}}_version', $new_version );
 
