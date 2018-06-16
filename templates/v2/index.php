@@ -8,9 +8,9 @@ Author: {{plugin_author}}
 Version: 0.0.1
 Author URI: {{plugin_author_uri}}
 License: GPL3
-{{#modules.git.github_repo}}
+{{#modules.git}}
 Github Repository: {{modules.git.github_repo}}
-{{/modules.git.github_repo}}
+{{/modules.git}}
 Text Domain: {{wp_plugin_slug}}
 Domain Path: /languages/
 */
