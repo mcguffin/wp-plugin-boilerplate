@@ -58,8 +58,10 @@ abstract class AutoUpdate extends Core\Singleton {
 	 *	@filter plugin_api
 	 */
 	public function plugins_api( $res, $action, $args ) {
+
 		$slug = basename({{plugin_slug_upper}}_DIRECTORY);
-		if ( $_REQUEST['plugin'] === $slug ) {
+
+		if ( isset($_REQUEST['plugin']) && $_REQUEST['plugin'] === $slug ) {
 			/*
 
 			'Name'        => 'Plugin Name',
