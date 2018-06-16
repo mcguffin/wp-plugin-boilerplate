@@ -65,6 +65,7 @@ else:
 	module_argv = sys.argv[2:]
 	plugin_dir = os.getcwd() + '/' + slugify( plugin_name, '-' )
 
+is_update = False
 try:
 	# update existing
 	f = codecs.open( plugin_dir + '/' + 'wp-plugin-boilerplate.json', 'rb', encoding = 'utf-8' )
@@ -83,7 +84,7 @@ try:
 	for mod_key,module in module_args.items():
 		if mod_key not in config['modules']:
 			config['modules'][mod_key] = module
-
+	is_update = True
 	print( "Update existsing plugin:", plugin_name )
 except IOError as a:
 	if plugin_name:
@@ -108,6 +109,7 @@ except IOError as a:
 plug = p.plugin()
 plug.config( config, plugin_dir )
 plug.set_override( '--force' in sys.argv )
+plug.set_update( is_update )
 plug.pre_process()
 plug.process()
 plug.post_process()

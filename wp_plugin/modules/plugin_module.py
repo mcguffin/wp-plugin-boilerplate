@@ -3,6 +3,7 @@ import wp_plugin.file_template as f
 
 class plugin_module:
 	override = False
+	update = False
 	templates = None
 	_config = None
 	template_vars = None
@@ -17,6 +18,9 @@ class plugin_module:
 
 	def set_override(self,override):
 		self.override = override
+
+	def set_update(self,update):
+		self.update = update
 
 
 	def add_template(self, template, template_vars = False, unique = True ):

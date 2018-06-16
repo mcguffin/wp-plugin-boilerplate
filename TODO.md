@@ -7,5 +7,6 @@ Plugin Scaffold ToDo
  - [ ] Code Docs
  - [x] Modularize python
  - [x] Add feature
- - [ ] PHP: Add Rest Classes
+ - [x] PHP: Add Rest Classes
  - [ ] AutoUpdate: do network upgrade
+ - [ ] Autoupgrade: upgrade from gitupdate-test repo

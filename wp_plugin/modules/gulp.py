@@ -13,6 +13,9 @@ class gulp(m.plugin_module):
 
 		super().process()
 
-		subprocess.call( [ "npm","install", "--prefix", "./" + self.plugin._config['wp_plugin_slug'] ] )
+		if self.update:
+			subprocess.call( [ "npm","install" ] )
+		else:
+			subprocess.call( [ "npm","install", "--prefix", "./" + self.plugin._config['wp_plugin_slug'] ] )
 
 		print ( 'cd into `%s`, run `gulp` and have fun coding!' % ( self.plugin._config['wp_plugin_slug'] ) )

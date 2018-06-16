@@ -9,6 +9,7 @@ import wp_plugin.modules.factory as factory
 class plugin( m.plugin_module ):
 
 	override = False
+	update = False
 
 	_modules = {}
 
@@ -33,6 +34,11 @@ class plugin( m.plugin_module ):
 		self.add_template('include/{{plugin_namespace}}/Core/Core.php')
 		self.add_template('include/{{plugin_namespace}}/Core/Plugin.php')
 		self.add_template('include/{{plugin_namespace}}/Core/PluginComponent.php')
+
+	def set_update(self,update):
+		super().set_update(update)
+		for mod,module in self._modules.items():
+			module.set_update(update)
 
 	def set_override(self,override):
 		super().set_override(override)
