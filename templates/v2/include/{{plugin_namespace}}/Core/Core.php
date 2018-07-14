@@ -60,7 +60,7 @@ class Core extends Plugin {
 	 */
 	public function load_textdomain() {
 		$path = pathinfo( dirname( {{plugin_slug_upper}}_FILE ), PATHINFO_FILENAME );
-		load_plugin_textdomain( '{{wp_plugin_slug}}' , false, $path . '/languages' );
+		load_plugin_textdomain( '{{wp_plugin_slug}}', false, $path . '/languages' );
 	}
 
 	/**
