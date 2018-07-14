@@ -83,7 +83,7 @@ if ( is_admin() || defined( 'DOING_AJAX' ) ) {
 {{#modules.autoupdate}}
 	// don't WP-Update actual repos!
 	if ( ! file_exists( {{plugin_slug_upper}}_DIRECTORY . '/.git/' ) ) {
-		AutoUpdate\AutoUpdateGithub::instance();
+		AutoUpdate\AutoUpdateGithub::instance()->init( __FILE__ );
 	}
 {{/modules.autoupdate}}
 
