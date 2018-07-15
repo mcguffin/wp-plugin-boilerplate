@@ -46,7 +46,7 @@ abstract class AutoUpdate extends Core\Singleton {
 	public function plugins_api( $res, $action, $args ) {
 		$slug = basename($this->directory);
 
-		if ( $_REQUEST['plugin'] === $slug ) {
+		if ( isset($_REQUEST['plugin']) && $_REQUEST['plugin'] === $slug ) {
 
 			$plugin_info	= get_plugin_data( $this->file );
 			$release_info	= $this->get_release_info();
