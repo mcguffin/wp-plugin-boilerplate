@@ -15,7 +15,7 @@ Installation
 
 ### Production (using Github Updater – recommended for Multisite)
  - Install [Andy Fragen's GitHub Updater](https://github.com/afragen/github-updater) first.
- - Go to Settings / GitHub Updater / Install Plugin. Enter `{{modules.git.github_repo}}` as Plugin-URI.
+ - In WP Admin go to Settings / GitHub Updater / Install Plugin. Enter `{{modules.git.github_repo}}` as a Plugin-URI.
 
 ### Development
  - cd into your plugin directory
