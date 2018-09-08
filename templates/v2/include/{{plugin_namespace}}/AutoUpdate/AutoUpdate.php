@@ -35,9 +35,30 @@ abstract class AutoUpdate extends Core\Singleton {
 		$this->directory = plugin_dir_path( $plugin_file );
 
 		add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'pre_set_transient' ), 10, 3 );
+		add_filter( 'site_transient_update_plugins', array( $this, 'check_site_transient' ), 10, 2 );
 
 		add_filter( 'upgrader_source_selection', array( $this, 'source_selection' ), 10, 4 );
 		add_filter( 'plugins_api', array( $this, 'plugins_api' ), 10, 3 );
+	}
+
+	/**
+	 *	Prevent WP.org updates of plugins with the same slug.
+	 *
+	 *	@filter site_transient_update_plugins
+	 */
+	public function check_site_transient( $value, $transient ) {
+		$plugin = plugin_basename( $this->file );
+
+		if ( ! is_object( $value ) || ! isset( $value->response ) || ! isset( $value->response[ plugin_basename( $this->file ) ] ) ) {
+			return $value;
+		}
+
+		$plugin_info	= get_plugin_data( $this->file );
+
+		if ( $value->response[ $plugin ]->slug === $this->slug && $value->response[ $plugin ]->url !== $plugin_info['PluginURI'] ) {
+			unset( $value->response[$plugin] );
+		}
+		return $value;
 	}
 
 	/**
