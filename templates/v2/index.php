@@ -11,7 +11,6 @@ License: GPL3
 {{#modules.git}}
 Github Repository: {{modules.git.github_repo}}
 GitHub Plugin URI: {{modules.git.github_repo}}
-Release Asset: true
 {{/modules.git}}
 Text Domain: {{wp_plugin_slug}}
 Domain Path: /languages/
@@ -47,13 +46,9 @@ if ( ! defined('ABSPATH') ) {
 }
 
 
-define( '{{plugin_slug_upper}}_FILE', __FILE__ );
-define( '{{plugin_slug_upper}}_DIRECTORY', plugin_dir_path(__FILE__) );
-define( '{{plugin_slug_upper}}_PLUGIN', pathinfo( {{plugin_slug_upper}}_DIRECTORY, PATHINFO_FILENAME ) . '/' . pathinfo( __FILE__, PATHINFO_BASENAME ) );
+require_once plugin_dir_path(__FILE__) . 'include/autoload.php';
 
-require_once {{plugin_slug_upper}}_DIRECTORY . 'include/autoload.php';
-
-Core\Core::instance();
+Core\Core::instance( __FILE__ );
 
 {{#modules.model.items}}
 Model\Model{{module.classname}}::instance();
@@ -84,9 +79,9 @@ if ( is_admin() || defined( 'DOING_AJAX' ) ) {
 
 {{#modules.autoupdate}}
 	// don't WP-Update actual repos!
-	if ( ! file_exists( {{plugin_slug_upper}}_DIRECTORY . '/.git/' ) ) {
+	if ( ! file_exists( plugin_dir_path(__FILE__) . '/.git/' ) ) {
 
-		// Not a git. Check if https://github.com/afragen/github-updater is active
+		// not a git. Check if https://github.com/afragen/github-updater is active. (function is_plugin_active not available yet)
 		$active_plugins = get_option('active_plugins');
 		if ( $sitewide_plugins = get_site_option('active_sitewide_plugins') ) {
 			$active_plugins = array_merge( $active_plugins, array_keys( $sitewide_plugins ) );
@@ -94,9 +89,10 @@ if ( is_admin() || defined( 'DOING_AJAX' ) ) {
 
 		if ( ! in_array( 'github-updater/github-updater.php', $active_plugins ) ) {
 			// not github updater. Init our our own...
-			AutoUpdate\AutoUpdateGithub::instance()->init( __FILE__ );
+			AutoUpdate\AutoUpdateGithub::instance();
 		}
 	}
+
 {{/modules.autoupdate}}
 
 {{#modules.admin}}

@@ -1,4 +1,9 @@
 <?php
+/**
+ *	@package {{plugin_namespace}}\Core
+ *	@version 1.0.0
+ *	2018-09-22
+ */
 
 namespace {{plugin_namespace}}\Core;
 
@@ -12,6 +17,13 @@ use {{plugin_namespace}}\Compat;
 
 class Plugin extends Singleton {
 
+	/** @var string plugin main file */
+	private $plugin_file;
+
+	/** @var array metadata from plugin file */
+	private $plugin_meta;
+
+	/** @var string plugin components which might need upgrade */
 	private static $components = array(
 {{#modules.model.items}}
 		'{{plugin_namespace}}\Model\Model{{module.classname}}',
@@ -27,11 +39,13 @@ class Plugin extends Singleton {
 	/**
 	 *	@inheritdoc
 	 */
-	protected function __construct() {
+	protected function __construct( $file ) {
 
-		register_activation_hook( {{plugin_slug_upper}}_FILE, array( __CLASS__ , 'activate' ) );
-		register_deactivation_hook( {{plugin_slug_upper}}_FILE, array( __CLASS__ , 'deactivate' ) );
-		register_uninstall_hook( {{plugin_slug_upper}}_FILE, array( __CLASS__ , 'uninstall' ) );
+		$this->plugin_file = $file;
+
+		register_activation_hook( $this->get_plugin_file(), array( __CLASS__ , 'activate' ) );
+		register_deactivation_hook( $this->get_plugin_file(), array( __CLASS__ , 'deactivate' ) );
+		register_uninstall_hook( $this->get_plugin_file(), array( __CLASS__ , 'uninstall' ) );
 
 		add_action( 'admin_init', array( $this, 'maybe_upgrade' ) );
 
@@ -39,12 +53,53 @@ class Plugin extends Singleton {
 	}
 
 	/**
+	 *	@return string full plugin file path
+	 */
+	public function get_plugin_file() {
+		return $this->plugin_file;
+	}
+
+	/**
+	 *	@return string full plugin file path
+	 */
+	public function get_plugin_dir() {
+		return plugin_dir_path( $this->get_plugin_file() );
+	}
+
+	/**
+	 *	@return string Path to the main plugin file from plugins directory
+	 */
+	public function get_wp_plugin() {
+		return str_replace( trailingslashit( WP_PLUGIN_DIR ), '', $this->plugin_file );
+	}
+
+	/**
+	 *	@return string current plugin version
+	 */
+	public function get_version() {
+		return $this->get_plugin_meta( 'Version' );
+	}
+
+	/**
+	 *	@param string $which Which plugin meta to get. NUll
+	 *	@return string|array plugin meta
+	 */
+	public function get_plugin_meta( $which = null ) {
+		if ( ! isset( $this->plugin_meta ) ) {
+			$this->plugin_meta = get_plugin_data( $this->plugin_file() );
+		}
+		if ( isset( $this->plugin_meta[ $which ] ) ) {
+			return $this->plugin_meta[ $which ];
+		}
+		return $this->plugin_meta;
+	}
+
+	/**
 	 *	@action plugins_loaded
 	 */
 	public function maybe_upgrade() {
 		// trigger upgrade
-		$meta = get_plugin_data( {{plugin_slug_upper}}_FILE );
-		$new_version = $meta['Version'];
+		$new_version = $this->get_version();
 		$old_version = get_option( '{{plugin_slug}}_version' );
 
 		// call upgrade
@@ -63,10 +118,7 @@ class Plugin extends Singleton {
 	 */
 	public static function activate() {
 
-		$meta = get_plugin_data( {{plugin_slug_upper}}_FILE );
-		$new_version = $meta['Version'];
-
-		update_site_option( '{{plugin_slug_lower}}_version', $new_version );
+		update_site_option( '{{plugin_slug_lower}}_version', $this->get_version() );
 
 		foreach ( self::$components as $component ) {
 			$comp = $component::instance();

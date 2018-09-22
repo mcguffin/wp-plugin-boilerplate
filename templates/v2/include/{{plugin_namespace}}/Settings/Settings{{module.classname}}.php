@@ -1,4 +1,9 @@
 <?php
+/**
+ *	@package {{plugin_namespace}}\Settings
+ *	@version 1.0.0
+ *	2018-09-22
+ */
 
 namespace {{plugin_namespace}}\Settings;
 

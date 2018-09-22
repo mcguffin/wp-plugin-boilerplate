@@ -1,5 +1,9 @@
 <?php
-
+/**
+ *	@package {{plugin_namespace}}\AutoUpdate
+ *	@version 1.0.0
+ *	2018-09-22
+ */
 namespace {{plugin_namespace}}\AutoUpdate;
 
 use GitupdateTest\Core;
@@ -37,7 +41,6 @@ class AutoUpdatePodpirate extends AutoUpdate {
 		if ( $release_info_url = $this->get_release_info_url() ) {
 
 			$response = wp_remote_get( $release_info_url, array() );
-			$slug = basename( {{plugin_slug_upper}}_DIRECTORY );
 
 			if ( ! is_wp_error( $response ) ) {
 				$release_info = json_decode( wp_remote_retrieve_body( $response ) );
@@ -91,8 +94,7 @@ class AutoUpdatePodpirate extends AutoUpdate {
 	private function get_release_info_url() {
 
 		if ( $token = $this->get_access_token() ) {
-			$slug = basename( {{plugin_slug_upper}}_DIRECTORY );
-			return sprintf( $this->info_url, $this->dl_prefix, $slug );
+			return sprintf( $this->info_url, $this->dl_prefix, $this->slug );
 		}
 		return false;
 	}

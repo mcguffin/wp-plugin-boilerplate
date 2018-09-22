@@ -1,4 +1,9 @@
 <?php
+/**
+ *	@package {{plugin_namespace}}\Core
+ *	@version 1.0.0
+ *	2018-09-22
+ */
 
 namespace {{plugin_namespace}}\Core;
 
@@ -19,9 +24,11 @@ class Core extends Plugin {
 		add_action( 'plugins_loaded' , array( $this , 'init_compat' ), 0 );
 {{/modules.compat}}
 		add_action( 'init' , array( $this , 'init' ) );
+
 		add_action( 'wp_enqueue_scripts' , array( $this , 'wp_enqueue_style' ) );
 
-		parent::__construct();
+		$args = func_get_args();
+		parent::__construct( ...$args );
 	}
 
 	/**
@@ -46,8 +53,14 @@ class Core extends Plugin {
 	 *  @action plugins_loaded
 	 */
 	public function init_compat() {
-		if ( is_multisite() && is_plugin_active_for_network( {{plugin_slug_upper}}_PLUGIN ) ) {
+		if ( is_multisite() && is_plugin_active_for_network( $this->get_wp_plugin() ) ) {
 			Compat\WPMU::instance();
+		}
+		if ( function_exists('\acf') && version_comapre( acf()->version,'5.0.0','>=') ) {
+			Compat\ACF::instance();
+		}
+		if ( defined('POLYLANG_VERSION') && version_comapre( POLYLANG_VERSION, '1.0.0', '>=' ) ) {
+			Compat\Polylang::instance();
 		}
 	}
 {{/modules.compat}}
@@ -59,7 +72,7 @@ class Core extends Plugin {
 	 *  @action plugins_loaded
 	 */
 	public function load_textdomain() {
-		$path = pathinfo( dirname( {{plugin_slug_upper}}_FILE ), PATHINFO_FILENAME );
+		$path = pathinfo( $this->plugin_file(), PATHINFO_FILENAME );
 		load_plugin_textdomain( '{{wp_plugin_slug}}', false, $path . '/languages' );
 	}
 
@@ -78,7 +91,7 @@ class Core extends Plugin {
 	 *	@return wp_enqueue_editor
 	 */
 	public function get_asset_url( $asset ) {
-		return plugins_url( $asset, {{plugin_slug_upper}}_FILE );
+		return plugins_url( $asset, $this->plugin_file() );
 	}
 
 

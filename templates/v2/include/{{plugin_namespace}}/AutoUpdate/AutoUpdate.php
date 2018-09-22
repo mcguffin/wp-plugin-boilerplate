@@ -1,5 +1,9 @@
 <?php
-
+/**
+ *	@package {{plugin_namespace}}\AutoUpdate
+ *	@version 1.0.0
+ *	2018-09-22
+ */
 namespace {{plugin_namespace}}\AutoUpdate;
 
 if ( ! defined('ABSPATH') ) {
@@ -65,16 +69,15 @@ abstract class AutoUpdate extends Core\Singleton {
 	 *	@filter plugin_api
 	 */
 	public function plugins_api( $res, $action, $args ) {
-		$slug = basename($this->directory);
 
-		if ( isset($_REQUEST['plugin']) && $_REQUEST['plugin'] === $slug ) {
+		if ( isset($_REQUEST['plugin']) && $_REQUEST['plugin'] === $this->slug ) {
 
 			$plugin_info	= get_plugin_data( $this->file );
 			$release_info	= $this->get_release_info();
 
 			$plugin_api = array(
 				'name'						=> $plugin_info['Name'],
-				'slug'						=> $slug,
+				'slug'						=> $this->slug,
 //				'version'					=> $release_info, // release
 				'author'					=> $plugin_info['Author'],
 				'author_profile'			=> $plugin_info['AuthorURI'],
@@ -157,14 +160,13 @@ abstract class AutoUpdate extends Core\Singleton {
 		// get own version
 		if ( $release_info = $this->get_release_info() ) {
 			$plugin 		= plugin_basename( $this->file );
-			$slug			= basename($this->directory);
 			$plugin_info	= get_plugin_data( $this->file );
 
 			if ( version_compare( $release_info->version, $plugin_info['Version'] , '>' ) ) {
 
 				$transient->response[ $plugin ] = (object) array(
 					'id'			=> $release_info->id,
-					'slug'			=> $slug,
+					'slug'			=> $this->slug,
 					'plugin'		=> $plugin,
 					'new_version'	=> $release_info->version,
 					'url'			=> $plugin_info['PluginURI'],

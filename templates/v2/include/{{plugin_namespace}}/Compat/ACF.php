@@ -15,7 +15,7 @@ if ( ! defined('ABSPATH') ) {
 use {{plugin_namespace}}\Core;
 
 
-class WPMU extends Core\PluginComponent {
+class ACF extends Core\PluginComponent {
 
 	protected function __construct() {
 	}

@@ -15,7 +15,7 @@ if ( ! defined('ABSPATH') ) {
 use {{plugin_namespace}}\Core;
 
 
-class WPMU extends Core\PluginComponent {
+class Polylang extends Core\PluginComponent {
 
 	protected function __construct() {
 	}
