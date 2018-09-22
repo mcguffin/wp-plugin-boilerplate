@@ -70,7 +70,7 @@ class Plugin extends Singleton {
 	 *	@return string Path to the main plugin file from plugins directory
 	 */
 	public function get_wp_plugin() {
-		return str_replace( trailingslashit( WP_PLUGIN_DIR ), '', $this->plugin_file );
+		return plugin_basename( $this->plugin_file );
 	}
 
 	/**

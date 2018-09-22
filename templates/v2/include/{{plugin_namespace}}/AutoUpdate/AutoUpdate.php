@@ -21,22 +21,16 @@ abstract class AutoUpdate extends Core\Singleton {
 	protected $release_info = null;
 
 	/**
-	 *	@var string absolute path to plugin file
+	 *	@var {{plugin_namespace}}\Core\Core plugin core instance
 	 */
-	protected $file = null;
+	protected $core = null;
 
 	/**
-	 *	@var string absolute path to plugin directory
+	 *	@inheritdoc
 	 */
-	protected $directory = null;
+	protected function __construct() {
 
-	/**
-	 *	@param string $plugin_file absolute path to plugin file
-	 */
-	public function init( $plugin_file ) {
-
-		$this->file = $plugin_file;
-		$this->directory = plugin_dir_path( $plugin_file );
+		$this->core = Core\Core::instance();
 
 		add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'pre_set_transient' ), 10, 3 );
 		add_filter( 'site_transient_update_plugins', array( $this, 'check_site_transient' ), 10, 2 );
@@ -51,15 +45,16 @@ abstract class AutoUpdate extends Core\Singleton {
 	 *	@filter site_transient_update_plugins
 	 */
 	public function check_site_transient( $value, $transient ) {
-		$plugin = plugin_basename( $this->file );
 
-		if ( ! is_object( $value ) || ! isset( $value->response ) || ! isset( $value->response[ plugin_basename( $this->file ) ] ) ) {
+		$plugin = $this->core->get_wp_plugin();
+
+		if ( ! is_object( $value ) || ! isset( $value->response ) || ! isset( $value->response[ $plugin ] ) ) {
 			return $value;
 		}
 
-		$plugin_info	= get_plugin_data( $this->file );
+		$plugin_info	= get_plugin_data( $this->core->get_plugin_file() );
 
-		if ( $value->response[ $plugin ]->slug === $this->slug && $value->response[ $plugin ]->url !== $plugin_info['PluginURI'] ) {
+		if ( $value->response[ $plugin ]->slug === $this->core->get_slug() && $value->response[ $plugin ]->url !== $plugin_info['PluginURI'] ) {
 			unset( $value->response[$plugin] );
 		}
 		return $value;
@@ -70,14 +65,14 @@ abstract class AutoUpdate extends Core\Singleton {
 	 */
 	public function plugins_api( $res, $action, $args ) {
 
-		if ( isset($_REQUEST['plugin']) && $_REQUEST['plugin'] === $this->slug ) {
+		if ( isset($_REQUEST['plugin']) && $_REQUEST['plugin'] === $this->core->get_slug() ) {
 
-			$plugin_info	= get_plugin_data( $this->file );
+			$plugin_info	= get_plugin_data( $this->core->get_plugin_file() );
 			$release_info	= $this->get_release_info();
 
 			$plugin_api = array(
 				'name'						=> $plugin_info['Name'],
-				'slug'						=> $this->slug,
+				'slug'						=> $this->core->get_slug(),
 //				'version'					=> $release_info, // release
 				'author'					=> $plugin_info['Author'],
 				'author_profile'			=> $plugin_info['AuthorURI'],
@@ -113,7 +108,7 @@ abstract class AutoUpdate extends Core\Singleton {
 	 *	@filter upgrader_source_selection
 	 */
 	public function source_selection( $source, $remote_source, $wp_upgrader, $hook_extra ) {
-		if ( isset( $hook_extra['plugin'] ) && $hook_extra['plugin'] === plugin_basename( $this->file ) ) {
+		if ( isset( $hook_extra['plugin'] ) && $hook_extra['plugin'] === plugin_basename( $this->core->get_plugin_file() ) ) {
 			// $source: filepath
 			// $remote_source download dir
 			$source_dirname = pathinfo( $source, PATHINFO_FILENAME);
@@ -159,14 +154,14 @@ abstract class AutoUpdate extends Core\Singleton {
 
 		// get own version
 		if ( $release_info = $this->get_release_info() ) {
-			$plugin 		= plugin_basename( $this->file );
-			$plugin_info	= get_plugin_data( $this->file );
+			$plugin 		= plugin_basename( $this->core->get_plugin_file() );
+			$plugin_info	= get_plugin_data( $this->core->get_plugin_file() );
 
 			if ( version_compare( $release_info->version, $plugin_info['Version'] , '>' ) ) {
 
 				$transient->response[ $plugin ] = (object) array(
 					'id'			=> $release_info->id,
-					'slug'			=> $this->slug,
+					'slug'			=> $this->core->get_slug(),
 					'plugin'		=> $plugin,
 					'new_version'	=> $release_info->version,
 					'url'			=> $plugin_info['PluginURI'],

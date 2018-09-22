@@ -94,7 +94,7 @@ class AutoUpdatePodpirate extends AutoUpdate {
 	private function get_release_info_url() {
 
 		if ( $token = $this->get_access_token() ) {
-			return sprintf( $this->info_url, $this->dl_prefix, $this->slug );
+			return sprintf( $this->info_url, $this->dl_prefix, $this->core->get_slug() );
 		}
 		return false;
 	}
