@@ -43,13 +43,21 @@ class Plugin extends Singleton {
 
 		$this->plugin_file = $file;
 
-		register_activation_hook( $this->get_plugin_file(), array( __CLASS__ , 'activate' ) );
-		register_deactivation_hook( $this->get_plugin_file(), array( __CLASS__ , 'deactivate' ) );
-		register_uninstall_hook( $this->get_plugin_file(), array( __CLASS__ , 'uninstall' ) );
+		register_activation_hook( $this->get_plugin_file(), array( $this , 'activate' ) );
+		register_deactivation_hook( $this->get_plugin_file(), array( $this , 'deactivate' ) );
+		register_uninstall_hook( $this->get_plugin_file(), array( __CLASS__, 'uninstall' ) );
 
 		add_action( 'admin_init', array( $this, 'maybe_upgrade' ) );
-
+		add_filter( 'extra_plugin_headers', array( $this, 'add_plugin_header' ) );
 		parent::__construct();
+	}
+
+	/**
+	 *	@filter extra_plugin_headers
+	 */
+	public function add_plugin_header( $headers ) {
+		$headers['GithubRepo'] = 'Github Repository';
+		return $headers;
 	}
 
 	/**
@@ -64,6 +72,13 @@ class Plugin extends Singleton {
 	 */
 	public function get_plugin_dir() {
 		return plugin_dir_path( $this->get_plugin_file() );
+	}
+
+	/**
+	 *	@return string plugin slug
+	 */
+	public function get_slug() {
+		return basename( $this->get_plugin_dir() );
 	}
 
 	/**
@@ -100,14 +115,14 @@ class Plugin extends Singleton {
 	public function maybe_upgrade() {
 		// trigger upgrade
 		$new_version = $this->get_version();
-		$old_version = get_option( '{{plugin_slug}}_version' );
+		$old_version = get_site_option( '{{plugin_slug}}_version' );
 
 		// call upgrade
 		if ( version_compare($new_version, $old_version, '>' ) ) {
 
 			$this->upgrade( $new_version, $old_version );
 
-			update_option( '{{plugin_slug}}_version', $new_version );
+			update_site_option( '{{plugin_slug}}_version', $new_version );
 
 		}
 
@@ -118,7 +133,7 @@ class Plugin extends Singleton {
 	 */
 	public static function activate() {
 
-		update_site_option( '{{plugin_slug_lower}}_version', $this->get_version() );
+		update_site_option( '{{plugin_slug}}_version', self::instance()->get_version() );
 
 		foreach ( self::$components as $component ) {
 			$comp = $component::instance();

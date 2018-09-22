@@ -12,6 +12,8 @@ License: GPL3
 Github Repository: {{modules.git.github_repo}}
 GitHub Plugin URI: {{modules.git.github_repo}}
 {{/modules.git}}
+Requires WP: 4.8
+Requires PHP: 5.6
 Text Domain: {{wp_plugin_slug}}
 Domain Path: /languages/
 */

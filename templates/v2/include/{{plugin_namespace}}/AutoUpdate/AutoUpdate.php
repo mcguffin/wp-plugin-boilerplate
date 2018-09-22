@@ -52,7 +52,7 @@ abstract class AutoUpdate extends Core\Singleton {
 			return $value;
 		}
 
-		$plugin_info	= get_plugin_data( $this->core->get_plugin_file() );
+		$plugin_info	= $this->core->get_plugin_meta();
 
 		if ( $value->response[ $plugin ]->slug === $this->core->get_slug() && $value->response[ $plugin ]->url !== $plugin_info['PluginURI'] ) {
 			unset( $value->response[ $plugin ] );
@@ -67,7 +67,7 @@ abstract class AutoUpdate extends Core\Singleton {
 
 		if ( isset($_REQUEST['plugin']) && $_REQUEST['plugin'] === $this->core->get_slug() ) {
 
-			$plugin_info	= get_plugin_data( $this->core->get_plugin_file() );
+			$plugin_info	= $this->core->get_plugin_meta();
 			$release_info	= $this->get_release_info();
 
 			$plugin_api = array(
