@@ -11,6 +11,9 @@ if ( ! defined('ABSPATH') ) {
 	die('FU!');
 }
 
+{{#modules.compat}}
+use {{plugin_namespace}}\Compat;
+{{/modules.compat}}
 
 class Core extends Plugin {
 
@@ -56,10 +59,10 @@ class Core extends Plugin {
 		if ( is_multisite() && is_plugin_active_for_network( $this->get_wp_plugin() ) ) {
 			Compat\WPMU::instance();
 		}
-		if ( function_exists('\acf') && version_comapre( acf()->version,'5.0.0','>=') ) {
+		if ( function_exists('\acf') && version_compare( acf()->version,'5.0.0','>=') ) {
 			Compat\ACF::instance();
 		}
-		if ( defined('POLYLANG_VERSION') && version_comapre( POLYLANG_VERSION, '1.0.0', '>=' ) ) {
+		if ( defined('POLYLANG_VERSION') && version_compare( POLYLANG_VERSION, '1.0.0', '>=' ) ) {
 			Compat\Polylang::instance();
 		}
 	}
