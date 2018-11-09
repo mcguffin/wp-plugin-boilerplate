@@ -30,6 +30,11 @@ class Model{{module.classname}} extends Model {
 	/**
 	 *	@inheritdoc
 	 */
+	protected $_global_table = false;
+
+	/**
+	 *	@inheritdoc
+	 */
 	public function activate() {
 		// create table
 		$this->update_db();
