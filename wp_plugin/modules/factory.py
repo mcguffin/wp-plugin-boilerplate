@@ -5,6 +5,7 @@ class factory:
 		'admin_page',
 		'ajax',
 		'autoupdate',
+		'core',
 		'compat',
 		'gulp',
 		'git',
