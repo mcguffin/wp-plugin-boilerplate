@@ -13,7 +13,7 @@ if ( ! defined('ABSPATH') ) {
 
 use {{plugin_namespace}}\Core;
 
-abstract class Settings extends Core\Singleton {
+abstract class Settings extends Core\PluginComponent {
 
 	/**
 	 *	@inheritdoc
@@ -53,7 +53,7 @@ abstract class Settings extends Core\Singleton {
 		<?php
 
 	}
-
+	
 	/**
 	 *	Sanitize checkbox input
 	 *

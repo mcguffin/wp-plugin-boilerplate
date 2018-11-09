@@ -12,6 +12,7 @@ if ( ! defined('ABSPATH') ) {
 }
 
 use {{plugin_namespace}}\Core;
+use {{plugin_namespace}}\Taxonomy;
 
 abstract class PostType extends Core\PluginComponent {
 
@@ -83,7 +84,7 @@ abstract class PostType extends Core\PluginComponent {
 	/**
 	 *	@inheritdoc
 	 */
-	public function uninstall() {
+	public static function uninstall() {
 
 		$deleted_posts = 0;
 		$posts = get_posts(array(

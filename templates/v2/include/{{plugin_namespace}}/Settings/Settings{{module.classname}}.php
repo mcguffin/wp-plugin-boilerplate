@@ -24,10 +24,10 @@ class Settings{{module.classname}} extends Settings {
 	protected function __construct() {
 
 {{#is_section}}
-		add_action( "load-options-{$this->optionset}.php" , array( &$this , 'enqueue_assets' ) );
+		add_action( "load-options-{$this->optionset}.php" , array( $this, 'enqueue_assets' ) );
 {{/is_section}}
 {{#is_page}}
-		add_action( "settings_page_{$this->optionset}" , array( &$this , 'enqueue_assets' ) );
+		add_action( "settings_page_{$this->optionset}" , array( $this, 'enqueue_assets' ) );
 {{/is_page}}
 
 		add_option( '{{plugin_slug}}_setting_1' , 'Default Value' , '' , False );

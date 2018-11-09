@@ -22,7 +22,6 @@ class Core extends Plugin {
 	 */
 	protected function __construct() {
 
-		add_action( 'plugins_loaded' , array( $this , 'load_textdomain' ) );
 {{#modules.compat}}
 		add_action( 'plugins_loaded' , array( $this , 'init_compat' ), 0 );
 {{/modules.compat}}
@@ -56,7 +55,7 @@ class Core extends Plugin {
 	 *  @action plugins_loaded
 	 */
 	public function init_compat() {
-		if ( is_multisite() && is_plugin_active_for_network( $this->get_wp_plugin() ) ) {
+		if ( is_multisite() && function_exists('is_plugin_active_for_network') && is_plugin_active_for_network( $this->get_wp_plugin() ) ) {
 			Compat\WPMU::instance();
 		}
 		if ( function_exists('\acf') && version_compare( acf()->version,'5.0.0','>=') ) {
@@ -65,19 +64,12 @@ class Core extends Plugin {
 		if ( defined('POLYLANG_VERSION') && version_compare( POLYLANG_VERSION, '1.0.0', '>=' ) ) {
 			Compat\Polylang::instance();
 		}
+		if ( class_exists( '\RegenerateThumbnails' ) ) {
+			Compat\RegenerateThumbnails::instance();
+		}
 	}
 {{/modules.compat}}
 
-
-	/**
-	 *	Load text domain
-	 *
-	 *  @action plugins_loaded
-	 */
-	public function load_textdomain() {
-		$path = pathinfo( $this->plugin_file(), PATHINFO_FILENAME );
-		load_plugin_textdomain( '{{wp_plugin_slug}}', false, $path . '/languages' );
-	}
 
 	/**
 	 *	Init hook.
@@ -91,10 +83,10 @@ class Core extends Plugin {
 	 *	Get asset url for this plugin
 	 *
 	 *	@param	string	$asset	URL part relative to plugin class
-	 *	@return wp_enqueue_editor
+	 *	@return string URL
 	 */
 	public function get_asset_url( $asset ) {
-		return plugins_url( $asset, $this->plugin_file() );
+		return plugins_url( $asset, $this->get_plugin_file() );
 	}
 
 

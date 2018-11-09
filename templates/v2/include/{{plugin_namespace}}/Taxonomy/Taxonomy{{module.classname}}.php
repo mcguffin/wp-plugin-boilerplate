@@ -15,6 +15,12 @@ if ( ! defined('ABSPATH') ) {
 class Taxonomy{{module.classname}} extends Taxonomy {
 
 	/**
+	 *	@inheritdoc
+	 */
+	protected $taxonomy_slug = '{{module.slug}}';
+
+
+	/**
 	 *	Register taxonomy
 	 */
 	public function register_taxonomy( ) {

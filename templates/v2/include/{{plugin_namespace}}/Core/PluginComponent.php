@@ -53,6 +53,6 @@ abstract class PluginComponent extends Singleton {
 	 *		'messages'	=> array,
 	 *	)
 	 */
-	abstract function uninstall();
+	abstract static function uninstall();
 
 }

@@ -233,7 +233,7 @@ class Cron extends Core\PluginComponent {
 	/**
 	 *	@inheritdoc
 	 */
-	public function uninstall() {
+	public static function uninstall() {
 
 		delete_option( '{{plugin_slug}}_cronjobs' );
 		delete_option( '{{plugin_slug}}_cronschedules' );

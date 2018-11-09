@@ -48,7 +48,7 @@ if ( ! defined('ABSPATH') ) {
 }
 
 
-require_once plugin_dir_path(__FILE__) . 'include/autoload.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'include/autoload.php';
 
 Core\Core::instance( __FILE__ );
 

@@ -73,7 +73,7 @@ abstract class Taxonomy extends Core\PluginComponent {
 	/**
 	 *	@inheritdoc
 	 */
-	public function uninstall() {
+	public static function uninstall() {
 
 		$deleted_terms = 0;
 

@@ -5,13 +5,13 @@
  *	2018-09-22
  */
 
-namespace AccessAreas\WPCLI\Commands;
+namespace {{plugin_namespace}}\WPCLI\Commands;
 
 if ( ! defined('ABSPATH') ) {
 	die('FU!');
 }
 
-class AccessAreas extends \WP_CLI_Command {
+class {{module.classname}} extends \WP_CLI_Command {
 
 	/**
 	 * Bark.
@@ -50,7 +50,7 @@ class AccessAreas extends \WP_CLI_Command {
 		foreach ( $args as $animal ) {
 			if ( in_array( $animal, array( 'dog', 'wolve' ) ) ) {
 				$total++;
-				$bark = __( "Rouff", 'wp-access-areas' );
+				$bark = __( "Rouff", '{{wp_plugin_slug}}' );
 				switch ( $assoc_args['volume'] ) {
 					case 'loud':
 						$bark = strtoupper($bark) . '!!!';
@@ -61,12 +61,12 @@ class AccessAreas extends \WP_CLI_Command {
 				}
 				\WP_CLI::line( $bark );
 			} else if ( $animal === 'cat' ) {
-				\WP_CLI::error( __( "Bad Idea, chuck!", 'wp-access-areas' ) );
+				\WP_CLI::error( __( "Bad Idea, chuck!", '{{wp_plugin_slug}}' ) );
 			} else {
-				\WP_CLI::warning( __( "$animal did not bark.", 'wp-access-areas' ) );
+				\WP_CLI::warning( __( "$animal did not bark.", '{{wp_plugin_slug}}' ) );
 			}
 		}
-		\WP_CLI::success( sprintf( __( "%d animal(s) barked.", 'wp-access-areas' ), $total ) );
+		\WP_CLI::success( sprintf( __( "%d animal(s) barked.", '{{wp_plugin_slug}}' ), $total ) );
 	}
 
 }
