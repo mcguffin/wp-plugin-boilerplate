@@ -47,29 +47,35 @@ function concat_js( src, dest ) {
 }
 
 
-gulp.task('scss', function() {
-	return [
+// scss tasks
 {{#scss}}
-		do_scss('{{.}}'),
+gulp.task('scss:{{.}}',function(){
+	return do_scss( '{{.}}' );
+});
 {{/scss}}
+
+// scss admin tasks
 {{#scss_admin}}
-		do_scss('{{.}}'),
+gulp.task('scss:admin:{{.}}',function(){
+	return do_scss( '{{.}}' );
+});
 {{/scss_admin}}
-	];
-});
 
+// scss
+gulp.task('scss', gulp.parallel(
+	{{#scss}}'scss:{{.}}',{{/scss}}
+	{{#scss_admin}}'scss:admin:{{.}}',{{/scss_admin}}
+));
 
-gulp.task('js-admin', function() {
-    return [
+// admin js
 {{#js_admin}}
-		do_js( '{{.}}' ),
-{{/js_admin}}
-    ];
-
+gulp.task('js:admin:{{.}}',function(){
+	return do_js( '{{.}}' );
 });
+{{/js_admin}}
 
 
-gulp.task( 'js', function(){
+gulp.task( 'js:frontend', function(){
 	return concat_js( [
 {{#js}}
 		'./src/js/{{.}}.js',
@@ -77,13 +83,13 @@ gulp.task( 'js', function(){
 	], 'frontend.js');
 } );
 
+gulp.task('js', gulp.parallel( 'js:frontend',{{#js_admin}}'js:admin:{{.}}',{{/js_admin}} ) );
 
-gulp.task('build', ['scss','js','js-admin'] );
-
+gulp.task('build', gulp.parallel('scss','js') );
 
 gulp.task('watch', function() {
 	// place code for your default task here
-	gulp.watch('./src/scss/**/*.scss',[ 'scss' ]);
-	gulp.watch('./src/js/**/*.js',[ 'js', 'js-admin' ]);
+	gulp.watch('./src/scss/**/*.scss',gulp.parallel( 'scss' ));
+	gulp.watch('./src/js/**/*.js',gulp.parallel( 'js' ) );
 });
-gulp.task('default', ['build','watch']);
+gulp.task('default', gulp.parallel('build','watch'));
