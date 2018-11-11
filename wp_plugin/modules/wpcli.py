@@ -3,6 +3,10 @@ import wp_plugin.modules.plugin_module as m
 
 class wpcli(m.plugin_module):
 
+	def pre_process(self):
+		super().pre_process()
+		self.add_template('include/{{plugin_namespace}}/PostType/PostType.php')
+
 	def config( self, config, target_dir, plugin=False ):
 		items = []
 		for name, cnf in config.items():
