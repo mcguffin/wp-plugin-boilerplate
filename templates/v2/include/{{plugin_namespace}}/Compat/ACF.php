@@ -56,7 +56,7 @@ class ACF extends Core\PluginComponent {
 	 *	@action acf/delete_field_group
 	 */
 	public function maybe_json_save_path( $field_group ) {
-		if ( strpos( $fieldgroup['key'], 'group_'.$this->group_prefix . '_' ) !== false ) {
+		if ( strpos( $field_group['key'], 'group_'.$this->group_prefix . '_' ) !== false ) {
 			add_filter('acf/settings/save_json', array( $this, 'json_save_path' ) );
 		}
 	}
