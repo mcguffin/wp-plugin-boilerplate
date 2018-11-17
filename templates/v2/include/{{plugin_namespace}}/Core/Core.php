@@ -1,7 +1,7 @@
 <?php
 /**
  *	@package {{plugin_namespace}}\Core
- *	@version 1.0.0
+ *	@version 1.0.1
  *	2018-09-22
  */
 
@@ -86,6 +86,11 @@ class Core extends Plugin {
 	 *	@return string URL
 	 */
 	public function get_asset_url( $asset ) {
+		$pi = pathinfo($asset);
+		if ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG && in_array( $pi['extension'], ['css','js']) ) {
+			// add .dev suffix (files with sourcemaps)
+			$asset = sprintf('%s/%s.dev.%s', $pi['dirname'], $pi['filename'], $pi['extension'] );
+		}
 		return plugins_url( $asset, $this->get_plugin_file() );
 	}
 

@@ -28,8 +28,8 @@ function do_js( src ) {
 	return gulp.src( './src/js/' + src + '.js' )
 		.pipe( sourcemaps.init() )
 		.pipe( gulp.dest( './js/' + dir ) )
-		.pipe( uglify().on('error', gulputil.log ) )
-		.pipe( rename( { suffix: '.min' } ) )
+		.pipe( uglify() )
+		.pipe( rename( { suffix: '.dev' } ) )
 		.pipe( sourcemaps.write() )
 		.pipe( gulp.dest( './js/' + dir ) );
 }
@@ -37,10 +37,10 @@ function do_js( src ) {
 function concat_js( src, dest ) {
 	return gulp.src( src )
 		.pipe( sourcemaps.init() )
+		.pipe( uglify() )
 		.pipe( concat( dest ) )
 		.pipe( gulp.dest( './js/' ) )
-		.pipe( uglify().on('error', gulputil.log ) )
-		.pipe( rename( { suffix: '.min' } ) )
+		.pipe( rename( { suffix: '.dev' } ) )
 		.pipe( sourcemaps.write() )
 		.pipe( gulp.dest( './js/' ) );
 
