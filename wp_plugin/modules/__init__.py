@@ -5,6 +5,7 @@ __all__ = [
 'autoupdate',
 'compat',
 'core',
+'cron',
 'gulp',
 'git'
 'factory',

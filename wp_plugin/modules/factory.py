@@ -7,6 +7,7 @@ class factory:
 		'autoupdate',
 		'core',
 		'compat',
+		'cron',
 		'gulp',
 		'git',
 		'model',

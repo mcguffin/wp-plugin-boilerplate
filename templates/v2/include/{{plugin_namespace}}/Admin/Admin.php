@@ -34,14 +34,14 @@ class Admin extends Core\Singleton {
 	 *	Admin init
 	 *	@action admin_init
 	 */
-	function admin_init() {
+	public function admin_init() {
 	}
 
 	/**
 	 *	Enqueue options Assets
 	 *	@action admin_print_scripts
 	 */
-	function enqueue_assets() {
+	public function enqueue_assets() {
 {{#modules.admin.css}}
 		wp_enqueue_style( '{{plugin_slug}}-admin' , $this->core->get_asset_url( '/css/admin.css' ) );
 {{/modules.admin.css}}

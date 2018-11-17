@@ -14,6 +14,19 @@ if ( ! defined('ABSPATH') ) {
 
 use {{plugin_namespace}}\Core;
 
+/**
+ *	Usage:
+ *	======
+ *	Start a job every 10 minutes:
+ *
+ *	$job = Cron\Cron::getJob( 'some_unique_hook', 'callback', array('callback', 'args'), 600 );
+ *	$job->start();
+ *
+ *	Stop it:
+ *
+ *	$job = Cron\Cron::getJob( 'same_unique_hook', 'callback', array('callback', 'args') );
+ *	$job->stop();
+ */
 class Cron extends Core\PluginComponent {
 
 	/**
