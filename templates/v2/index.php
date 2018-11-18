@@ -114,7 +114,7 @@ if ( is_admin() || defined( 'DOING_AJAX' ) ) {
 {{#modules.wpcli}}
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
 {{#modules.wpcli.items}}
-	WPCLI\WPCLI{{module.classname}}::instance();
+	WPCLI\WPCLI::instance();
 {{/modules.wpcli.items}}
 }
 {{/modules.wpcli}}

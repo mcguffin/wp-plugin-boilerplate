@@ -144,7 +144,7 @@ class Cron extends Core\PluginComponent {
 		}
 		if ( ! $schedule = $this->find_schedule( $interval ) ) {
 			$schedule = sprintf( 'every_%d_seconds', $interval );
-			$schedules = get_option('pp_cal_cronschedules');
+			$schedules = get_option('{{plugin_slug}}_cronschedules');
 			$schedules[ $schedule ] = array(
 				'interval'	=> $interval,
 				'display'	=> sprintf( __( 'Every %d seconds', 'calendar-importer' ), $interval ),

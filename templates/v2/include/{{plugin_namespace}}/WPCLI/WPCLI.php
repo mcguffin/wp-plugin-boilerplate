@@ -13,7 +13,7 @@ if ( ! defined('ABSPATH') ) {
 
 use {{plugin_namespace}}\Core;
 
-class WPCLI{{module.classname}} extends Core\Singleton {
+class WPCLI extends Core\Singleton {
 
 	/**
 	 *	@inheritdoc

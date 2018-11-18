@@ -5,7 +5,8 @@ class wpcli(m.plugin_module):
 
 	def pre_process(self):
 		super().pre_process()
-		self.add_template('include/{{plugin_namespace}}/PostType/PostType.php')
+		# self.add_template('include/{{plugin_namespace}}/WPCLI/WPCLI.php')
+		# self.add_template('include/{{plugin_namespace}}/WPCLI/Commands/{{module.classname}}.php')
 
 	def config( self, config, target_dir, plugin=False ):
 		items = []
