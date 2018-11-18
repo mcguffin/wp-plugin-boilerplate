@@ -5,7 +5,7 @@
  *	2018-09-22
  */
 
-namespace CalendarImporter\Cron;
+namespace {{plugin_namespace}}\Cron;
 
 if ( ! defined('ABSPATH') ) {
 	die('FU!');
