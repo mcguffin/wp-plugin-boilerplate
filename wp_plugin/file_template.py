@@ -4,35 +4,36 @@ import __main__
 
 class file_template:
 
-	filename = False
-	config = False
+	#source_filename = False
+	#target_filename = False
+	#source_dir = False
+	#target_dir = False
 
-	def __init__(self, filename, config={}, target_dir=False ):
-		self.filename = filename
+	config = {}
+
+	def __init__(self, template_name, config={}, target_dir=False ):
 		self.config = config
+		self.source_filename = template_name
+		self.target_filename = pystache.render( self.source_filename + '', self.config )
 		self.target_dir = target_dir
 		self.source_dir = os.path.dirname( os.path.realpath(__main__.__file__) ) + '/templates/v2'
 
-	def set_config( self, key, value ):
-		self.config[key] = value
 
 	def process( self, override = True ):
+
 		template = self.read()
 		content = pystache.render( template, self.config )
-		filename = pystache.render( self.filename, self.config )
-		file_path = self.target_dir + '/' + filename
+		file_path = self.target_dir + '/' + self.target_filename
 
 		if override or not os.path.exists(file_path):
-			print('Write file: %s' % (filename))
-			self.write(content,file_path)
+			print('Write file: %s' % (self.target_filename))
+			self.write( content )
 		else:
-			print('File exists: %s' % (filename))
+			print('File exists: %s' % (self.target_filename))
 			pass
 
 	def read(self):
-		file_path = self.source_dir + '/' + self.filename
-		if not os.path.exists(file_path):
-			return ''
+		file_path = self.source_dir + '/' + self.source_filename
 
 		f = codecs.open(file_path,'rb',encoding='utf-8')
 		contents = f.read()
@@ -40,8 +41,9 @@ class file_template:
 
 		return contents
 
-	def write(self, content, file_path ):
-#		print "Write File", file_path
+	def write( self, content ):
+		file_path = self.target_dir + '/' + self.target_filename
+
 		fdir = os.path.dirname(file_path)
 		if not os.path.exists(fdir):
 			os.makedirs(fdir)

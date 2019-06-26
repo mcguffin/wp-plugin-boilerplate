@@ -95,5 +95,21 @@ class Core extends Plugin {
 	}
 
 
+	/**
+	 *	Get asset url for this plugin
+	 *
+	 *	@param	string	$asset	URL part relative to plugin class
+	 *	@return string URL
+	 */
+	public function get_asset_path( $asset ) {
+		$pi = pathinfo($asset);
+		if ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG && in_array( $pi['extension'], ['css','js']) ) {
+			// add .dev suffix (files with sourcemaps)
+			$asset = sprintf('%s/%s.dev.%s', $pi['dirname'], $pi['filename'], $pi['extension'] );
+		}
+		return $this->get_plugin_dir() . '/' . preg_replace( '/^(\/+)/', '', $asset );
+		return plugins_url( $asset, $this->get_plugin_file() );
+	}
+
 
 }

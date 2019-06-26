@@ -3,17 +3,17 @@ from wp_plugin import plugin_slug, plugin_classname, slugify
 import wp_plugin.modules.plugin_module as m
 
 class widget(m.plugin_module):
+	templates = [
+		'include/{{plugin_namespace}}/Widget/Widgets.php'
+	]
 
-	def pre_process(self):
-		super().pre_process()
-		self.plugin.add_template('include/{{plugin_namespace}}/Widget/Widgets.php' )
+	def configure( self, config, target_dir, plugin=False ):
 
-	def config( self, config, target_dir, plugin=False ):
+		super().configure( config, target_dir, plugin )
 
 		items = []
 		for name, cnf in config.items():
 			widget_config = {}
-			widget_config.update(cnf)
 			widget_config.update({
 				'module' : {
 					'name'			: name,
@@ -28,9 +28,9 @@ class widget(m.plugin_module):
 			template_vars.update(widget_config)
 			template_vars.update(plugin._config)
 
-			self.add_template('include/{{plugin_namespace}}/Widget/Widget{{module.classname}}.php', template_vars, False )
+			self.add_template('include/{{plugin_namespace}}/Widget/Widget{{module.classname}}.php', template_vars )
 			if 'css' in widget_config:
-				self.add_template('src/scss/widget/{{module.slug}}.scss', template_vars, False )
+				self.add_template('src/scss/widget/{{module.slug}}.scss', template_vars )
 				plugin.add_template('src/scss/frontend.scss')
 				plugin.add_template('src/scss/mixins/_mixins.scss')
 				plugin.add_template('src/scss/variables/_colors.scss')
@@ -38,8 +38,4 @@ class widget(m.plugin_module):
 				plugin.add_template('src/scss/variables/_variables.scss')
 
 			if 'js' in widget_config:
-				self.add_template('src/js/widget/{{module.slug}}.js', template_vars, False )
-
-		super().config( config, target_dir, plugin )
-
-		self.template_vars = {'items' : items}
+				self.add_template('src/js/widget/{{module.slug}}/index.js', template_vars )

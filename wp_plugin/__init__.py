@@ -34,7 +34,7 @@ Features syntax:
 
 Example:
 ---------
-    wp-plugin "Fancy Plugin" core+css+js widget:"Fancy Widget"+css:"Even Cooler Widget"+css+js git gulp --force
+    wp-plugin "Fancy Plugin" core+css+js widget:"Fancy Widget"+css:"Even Cooler Widget"+css+js --force
 
 
 Available features

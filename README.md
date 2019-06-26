@@ -7,7 +7,7 @@ Create WordPress Plugins from the command line.
 Install
 -------
 ```
-$ mkdir ~/.scripts
+$ mkdir -p ~/.scripts
 $ cd ~/.scripts
 $ git clone git@github.com:mcguffin/wp-plugin-boilerplate.git
 $ ln -s ./wp-plugin-boilerplate/plugin.py ./wp-plugin
@@ -38,13 +38,13 @@ Examples:
 
 #### With Everything
     wp-plugin "Very Fancy Plugin" \
-	    admin+css+js settings:reading+css+js:"Plugin Settings"+css+js \ admin_page:tools+css+js \
+	    admin+css+js settings:reading+css+js:"Fancy Plugin Settings"+css+js \ admin_page:tools+css+js \
 		autoupdate \
-		cron widget:"A Widget" \
-		shortcode:"A Shortcode"+mce \
+		cron widget:"A Fancy Widget" \
+		shortcode:"A Fancy Shortcode"+mce \
 		taxonomy \
-		posttype:"Thingy Posts"+caps \
-		model:things \
+		posttype:"Fancy Posts"+caps \
+		model:fancy-things \
 		gulp \
 		git \
 		core+css+js \

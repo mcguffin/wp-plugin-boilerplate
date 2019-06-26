@@ -4,17 +4,17 @@ import wp_plugin.modules.plugin_module as m
 
 class git(m.plugin_module):
 
-	def pre_process(self):
-		super().pre_process()
-		self.add_template('README.md')
-		self.add_template('.gitattributes')
-		self.add_template('.gitignore')
+	templates = [
+		'README.md',
+		'.gitattributes',
+		'.gitignore',
+	]
 
-	def config(self,config,target_dir, plugin=False ):
+	def configure( self, config, target_dir, plugin=False ):
 		github_user = subprocess.check_output(["git","config","user.name"]).strip().decode('ascii')
 		print( "github user is",github_user)
 
-		super().config( config, target_dir, plugin )
+		super().configure( config, target_dir, plugin )
 
 		if github_user:
 			self.plugin.template_vars['plugin_author_uri'] = 'https://github.com/%s' % (github_user)

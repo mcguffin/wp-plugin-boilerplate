@@ -2,21 +2,17 @@ import wp_plugin.modules.plugin_module as m
 
 class admin(m.plugin_module):
 
-	def pre_process(self):
-		super().pre_process()
-		self.add_template('include/{{plugin_namespace}}/Admin/Admin.php')
+	templates = [
+		'include/{{plugin_namespace}}/Admin/Admin.php'
+	]
 
 
+	def configure( self, config, target_dir, plugin=False ):
 
-	def config( self, config, target_dir, plugin=False ):
+		super().configure( config, target_dir, plugin )
+
 		if 'css' in config:
-			self.add_template('src/scss/admin/admin.scss')
-			plugin.add_template('src/scss/mixins/_mixins.scss')
-			plugin.add_template('src/scss/variables/_colors.scss')
-			plugin.add_template('src/scss/variables/_dashicons.scss')
-			plugin.add_template('src/scss/variables/_variables.scss')
+			self.add_template('src/scss/admin/main.scss')
 
 		if 'js' in config:
-			self.add_template('src/js/admin/admin.js')
-
-		super().config( config, target_dir, plugin )
+			self.add_template('src/js/admin/main/index.js')

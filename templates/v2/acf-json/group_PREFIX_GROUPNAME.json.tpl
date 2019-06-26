@@ -1,5 +1,5 @@
 {
-    "key": "group_ternum_GROUPNAME",
+    "key": "group_PREFIX_GROUPNAME",
     "title": "GROUPNAME",
     "fields": [],
     "location": [

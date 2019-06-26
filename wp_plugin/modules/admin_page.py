@@ -3,12 +3,12 @@ import wp_plugin.modules.plugin_module as m
 
 class admin_page(m.plugin_module):
 
-	def pre_process(self):
-		super().pre_process()
-		self.plugin.add_template('include/{{plugin_namespace}}/Admin/AdminPage.php')
 
+	templates = [
+		'include/{{plugin_namespace}}/Admin/AdminPage.php'
+	]
 
-	def config( self, config, target_dir, plugin=False ):
+	def configure( self, config, target_dir, plugin=False ):
 		wp_page_slugs = [
 			'dashboard',
 			'posts',
@@ -58,6 +58,6 @@ class admin_page(m.plugin_module):
 			if 'js' in page_config:
 				self.add_template('src/js/admin/page/{{module.slug}}.js', template_vars, False )
 
-		super().config( config, target_dir, plugin )
+		super().configure( config, target_dir, plugin )
 
 		self.template_vars = {'items' : items }

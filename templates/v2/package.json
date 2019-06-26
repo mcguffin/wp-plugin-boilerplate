@@ -1,10 +1,17 @@
 {
   "name": "{{wp_plugin_slug}}",
   "version": "0.0.1",
-  "description": "Plugin description",
+  "description": "",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "init": "",
+    "dev": "gulp dev",
+    "build": "gulp build && npm run i18n",
+    "release": "git add . && npm version",
+    "i18n": "node ./src/run/json-i18n.js {{wp_plugin_slug}} && wp i18n make-pot . languages/serial.pot --domain={{wp_plugin_slug}}",
+    "preversion": "",
+    "version": "node ./src/run/release.js && npm run build && git add .",
+    "postversion": ""
   },
   "repository": {
     "type": "git",
@@ -17,13 +24,50 @@
   },
   "homepage": "https://github.com/{{github_user}}/{{wp_plugin_slug}}#readme",
   "devDependencies": {
-    "gulp": "^4.0.0",
-    "gulp-autoprefixer": "*",
-    "gulp-concat": "*",
-    "gulp-rename": "*",
-    "gulp-sass": "*",
-    "gulp-sourcemaps": "*",
-    "gulp-uglify": "*",
-    "gulp-util": "*"
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/plugin-transform-react-jsx": "^7.3.0",
+    "@babel/preset-env": "^7.4.5",
+    "autoprefixer": "^9.5.1",
+    "babelify": "^10.0.0",
+    "bootstrap": "^4.3.1",
+    "browserify": "^16.2.3",
+    "browserify-shim": "^3.8.14",
+    "event-stream": "^4.0.1",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^6.1.0",
+    "gulp-browserify": "^0.5.1",
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-uglify": "^3.0.2",
+    "intersection-observer": "^0.7.0",
+    "lozad": "^1.9.0",
+    "node-sass": "^4.12.0",
+    "postcss": "^7.0.17",
+    "postcss-loader": "^3.0.0",
+    "regenerator-runtime": "^0.13.2",
+    "sass": "^1.21.0",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.1",
+    "stylelint": "^10.0.1",
+    "stylelint-config-wordpress": "^14.0.0",
+    "svg-react-loader": "^0.4.6",
+    "ttf2woff": "^2.0.1",
+    "ttf2woff2": "^3.0.0",
+    "uglifyify": "^5.0.1",
+    "url-loader": "^1.1.2",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0"
+  },
+  "dependencies": {
+    "fstream": "^1.0.12",
+    "jquery": "^1.12.4",
+    "rimraf": "^2.6.3",
+    "tar": "^4.4.8"
+  },
+  "engines": {
+    "node": "12.4.0",
+    "npm": "^6.9.0"
   }
 }

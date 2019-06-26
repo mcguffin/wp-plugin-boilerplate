@@ -1,17 +1,18 @@
-import pprint, sys
+import pprint, sys, copy
 import wp_plugin.file_template as f
 
 class plugin_module:
 	override = False
 	update = False
-	templates = None
+	_templates = None
 	_config = None
-	template_vars = None
+
+	templates = []
 
 	def __init__( self ):
 		self._config = {}
 
-		self.templates = {}
+		self._templates = {}
 		self.template_vars = {}
 
 		pass
@@ -23,33 +24,31 @@ class plugin_module:
 		self.update = update
 
 
-	def add_template(self, template, template_vars = False, unique = True ):
-		key = template
-		if not unique:
-			i = 1
-			while key in self.templates:
-				key = '%s-%d' % ( template ,i )
-				i = i+1
-		self.templates[key] = {
-			'file'	: template,
-			'vars'	: template_vars
-		}
+	def add_template(self, template_name, template_vars = {} ):
 
-	def config(self, config, target_dir, plugin=False ):
+		template_vars.update(self._config)
+
+		template = f.file_template( template_name, template_vars, self.target_dir )
+
+		self._templates[template.target_filename] = template
+
+
+	def configure(self, config, target_dir, plugin=False ):
 
 		if not isinstance( config, dict ):
 			config = {}
-		if 'force' in config:
-			self.set_override(True)
-			config.pop('force')
 
 		self._config = config
 		self.target_dir = target_dir
 		self.plugin = plugin
-		self.template_vars.update( self._config )
 
 
 	def pre_process(self):
+		for template in self.templates:
+			template_config = copy.deepcopy(self._config)
+			if self.plugin:
+				template_config.update(self.plugin._config)
+			self.add_template( template, template_config )
 		pass
 
 
@@ -59,18 +58,9 @@ class plugin_module:
 			config = self.plugin._config
 		else:
 			config = self._config
-		default_template_vars = {}
-		for key,template in self.templates.items():
-			template_vars = {}
-			if template['vars'] == False:
-				template_vars.update( self.template_vars )
-			else:
-				template_vars.update( template['vars'] )
 
-			if self.plugin != False:
-				template_vars.update(self.plugin.template_vars)
-
-			f.file_template( template['file'], template_vars, self.target_dir ).process( self.override )
+		for k,template in self._templates.items():
+			template.process( self.override )
 
 	def post_process(self):
 		pass

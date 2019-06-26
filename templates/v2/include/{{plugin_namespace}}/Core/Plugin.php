@@ -142,7 +142,7 @@ class Plugin extends PluginComponent {
 	 *  @action plugins_loaded
 	 */
 	public function load_textdomain() {
-		$path = pathinfo( $this->get_plugin_file(), PATHINFO_FILENAME );
+		$path = pathinfo( $this->get_wp_plugin(), PATHINFO_DIRNAME );
 		load_plugin_textdomain( '{{wp_plugin_slug}}', false, $path . '/languages' );
 	}
 

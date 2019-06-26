@@ -4,12 +4,13 @@ import wp_plugin.modules.plugin_module as m
 
 class settings(m.plugin_module):
 
-	def pre_process(self):
-		super().pre_process()
-		self.add_template('include/{{plugin_namespace}}/Settings/Settings.php')
+
+	templates = [
+		'include/{{plugin_namespace}}/Settings/Settings.php'
+	]
 
 
-	def config( self, config, target_dir, plugin=False ):
+	def configure( self, config, target_dir, plugin=False ):
 		wp_page_slugs = [
 			'general',
 			'writing',
@@ -44,19 +45,17 @@ class settings(m.plugin_module):
 			template_vars.update(plugin._config)
 			template_vars.update(page_config)
 
-			self.add_template('include/{{plugin_namespace}}/Settings/Settings{{module.classname}}.php', template_vars, False )
+			self.add_template('include/{{plugin_namespace}}/Settings/Settings{{module.classname}}.php', template_vars )
 
 			if 'css' in page_config:
-				self.add_template('src/scss/admin/settings/{{module.slug}}.scss', template_vars, False )
+				self.add_template('src/scss/admin/settings/{{module.slug}}.scss', template_vars )
 				plugin.add_template('src/scss/mixins/_mixins.scss')
 				plugin.add_template('src/scss/variables/_colors.scss')
 				plugin.add_template('src/scss/variables/_dashicons.scss')
 				plugin.add_template('src/scss/variables/_variables.scss')
 
 			if 'js' in page_config:
-				self.add_template('src/js/admin/settings/{{module.slug}}.js', template_vars, False )
+				self.add_template('src/js/admin/settings/{{module.slug}}.js', template_vars )
 
 
-		super().config( config, target_dir, plugin )
-
-		self.template_vars = {'items' : items }
+		super().configure( config, target_dir, plugin )

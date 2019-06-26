@@ -3,12 +3,11 @@ import wp_plugin.modules.plugin_module as m
 
 class wpcli(m.plugin_module):
 
-	def pre_process(self):
-		super().pre_process()
-		# self.add_template('include/{{plugin_namespace}}/WPCLI/WPCLI.php')
-		# self.add_template('include/{{plugin_namespace}}/WPCLI/Commands/{{module.classname}}.php')
+	templates = [
+		'include/{{plugin_namespace}}/WPCLI/WPCLI.php'
+	]
 
-	def config( self, config, target_dir, plugin=False ):
+	def configure( self, config, target_dir, plugin=False ):
 		items = []
 		for name, cnf in config.items():
 			model_config = {}
@@ -26,9 +25,6 @@ class wpcli(m.plugin_module):
 			template_vars.update(model_config)
 			template_vars.update(plugin._config)
 
-			self.add_template('include/{{plugin_namespace}}/WPCLI/WPCLI{{module.classname}}.php', template_vars, False )
-			self.add_template('include/{{plugin_namespace}}/WPCLI/Commands/{{module.classname}}.php', template_vars, False )
+			self.add_template('include/{{plugin_namespace}}/WPCLI/Commands/{{module.classname}}.php', template_vars )
 
-		super().config( config, target_dir, plugin )
-
-		self.template_vars = {'items' : items }
+		super().configure( config, target_dir, plugin )

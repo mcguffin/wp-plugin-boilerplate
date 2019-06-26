@@ -16,16 +16,53 @@ use {{plugin_namespace}}\Taxonomy;
 
 abstract class PostType extends Core\PluginComponent {
 
+	/**
+	 *	@var string
+	 */
+	protected $post_type_slug = null;
+
+
+	/**
+	 *	@var null|array
+	 */
 	protected $post_type_caps = null;
+
+
+	/**
+	 *	@var boolean
+	 */
+	protected $enable_block_editor = true;
+
 
 	/**
 	 *	@inheritdoc
 	 */
 	protected function __construct() {
+
 		parent::__construct();
+
 		add_action( 'init' , array( $this , 'register_post_types' ) , 0 );
+
+		if ( ! $this->enable_block_editor ) {
+
+			add_filter( 'use_block_editor_for_post_type', array( $this, 'disable_block_editor' ), 10, 2);
+
+		}
 	}
 
+	/**
+	 *	Filter block editor support
+	 *
+	 *	@param bool $is_enabled
+	 *	@param string $post_type
+	 *	@filter use_block_editor_for_post_type
+	 */
+	public function disable_block_editor( $is_enabled, $post_type ) {
+		if ( $post_type === $this->get_slug() ) {
+			return false;
+		}
+		return $is_enabled;
+	}
 
 	/**
 	 *	@return string
