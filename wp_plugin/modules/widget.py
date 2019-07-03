@@ -11,7 +11,6 @@ class widget(m.plugin_module):
 
 		super().configure( config, target_dir, plugin )
 
-		items = []
 		for name, cnf in config.items():
 			widget_config = {}
 			widget_config.update({
@@ -21,8 +20,6 @@ class widget(m.plugin_module):
 					'slug'			: slugify( name, '-' ),
 				}
 			})
-
-			items.append(widget_config)
 
 			template_vars = {}
 			template_vars.update(widget_config)
