@@ -26,9 +26,18 @@ class Plugin extends PluginComponent {
 	/** @var string plugin components which might need upgrade */
 	private static $components = array(
 {{#modules.compat}}
+{{#modules.compat.acf}}
 		'{{plugin_namespace}}\Compat\ACF',
+{{/modules.compat.acf}}
+{{#modules.compat.polylang}}
 		'{{plugin_namespace}}\Compat\Polylang',
+{{/modules.compat.polylang}}
+{{#modules.compat.wpmu}}
 		'{{plugin_namespace}}\Compat\WPMU',
+{{/modules.compat.wpmu}}
+{{#modules.compat.regenerate_thumbnails}}
+		'{{plugin_namespace}}\Compat\RegenerateThumbnails',
+{{/modules.compat.regenerate_thumbnails}}
 {{/modules.compat}}
 {{#modules.model.items}}
 		'{{plugin_namespace}}\Model\Model{{module.classname}}',
@@ -80,6 +89,13 @@ class Plugin extends PluginComponent {
 	 */
 	public function get_plugin_dir() {
 		return plugin_dir_path( $this->get_plugin_file() );
+	}
+
+	/**
+	 *	@return string full plugin url path
+	 */
+	public function get_plugin_url() {
+		return plugin_dir_url( $this->get_plugin_file() );
 	}
 
 	/**

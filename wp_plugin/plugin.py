@@ -24,9 +24,6 @@ class plugin( m.plugin_module ):
 		'this_year'			: '',
 	}
 
-	templates = [
-	]
-
 	def configure(self, config, target_dir, plugin=False ):
 
 		super().configure( config, target_dir, plugin )

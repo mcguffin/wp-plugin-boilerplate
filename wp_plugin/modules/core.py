@@ -17,7 +17,13 @@ class core(m.plugin_module):
 		'src/scss/variables/_colors.scss',
 		'src/scss/variables/_dashicons.scss',
 		'src/scss/variables/_variables.scss',
-		'src/js/lib/__placeholder__.js',
+		'src/run/release.js',
+		'src/run/release-github.js',
+		'src/run/release-bitbucket.js',
+		'src/run/release-wporg.js',
+		'src/run/lib/json-extract.js',
+		'src/run/lib/wp-release.js',
+		'.editorconfig',
 	]
 
 	def configure( self, config, target_dir, plugin=False ):

@@ -55,18 +55,27 @@ class Core extends Plugin {
 	 *  @action plugins_loaded
 	 */
 	public function init_compat() {
+		{{#modules.compat.wpmu}}
 		if ( is_multisite() && function_exists('is_plugin_active_for_network') && is_plugin_active_for_network( $this->get_wp_plugin() ) ) {
 			Compat\WPMU::instance();
 		}
+		{{/modules.compat.wpmu}}
+		{{#modules.compat.acf}}
 		if ( function_exists('\acf') && version_compare( acf()->version,'5.0.0','>=') ) {
 			Compat\ACF::instance();
 		}
+		{{/modules.compat.acf}}
+		{{#modules.compat.polylang}}
 		if ( defined('POLYLANG_VERSION') && version_compare( POLYLANG_VERSION, '1.0.0', '>=' ) ) {
 			Compat\Polylang::instance();
 		}
+		{{/modules.compat.polylang}}
+		{{#modules.compat.regenerate_thumbnails}}
 		if ( class_exists( '\RegenerateThumbnails' ) ) {
 			Compat\RegenerateThumbnails::instance();
 		}
+		{{/modules.compat.regenerate_thumbnails}}
+
 	}
 {{/modules.compat}}
 
@@ -86,11 +95,6 @@ class Core extends Plugin {
 	 *	@return string URL
 	 */
 	public function get_asset_url( $asset ) {
-		$pi = pathinfo($asset);
-		if ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG && in_array( $pi['extension'], ['css','js']) ) {
-			// add .dev suffix (files with sourcemaps)
-			$asset = sprintf('%s/%s.dev.%s', $pi['dirname'], $pi['filename'], $pi['extension'] );
-		}
 		return plugins_url( $asset, $this->get_plugin_file() );
 	}
 
@@ -102,13 +106,7 @@ class Core extends Plugin {
 	 *	@return string URL
 	 */
 	public function get_asset_path( $asset ) {
-		$pi = pathinfo($asset);
-		if ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG && in_array( $pi['extension'], ['css','js']) ) {
-			// add .dev suffix (files with sourcemaps)
-			$asset = sprintf('%s/%s.dev.%s', $pi['dirname'], $pi['filename'], $pi['extension'] );
-		}
 		return $this->get_plugin_dir() . '/' . preg_replace( '/^(\/+)/', '', $asset );
-		return plugins_url( $asset, $this->get_plugin_file() );
 	}
 
 

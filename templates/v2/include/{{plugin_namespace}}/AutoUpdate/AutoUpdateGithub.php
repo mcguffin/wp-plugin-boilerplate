@@ -14,7 +14,7 @@ use {{plugin_namespace}}\Core;
 
 class AutoUpdateGithub extends AutoUpdate {
 
-	private $github_repo = null;
+	private $git_repo = null;
 
 	/**
 	 *	@inheritdoc
@@ -30,7 +30,7 @@ class AutoUpdateGithub extends AutoUpdate {
 						'requires_php'	=> 'Requires PHP',
 						'requires'		=> 'Requires at least'
 					) ) + array(
-						'id'			=> sprintf( 'github.com/%s', $this->get_github_repo() ),
+						'id'			=> sprintf( 'github.com/%s', $this->get_git_repo() ),
 						'version_tag'	=> $release_info->tag_name,
 						'version'		=> preg_replace( '/^([^0-9]+)/ims', '', $release_info->tag_name ),
 						'download_link'	=> $release_info->zipball_url,
@@ -47,7 +47,7 @@ class AutoUpdateGithub extends AutoUpdate {
 	 *	@inheritdoc
 	 */
 	protected function get_plugin_sections() {
-		$repo = $this->get_github_repo();
+		$repo = $this->get_git_repo();
 
 		$sections = array();
 
@@ -124,15 +124,15 @@ class AutoUpdateGithub extends AutoUpdate {
 	/**
 	 *	@return	string	github-owner/github-repo
 	 */
-	private function get_github_repo() {
-		if ( is_null( $this->github_repo ) ) {
-			$this->github_repo = false;
+	private function get_git_repo() {
+		if ( is_null( $this->git_repo ) ) {
+			$this->git_repo = false;
 			$data = get_file_data( $this->file, array('GithubRepo'=>'Github Repository') );
 			if ( ! empty( $data['GithubRepo'] ) ) {
-				$this->github_repo = $data['GithubRepo'];
+				$this->git_repo = $data['GithubRepo'];
 			}
 		}
-		return $this->github_repo;
+		return $this->git_repo;
 
 	}
 
@@ -141,7 +141,7 @@ class AutoUpdateGithub extends AutoUpdate {
 	 */
 	private function get_release_info_url() {
 		$url = false;
-		if ( $repo = $this->get_github_repo() ) {
+		if ( $repo = $this->get_git_repo() ) {
 			$url = sprintf('https://api.github.com/repos/%s/releases/latest', $repo );
 		}
 		return $url;
