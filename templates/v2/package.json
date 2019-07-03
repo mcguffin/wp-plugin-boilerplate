@@ -7,22 +7,32 @@
     "init": "",
     "dev": "gulp dev",
     "build": "gulp build && npm run i18n",
-    "release": "git add . && npm version",
-    "i18n": "node ./src/run/json-i18n.js {{wp_plugin_slug}} && wp i18n make-pot . languages/serial.pot --domain={{wp_plugin_slug}}",
-    "preversion": "",
-    "version": "node ./src/run/release.js && npm run build && git add .",
-    "postversion": ""
+    "release": "npm run release:build && npm run release:github",
+    "release:build": "npm run i18n && node ./src/run/release.js",
+    "release:git": "VERSION=$(node -e 'console.log(require(\"./package.json\").version)') && git add . && git commit -m \"Release ${VERSION}\"",
+    "release:github": "node ./src/run/release-github.js",
+    "release:wporg": "",
+    "i18n": "wp i18n make-pot . languages/{{wp_plugin_slug}}.pot --domain={{wp_plugin_slug}}",
+    "rollback":"git reset --hard HEAD~ && git push origin +master"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/{{github_user}}/{{wp_plugin_slug}}.git"
+    "url": "git+https://{{modules.git.git_host}}/{{modules.git.git_user}}/{{wp_plugin_slug}}.git"
   },
   "author": "Jörn Lund",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/{{github_user}}/{{wp_plugin_slug}}/issues"
+    "url": "https://{{modules.git.git_host}}/{{modules.git.git_user}}/{{wp_plugin_slug}}/issues"
   },
-  "homepage": "https://github.com/{{github_user}}/{{wp_plugin_slug}}#readme",
+  "browserslist": [
+    "last 3 versions",
+    "> 0.25%",
+    "IE 10"
+  ],
+  "browserify-shim": {
+    "jquery": "global:jQuery"
+  },
+  "homepage": "https://{{modules.git.git_host}}/{{modules.git.git_user}}/{{wp_plugin_slug}}#readme",
   "devDependencies": {
     "@babel/core": "^7.4.5",
     "@babel/plugin-proposal-class-properties": "^7.4.4",
@@ -36,7 +46,6 @@
     "event-stream": "^4.0.1",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^6.1.0",
-    "gulp-browserify": "^0.5.1",
     "gulp-rename": "^1.4.0",
     "gulp-sass": "^4.0.2",
     "gulp-sourcemaps": "^2.6.5",
@@ -61,10 +70,7 @@
     "vinyl-source-stream": "^2.0.0"
   },
   "dependencies": {
-    "fstream": "^1.0.12",
-    "jquery": "^1.12.4",
-    "rimraf": "^2.6.3",
-    "tar": "^4.4.8"
+    "jquery": "^1.12.4"
   },
   "engines": {
     "node": "12.4.0",
