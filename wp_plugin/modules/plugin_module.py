@@ -27,7 +27,6 @@ class plugin_module:
 	def add_template(self, template_name, template_vars = {} ):
 
 		template_vars.update(self._config)
-
 		template = f.file_template( template_name, template_vars, self.target_dir )
 
 		self._templates[template.target_filename] = template

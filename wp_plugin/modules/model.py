@@ -12,6 +12,7 @@ class model(m.plugin_module):
 
 	def configure( self, config, target_dir, plugin=False ):
 		items = []
+		super().configure( config, target_dir, plugin )
 		for name, cnf in config.items():
 			model_config = {}
 			model_config.update(cnf)
@@ -28,8 +29,7 @@ class model(m.plugin_module):
 			template_vars.update(model_config)
 			template_vars.update(plugin._config)
 
-			self.add_template('include/{{plugin_namespace}}/Model/Model{{module.classname}}.php', template_vars, False )
+			self.add_template('include/{{plugin_namespace}}/Model/Model{{module.classname}}.php', template_vars )
 
-		super().configure( config, target_dir, plugin )
 
 		self.template_vars = {'items' : items }

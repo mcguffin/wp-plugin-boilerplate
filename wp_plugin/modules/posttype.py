@@ -29,7 +29,7 @@ class posttype(m.plugin_module):
 			template_vars.update(plugin._config)
 
 
-			self.add_template('include/{{plugin_namespace}}/PostType/PostType{{module.classname}}.php', template_vars, False )
+			self.add_template('include/{{plugin_namespace}}/PostType/PostType{{module.classname}}.php', template_vars )
 
 		super().configure( config, target_dir, plugin )
 
