@@ -1,0 +1,37 @@
+{
+  "name": "wp-plugin-boilerplate",
+  "version": "0.0.1",
+  "description": "Generate complex WP plugins.",
+  "private": false,
+  "main": "plugin.js",
+  "bin": {
+    "wp-plugin": "./plugin.js"
+  },
+  "scripts": {
+    "postversion": "git push && git push --tags",
+    "rollback": "git reset --hard HEAD~ && git push origin +master"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mcguffin/wp-plugin-boilerplate.git"
+  },
+  "author": "Jörn Lund",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mcguffin/wp-plugin-boilerplate/issues"
+  },
+  "homepage": "https://github.com/mcguffin/wp-plugin-boilerplate#readme",
+  "devDependencies": {},
+  "dependencies": {
+    "change-case": "^3.1.0",
+    "child_process": "^1.0.2",
+    "colors": "^1.3.3",
+    "glob": "^7.1.4",
+    "mustache": "^3.0.1",
+    "prompts": "^2.1.0",
+    "semver": "^6.2.0",
+    "simple-git": "^1.118.0",
+    "sisteransi": "^1.0.2"
+  },
+  "templateDir": "templates/v3"
+}

@@ -1,0 +1,80 @@
+{
+  "name": "{{wp_plugin_slug}}",
+  "version": "0.0.1",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "init": "",
+    "dev": "gulp dev",
+    "build": "gulp build && npm run i18n",
+    "release": "npm run i18n && node ./src/run/release.js -- build github wporg",
+    "release:build": "npm run i18n && node ./src/run/release.js -- build",
+    "release:github": "node ./src/run/release.js -- github",
+    "release:bitbucket": "node ./src/run/release.js -- bitbucket",
+    "release:wporg": "node ./src/run/release.js -- wporg",
+    "i18n": "wp i18n make-pot . languages/{{wp_plugin_slug}}.pot --domain={{wp_plugin_slug}}",
+    "package:wporg": "cp ./.wporg/screenshot-*.png . && git add . && git commit -m \"tmp\" && git archive --format=zip --prefix={{wp_plugin_slug}}/ --output=../{{wp_plugin_slug}}.zip --worktree-attributes HEAD && git reset --hard HEAD~",
+    "rollback":"git reset --hard HEAD~ && git push origin +master"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://{{modules.git.git_host}}/{{modules.git.git_user}}/{{wp_plugin_slug}}.git"
+  },
+  "author": "Jörn Lund",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://{{modules.git.git_host}}/{{modules.git.git_user}}/{{wp_plugin_slug}}/issues"
+  },
+  "browserslist": [
+    "last 3 versions",
+    "> 0.25%",
+    "IE 10"
+  ],
+  "browserify-shim": {
+    "jquery": "global:jQuery"
+  },
+  "homepage": "https://{{modules.git.git_host}}/{{modules.git.git_user}}/{{wp_plugin_slug}}#readme",
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/plugin-transform-react-jsx": "^7.3.0",
+    "@babel/preset-env": "^7.4.5",
+    "autoprefixer": "^9.5.1",
+    "babelify": "^10.0.0",
+    "bootstrap": "^4.3.1",
+    "browserify": "^16.2.3",
+    "browserify-shim": "^3.8.14",
+    "event-stream": "^4.0.1",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^6.1.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-uglify": "^3.0.2",
+    "intersection-observer": "^0.7.0",
+    "lozad": "^1.9.0",
+    "node-sass": "^4.12.0",
+    "postcss": "^7.0.17",
+    "postcss-loader": "^3.0.0",
+    "regenerator-runtime": "^0.13.2",
+    "sass": "^1.21.0",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.1",
+    "stylelint": "^10.0.1",
+    "stylelint-config-wordpress": "^14.0.0",
+    "svg-react-loader": "^0.4.6",
+    "ttf2woff": "^2.0.1",
+    "ttf2woff2": "^3.0.0",
+    "uglifyify": "^5.0.1",
+    "url-loader": "^1.1.2",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0"
+  },
+  "dependencies": {
+    "jquery": "^1.12.4"
+  },
+  "engines": {
+    "node": "12.4.0",
+    "npm": "^6.9.0"
+  }
+}

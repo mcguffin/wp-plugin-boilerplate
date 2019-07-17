@@ -1,12 +1,33 @@
 Plugin Scaffold ToDo
 ====================
 
- - [ ] v2 Docs
- - [x] Save json config
- - [ ] Gulp JS assets
- - [ ] Code Docs
- - [x] Modularize python
- - [x] Add feature
- - [x] PHP: Add Rest Classes
- - [ ] AutoUpdate: do network upgrade
- - [ ] Autoupgrade: upgrade from gitupdate-test repo
+ - [ ] Components
+     - [ ] Admin
+     - [ ] Ajax
+     - [ ] CLI
+     - [ ] Compat
+         - [ ] WPMU
+         - [ ] ACF
+         - [ ] ...
+     - [ ] Core
+     - [ ] Cron
+     - [ ] Model
+     - [ ] PostType
+     - [ ] Rest
+     - [ ] Settings
+     - [ ] Shortcode
+     - [ ] Taxonomy
+     - [ ] Widget
+ - [ ] Component options
+     - [ ] Assets js/css
+ - [ ] Component params
+     - [ ] slug, ...
+
+
+
+ - [ ] Process
+     1. [ ] Get dest dirs
+     2. [ ] Promt for vars: slug, namespace, textdomain, ...
+     3. [ ] Prompt for components
+     3. [ ] Gather template files - adapt vars
+     4. [ ] Render Templates, save
