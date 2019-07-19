@@ -1,17 +1,17 @@
 <?php
 /**
- *	@package {{plugin_namespace}}\Widget
+ *	@package {{plugin.namespace}}\Widget
  *	@version 1.0.0
  *	2018-09-22
  */
 
-namespace {{plugin_namespace}}\Widget;
+namespace {{plugin.namespace}}\Widget;
 
 if ( ! defined('ABSPATH') ) {
 	die('FU!');
 }
 
-use {{plugin_namespace}}\Core;
+use {{plugin.namespace}}\Core;
 
 class Widgets extends Core\Singleton {
 
@@ -28,7 +28,7 @@ class Widgets extends Core\Singleton {
 	 */
 	public function widgets_init(){
 {{#modules.widget.items}}
-		register_widget("{{plugin_namespace}}\Widget\Widget{{module.classname}}");
+		register_widget("{{plugin.namespace}}\Widget\Widget{{component.classname}}");
 {{/modules.widget.items}}
 	}
 

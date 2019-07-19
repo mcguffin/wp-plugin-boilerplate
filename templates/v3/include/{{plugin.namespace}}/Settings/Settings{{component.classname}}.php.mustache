@@ -1,19 +1,19 @@
 <?php
 /**
- *	@package {{plugin_namespace}}\Settings
+ *	@package {{plugin.namespace}}\Settings
  *	@version 1.0.0
  *	2018-09-22
  */
 
-namespace {{plugin_namespace}}\Settings;
+namespace {{plugin.namespace}}\Settings;
 
 if ( ! defined('ABSPATH') ) {
 	die('FU!');
 }
 
-use {{plugin_namespace}}\Core;
+use {{plugin.namespace}}\Core;
 
-class Settings{{module.classname}} extends Settings {
+class Settings{{component.classname}} extends Settings {
 
 	private $optionset = '{{settings_section}}';
 

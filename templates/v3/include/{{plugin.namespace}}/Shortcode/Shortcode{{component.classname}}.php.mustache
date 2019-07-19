@@ -1,32 +1,29 @@
 <?php
 /**
- *	@package {{plugin_namespace}}\Shortcode
+ *	@package {{plugin.namespace}}\Shortcode
  *	@version 1.0.0
  *	2018-09-22
  */
 
-namespace {{plugin_namespace}}\Shortcode;
+namespace {{plugin.namespace}}\Shortcode;
 
 if ( ! defined('ABSPATH') ) {
 	die('FU!');
 }
 
-use {{plugin_namespace}}\Core;
+use {{plugin.namespace}}\Core;
 
-class Shortcode{{module.classname}} extends Shortcode {
+class Shortcode{{component.classname}} extends Shortcode {
 
 	protected $shortcode = '{{module.slug}}';
 
 {{#module.mce}}
 	private $mce = null;
-{{/module.mce}}
 
-
-{{#module.mce}}
 	protected function __construct() {
 		parent::__construct();
 
-		$this->mce = Mce\Mce{{module.classname}}::instance();
+		$this->mce = Mce\{{component.classname}}::instance();
 	}
 {{/module.mce}}
 

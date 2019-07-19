@@ -1,17 +1,17 @@
 <?php
 /**
- *	@package {{plugin_namespace}}\WPCLI
+ *	@package {{plugin.namespace}}\WPCLI
  *	@version 1.0.0
  *	2018-09-22
  */
 
-namespace {{plugin_namespace}}\WPCLI;
+namespace {{plugin.namespace}}\WPCLI;
 
 if ( ! defined('ABSPATH') ) {
 	die('FU!');
 }
 
-use {{plugin_namespace}}\Core;
+use {{plugin.namespace}}\Core;
 
 class WPCLI extends Core\Singleton {
 
@@ -19,7 +19,7 @@ class WPCLI extends Core\Singleton {
 	 *	@inheritdoc
 	 */
 	protected function __construct() {
-		$command = Commands\{{module.classname}};
+		$command = Commands\{{component.classname}};
 		\WP_CLI::add_command( '{{module.slug}}', array( $command, 'bark' ), array(
 //			'before_invoke'	=> 'a_callable',
 //			'after_invoke'	=> 'another_callable',

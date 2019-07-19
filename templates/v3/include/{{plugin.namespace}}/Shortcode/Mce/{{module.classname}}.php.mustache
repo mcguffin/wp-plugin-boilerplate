@@ -1,21 +1,21 @@
 <?php
 /**
- *	@package {{plugin_namespace}}\Shortcode\Mce
+ *	@package {{plugin.namespace}}\Shortcode\Mce
  *	@version 1.0.0
  *	2018-09-22
  */
 
 
-namespace {{plugin_namespace}}\Shortcode\Mce;
+namespace {{plugin.namespace}}\Shortcode\Mce;
 
 if ( ! defined('ABSPATH') ) {
 	die('FU!');
 }
 
-use {{plugin_namespace}}\Core;
-use {{plugin_namespace}}\Admin\Mce;
+use {{plugin.namespace}}\Core;
+use {{plugin.namespace}}\Admin\Mce;
 
-class Mce{{module.classname}} extends Mce\Mce {
+class {{component.classname}} extends Mce\Mce {
 
 	protected $module_name = '{{shortcode_slug}}-shortcode';
 

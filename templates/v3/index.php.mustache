@@ -1,24 +1,24 @@
 <?php
 
 /*
-Plugin Name: {{plugin_name}}
+Plugin Name: {{plugin.name}}
 Plugin URI: http://wordpress.org/
 Description: Enter description here.
-Author: {{plugin_author}}
+Author: {{plugin.author}}
 Version: 0.0.1
-Author URI: {{plugin_author_uri}}
+Author URI: {{plugin.author_uri}}
 License: GPL3
-{{#modules.git}}
+{{#components.git}}
 Github Repository: {{modules.git.git_repo}}
 GitHub Plugin URI: {{modules.git.git_repo}}
-{{/modules.git}}
+{{/components.git}}
 Requires WP: 4.8
 Requires PHP: 5.6
-Text Domain: {{wp_plugin_slug}}
+Text Domain: {{plugin.slug}}
 Domain Path: /languages/
 */
 
-/*  Copyright {{this_year}} {{plugin_author}}
+/*  Copyright {{plugin.year}} {{plugin.author}}
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as
@@ -40,7 +40,7 @@ https://github.com/mcguffin/wp-plugin-scaffold
 */
 
 
-namespace {{plugin_namespace}};
+namespace {{plugin.namespace}};
 
 if ( ! defined('ABSPATH') ) {
 	die('FU!');
@@ -52,20 +52,20 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'include/autoload.php';
 Core\Core::instance( __FILE__ );
 
 {{#modules.model.items}}
-Model\Model{{module.classname}}::instance();
+Model\Model{{component.classname}}::instance();
 {{/modules.model.items}}
 
 
 {{#modules.posttype.items}}
-PostType\PostType{{module.classname}}::instance();
+PostType\PostType{{component.classname}}::instance();
 {{/modules.posttype.items}}
 
 {{#modules.taxonomy.items}}
-Taxonomy\Taxonomy{{module.classname}}::instance();
+Taxonomy\Taxonomy{{component.classname}}::instance();
 {{/modules.taxonomy.items}}
 
 {{#modules.shortcode.items}}
-Shortcode\Shortcode{{module.classname}}::instance();
+Shortcode\Shortcode{{component.classname}}::instance();
 {{/modules.shortcode.items}}
 
 {{#modules.widget}}
@@ -78,42 +78,24 @@ WPRest\WPRest::instance();
 
 if ( is_admin() || defined( 'DOING_AJAX' ) ) {
 
-{{#modules.autoupdate}}
-	// don't WP-Update actual repos!
-	if ( ! file_exists( plugin_dir_path(__FILE__) . '/.git/' ) ) {
-
-		// not a git. Check if https://github.com/afragen/github-updater is active. (function is_plugin_active not available yet)
-		$active_plugins = get_option('active_plugins');
-		if ( $sitewide_plugins = get_site_option('active_sitewide_plugins') ) {
-			$active_plugins = array_merge( $active_plugins, array_keys( $sitewide_plugins ) );
-		}
-
-		if ( ! in_array( 'github-updater/github-updater.php', $active_plugins ) ) {
-			// not github updater. Init our our own...
-			AutoUpdate\AutoUpdateGithub::instance();
-		}
-	}
-
-{{/modules.autoupdate}}
-
 {{#modules.admin}}
 	Admin\Admin::instance();
 {{/modules.admin}}
 
 {{#modules.admin_page.items}}
-	Admin\AdminPage{{module.classname}}::instance();
+	Admin\AdminPage{{component.classname}}::instance();
 {{/modules.admin_page.items}}
 
 {{#modules.settings.items}}
-	Settings\Settings{{module.classname}}::instance();
+	Settings\Settings{{component.classname}}::instance();
 {{/modules.settings.items}}
 
 }
 
-{{#modules.wpcli}}
+{{#modules.cli}}
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
-{{#modules.wpcli.items}}
+{{#modules.cli.items}}
 	WPCLI\WPCLI::instance();
-{{/modules.wpcli.items}}
+{{/modules.cli.items}}
 }
-{{/modules.wpcli}}
+{{/modules.cli}}

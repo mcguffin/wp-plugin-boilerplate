@@ -7,13 +7,7 @@
     "init": "",
     "dev": "gulp dev",
     "build": "gulp build && npm run i18n",
-    "release": "npm run i18n && node ./src/run/release.js -- build github wporg",
-    "release:build": "npm run i18n && node ./src/run/release.js -- build",
-    "release:github": "node ./src/run/release.js -- github",
-    "release:bitbucket": "node ./src/run/release.js -- bitbucket",
-    "release:wporg": "node ./src/run/release.js -- wporg",
-    "i18n": "wp i18n make-pot . languages/{{wp_plugin_slug}}.pot --domain={{wp_plugin_slug}}",
-    "package:wporg": "cp ./.wporg/screenshot-*.png . && git add . && git commit -m \"tmp\" && git archive --format=zip --prefix={{wp_plugin_slug}}/ --output=../{{wp_plugin_slug}}.zip --worktree-attributes HEAD && git reset --hard HEAD~",
+    "i18n": "wp i18n make-pot . languages/{{wp_plugin_slug}}.pot --domain={{wp_plugin_slug}} --excude=tmp/",
     "rollback":"git reset --hard HEAD~ && git push origin +master"
   },
   "repository": {

@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 const colors = require('colors');
 const Plugin = require('./lib/plugin.js');
+const {Template,TemplateExistsError} = require('./lib/template.js');
 const prompts = require('prompts');
+const fs = require('fs');
 
 const [ , , ...args ] = process.argv;
-
-
 
 const usage = `Usage \`wp-plugin [components]\`
 
@@ -130,7 +130,7 @@ if ( args.indexOf('--help') !== -1 ) {
 const parse_args = () => {
 	let ret = args.slice(0);
 	// core is mandatory
-	return ret.map( arg => {
+	return ret.filter( arg => arg.indexOf('--') !== 0 ).map( arg => {
 		let slug, flags, comp, components;
 
 		[ comp, ...components ] = arg.split(':');
@@ -141,25 +141,53 @@ const parse_args = () => {
 	} );
 }
 
+Template.srcdir = require('./package.json').templateDir;
+
+
 (async () => {
 	const plugin = new Plugin();
-	let package;
-
+	let package, currdir;
+	plugin.force = args.indexOf('--force') !== -1;
 	try {
+		// Existing plugin
 		//*
-		plugin.package = require('./package.json').wpPlugin;
+		plugin.root_package = require( process.cwd() + '/package.json');
+		plugin.package = plugin.root_package.wpPlugin;
+		plugin.destdir = process.cwd();
 		/*/
 		plugin.package = { name:'WP Async Foobar Extruder'}
 		plugin.guessNames();
 		//*/
-	} catch ( err ) {
+	} catch ( e ) {
+		// test if in wp directory
+		currdir = process.cwd();
+
+		while ( currdir != '/' ) {
+			if ( fs.existsSync(currdir+'/wp-load.php') ) {
+				break;
+			}
+			currdir = fs.realpathSync( currdir + '/..' );
+		}
+		if ( currdir === '/' ) {
+			throw( 'Not in a wordpress directory' )
+		}
+		try {
+			// set cwd to plugins dir
+			currdir = fs.realpathSync( currdir + '/wp-content/plugins' )
+			process.chdir( currdir );
+		} catch(e2) {
+			throw(e2)
+		}
 	}
 
 	parse_args().forEach( c => plugin.addComponent( ...Object.values(c) ) )
-
-	console.dir(plugin.package,{depth:null})
-
-	await plugin.setup(); // prompt for setup
+	try {
+		await plugin.setup(); // prompt for setup
+	} catch ( err ) {
+		console.error('Error:'.red,err.toString().white)
+		throw(err)
+		process.exit();
+	}
 	await plugin.generate(); // make code, store in location
 	await plugin.finish(); // run post-generate scripts like git init
 

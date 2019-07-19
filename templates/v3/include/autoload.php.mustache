@@ -1,11 +1,11 @@
 <?php
 /**
- *	@package {{plugin_namespace}}
+ *	@package {{plugin.namespace}}
  *	@version 1.0.0
  *	2018-09-22
  */
 
-namespace {{plugin_namespace}};
+namespace {{plugin.namespace}};
 
 if ( ! defined('ABSPATH') ) {
 	die('FU!');
@@ -36,4 +36,4 @@ function __autoload( $class ) {
 }
 
 
-spl_autoload_register( '{{plugin_namespace}}\__autoload' );
+spl_autoload_register( '{{plugin.namespace}}\__autoload' );

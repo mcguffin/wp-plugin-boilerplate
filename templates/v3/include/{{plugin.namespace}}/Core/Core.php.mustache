@@ -1,18 +1,18 @@
 <?php
 /**
- *	@package {{plugin_namespace}}\Core
+ *	@package {{plugin.namespace}}\Core
  *	@version 1.0.1
  *	2018-09-22
  */
 
-namespace {{plugin_namespace}}\Core;
+namespace {{plugin.namespace}}\Core;
 
 if ( ! defined('ABSPATH') ) {
 	die('FU!');
 }
 
 {{#modules.compat}}
-use {{plugin_namespace}}\Compat;
+use {{plugin.namespace}}\Compat;
 {{/modules.compat}}
 
 class Core extends Plugin {

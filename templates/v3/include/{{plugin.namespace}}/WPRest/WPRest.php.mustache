@@ -1,17 +1,17 @@
 <?php
 /**
- *	@package {{plugin_namespace}}\WPRest
+ *	@package {{plugin.namespace}}\WPRest
  *	@version 1.0.0
  *	2018-09-22
  */
 
-namespace {{plugin_namespace}}\WPRest;
+namespace {{plugin.namespace}}\WPRest;
 
 if ( ! defined('ABSPATH') ) {
 	die('FU!');
 }
 
-use {{plugin_namespace}}\Core;
+use {{plugin.namespace}}\Core;
 
 class WPRest extends Core\Singleton {
 
@@ -35,7 +35,7 @@ class WPRest extends Core\Singleton {
 	 */
 	public function rest_api_init(){
 {{#modules.wprest.items}}
-		WPRest{{module.classname}}::instance();
+		WPRest{{component.classname}}::instance();
 {{/modules.wprest.items}}
 	}
 

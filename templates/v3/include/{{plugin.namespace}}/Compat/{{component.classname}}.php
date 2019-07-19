@@ -2,23 +2,26 @@
 /**
  *	@package {{plugin.namespace}}\Compat
  *	@version 1.0.0
- *	2018-09-25
+ *	2018-09-22
  */
 
 namespace {{plugin.namespace}}\Compat;
 
+if ( ! defined('ABSPATH') ) {
+	die('FU!');
+}
+
+
 use {{plugin.namespace}}\Core;
 
-class RegenerateThumbnails extends Core\PluginComponent {
 
-	private $stored_meta;
+class {{module.classname}} extends Core\PluginComponent {
 
 	/**
 	 *	@inheritdoc
 	 */
 	protected function __construct() {
 	}
-
 
 	/**
 	 *	@inheritdoc
@@ -46,6 +49,5 @@ class RegenerateThumbnails extends Core\PluginComponent {
 	 */
 	public function upgrade( $new_version, $old_version ) {
 	}
-
 
 }

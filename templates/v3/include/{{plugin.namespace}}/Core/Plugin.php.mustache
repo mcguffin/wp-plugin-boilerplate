@@ -1,19 +1,19 @@
 <?php
 /**
- *	@package {{plugin_namespace}}\Core
+ *	@package {{plugin.namespace}}\Core
  *	@version 1.0.0
  *	2018-09-22
  */
 
-namespace {{plugin_namespace}}\Core;
+namespace {{plugin.namespace}}\Core;
 
 if ( ! defined('ABSPATH') ) {
 	die('FU!');
 }
 
 
-use {{plugin_namespace}}\PostType;
-use {{plugin_namespace}}\Compat;
+use {{plugin.namespace}}\PostType;
+use {{plugin.namespace}}\Compat;
 
 class Plugin extends PluginComponent {
 
@@ -27,26 +27,26 @@ class Plugin extends PluginComponent {
 	private static $components = array(
 {{#modules.compat}}
 {{#modules.compat.acf}}
-		'{{plugin_namespace}}\Compat\ACF',
+		'{{plugin.namespace}}\Compat\ACF',
 {{/modules.compat.acf}}
 {{#modules.compat.polylang}}
-		'{{plugin_namespace}}\Compat\Polylang',
+		'{{plugin.namespace}}\Compat\Polylang',
 {{/modules.compat.polylang}}
 {{#modules.compat.wpmu}}
-		'{{plugin_namespace}}\Compat\WPMU',
+		'{{plugin.namespace}}\Compat\WPMU',
 {{/modules.compat.wpmu}}
 {{#modules.compat.regenerate_thumbnails}}
-		'{{plugin_namespace}}\Compat\RegenerateThumbnails',
+		'{{plugin.namespace}}\Compat\RegenerateThumbnails',
 {{/modules.compat.regenerate_thumbnails}}
 {{/modules.compat}}
 {{#modules.model.items}}
-		'{{plugin_namespace}}\Model\Model{{module.classname}}',
+		'{{plugin.namespace}}\Model\Model{{component.classname}}',
 {{/modules.model.items}}
 {{#modules.posttype.items}}
-		'{{plugin_namespace}}\PostType\PostType{{module.classname}}',
+		'{{plugin.namespace}}\PostType\PostType{{component.classname}}',
 {{/modules.posttype.items}}
 {{#modules.taxonomy.items}}
-		'{{plugin_namespace}}\Taxonomy\Taxonomy{{module.classname}}',
+		'{{plugin.namespace}}\Taxonomy\Taxonomy{{component.classname}}',
 {{/modules.taxonomy.items}}
 	);
 
