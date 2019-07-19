@@ -11,6 +11,7 @@ Plugin Scaffold ToDo
          - [ ] ...
      - [ ] Core
      - [ ] Cron
+	 - [ ] MenuItemType
      - [ ] Model
      - [ ] PostType
      - [ ] Rest
@@ -23,7 +24,7 @@ Plugin Scaffold ToDo
  - [ ] Component params
      - [ ] slug, ...
 
-
+ - [ ] PHP docblock @since
 
  - [ ] Process
      1. [ ] Get dest dirs

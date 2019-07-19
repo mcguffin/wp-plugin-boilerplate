@@ -6,12 +6,12 @@ Plugin URI: http://wordpress.org/
 Description: Enter description here.
 Author: {{plugin.author}}
 Version: 0.0.1
-Author URI: {{plugin.author_uri}}
+Author URI: {{{plugin.author_uri}}}
 License: GPL3
-{{#components.git}}
-Github Repository: {{modules.git.git_repo}}
-GitHub Plugin URI: {{modules.git.git_repo}}
-{{/components.git}}
+{{#plugin.components.git}}
+Github Repository: {{{plugin.components.git.repo}}}
+GitHub Plugin URI: {{{plugin.components.git.repo_uri}}}
+{{/plugin.components.git}}
 Requires WP: 4.8
 Requires PHP: 5.6
 Text Domain: {{plugin.slug}}

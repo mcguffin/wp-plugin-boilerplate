@@ -11,9 +11,9 @@ if ( ! defined('ABSPATH') ) {
 	die('FU!');
 }
 
-{{#modules.compat}}
+{{#plugin.components.compat}}
 use {{plugin.namespace}}\Compat;
-{{/modules.compat}}
+{{/plugin.components.compat}}
 
 class Core extends Plugin {
 
@@ -22,9 +22,9 @@ class Core extends Plugin {
 	 */
 	protected function __construct() {
 
-{{#modules.compat}}
+{{#plugin.components.compat}}
 		add_action( 'plugins_loaded' , array( $this , 'init_compat' ), 0 );
-{{/modules.compat}}
+{{/plugin.components.compat}}
 		add_action( 'init' , array( $this , 'init' ) );
 
 		add_action( 'wp_enqueue_scripts' , array( $this , 'wp_enqueue_style' ) );
@@ -39,45 +39,51 @@ class Core extends Plugin {
 	 *	@action wp_enqueue_scripts
 	 */
 	public function wp_enqueue_style() {
-{{#css}}
-		wp_enqueue_style( '{{wp_plugin_slug}}-style', $this->get_asset_url( 'css/frontend.css' ) );
-{{/css}}
-{{#js}}
-		wp_enqueue_script( '{{wp_plugin_slug}}-script', $this->get_asset_url( 'js/frontend.js' ), array( 'jquery' ) );
-{{/js}}
+{{#component.flagged.css}}
+		wp_enqueue_style( '{{plugin.prefix}}-style', $this->get_asset_url( 'css/main.css' ) );
+{{/component.flagged.css}}
+{{#component.flagged.js}}
+		wp_enqueue_script( '{{plugin.prefix}}-script', $this->get_asset_url( 'js/main.js' ), array( 'jquery' ) );
+{{/component.flagged.js}}
 	}
 
 
-{{#modules.compat}}
+{{#plugin.components.compat}}
 	/**
 	 *	Load Compatibility classes
 	 *
 	 *  @action plugins_loaded
 	 */
 	public function init_compat() {
-		{{#modules.compat.wpmu}}
-		if ( is_multisite() && function_exists('is_plugin_active_for_network') && is_plugin_active_for_network( $this->get_wp_plugin() ) ) {
-			Compat\WPMU::instance();
-		}
-		{{/modules.compat.wpmu}}
-		{{#modules.compat.acf}}
+		{{#plugin.components.compat.children}}
+		{{#isACF}}
 		if ( function_exists('\acf') && version_compare( acf()->version,'5.0.0','>=') ) {
 			Compat\ACF::instance();
 		}
-		{{/modules.compat.acf}}
-		{{#modules.compat.polylang}}
+		{{/isACF}}
+		{{#isPLL}}
 		if ( defined('POLYLANG_VERSION') && version_compare( POLYLANG_VERSION, '1.0.0', '>=' ) ) {
 			Compat\Polylang::instance();
 		}
-		{{/modules.compat.polylang}}
-		{{#modules.compat.regenerate_thumbnails}}
+		{{/isPLL}}
+		{{#isREG}}
 		if ( class_exists( '\RegenerateThumbnails' ) ) {
 			Compat\RegenerateThumbnails::instance();
 		}
-		{{/modules.compat.regenerate_thumbnails}}
-
+		{{/isREG}}
+		{{#isWPMU}}
+		if ( is_multisite() && function_exists('is_plugin_active_for_network') && is_plugin_active_for_network( $this->get_wp_plugin() ) ) {
+			Compat\WPMU::instance();
+		}
+		{{/isWPMU}}
+		{{^isWPMU}}
+		if ( false /* write your own condition! */ ) {
+			Compat\{{classname}}::instance();
+		}
+		{{/isWPMU}}
+		{{/plugin.components.compat.children}}
 	}
-{{/modules.compat}}
+{{/plugin.components.compat}}
 
 
 	/**

@@ -1,19 +1,19 @@
 <?php
 /**
- *	@package {{plugin_namespace}}\Model
+ *	@package {{plugin.namespace}}\Model
  *	@version 1.0.0
  *	2018-09-22
  */
 
 
-namespace {{plugin_namespace}}\Model;
+namespace {{plugin.namespace}}\Model;
 
 if ( ! defined('ABSPATH') ) {
 	die('FU!');
 }
 
 
-class Model{{module.classname}} extends Model {
+class {{component.classname}} extends Model {
 
 	protected $fields = array(
 		'ID'	=> '%d',
@@ -25,7 +25,7 @@ class Model{{module.classname}} extends Model {
 	/**
 	 *	@inheritdoc
 	 */
-	protected $_table = '{{module.slug}}';
+	protected $_table = '{{component.prefix}}';
 
 	/**
 	 *	@inheritdoc
@@ -55,7 +55,7 @@ class Model{{module.classname}} extends Model {
 
 		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
-		$sql = "CREATE TABLE $wpdb->{{module.slug}} (
+		$sql = "CREATE TABLE $wpdb->{{component.prefix}} (
 			`ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 			PRIMARY KEY (`id`)
 		) $charset_collate;";

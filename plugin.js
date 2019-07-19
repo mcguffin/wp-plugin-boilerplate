@@ -3,6 +3,7 @@ const colors = require('colors');
 const Plugin = require('./lib/plugin.js');
 const {Template,TemplateExistsError} = require('./lib/template.js');
 const prompts = require('prompts');
+const change_case = require('change-case');
 const fs = require('fs');
 
 const [ , , ...args ] = process.argv;
@@ -112,13 +113,6 @@ Register a widget.
 	flags: js, css
 `;
 
-// input: slug+flag+flag
-const parse_flags = s => {
-	let flags;
-	[ slug, ...flags ] = s.split('+')
-	return { slug, flags };
-}
-
 const plugin_collection = [];
 let current_task;
 // show help
@@ -127,17 +121,32 @@ if ( args.indexOf('--help') !== -1 ) {
 	process.exit();
 }
 
+// input: slug+flag+flag
+const parse_flags = s => {
+	let flags;
+	[ slug, ...flags ] = s.split('+')
+	slug = change_case.paramCase( slug );
+	return { slug, flags };
+}
 const parse_args = () => {
 	let ret = args.slice(0);
 	// core is mandatory
 	return ret.filter( arg => arg.indexOf('--') !== 0 ).map( arg => {
-		let slug, flags, comp, components;
+		let slug, flags, comp, components, componentsObj;
 
 		[ comp, ...components ] = arg.split(':');
 		comp = parse_flags(comp)
 		components = components || [];
 		components = components.map( parse_flags );
-		return { slug: comp.slug, flags: comp.flags, components }
+		componentsObj = {};
+		components.forEach( c => componentsObj[c.slug] = { flags: c.flags } );
+		return {
+			slug: comp.slug,
+			package: {
+				flags:comp.flags,
+				components: componentsObj
+			}
+		}
 	} );
 }
 
