@@ -42,15 +42,15 @@ class Admin extends Core\Singleton {
 	 *	@action admin_print_scripts
 	 */
 	public function enqueue_assets() {
-{{#modules.admin.css}}
-		wp_enqueue_style( '{{plugin_slug}}-admin' , $this->core->get_asset_url( '/css/admin.css' ) );
-{{/modules.admin.css}}
+{{#component.flagged.css}}
+		wp_enqueue_style( '{{plugin.slug}}-{{component.slug}}' , $this->core->get_asset_url( '/css/admin.css' ) );
+{{/component.flagged.css}}
 
-{{#modules.admin.js}}
-		wp_enqueue_script( '{{plugin_slug}}-admin' , $this->core->get_asset_url( 'js/admin.js' ) );
-		wp_localize_script('{{plugin_slug}}-admin' , '{{plugin_slug}}_admin' , array(
+{{#component.flagged.js}}
+		wp_enqueue_script( '{{plugin.slug}}-{{component.slug}}' , $this->core->get_asset_url( 'js/admin.js' ) );
+		wp_localize_script('{{plugin.slug}}-{{component.slug}}' , '{{plugin.prefix}}_{{component.prefix}}' , array(
 		) );
-{{/modules.admin.js}}
+{{/component.flagged.js}}
 	}
 
 }
