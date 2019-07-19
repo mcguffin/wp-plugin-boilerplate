@@ -25,29 +25,24 @@ class Plugin extends PluginComponent {
 
 	/** @var string plugin components which might need upgrade */
 	private static $components = array(
-{{#modules.compat}}
-{{#modules.compat.acf}}
-		'{{plugin.namespace}}\Compat\ACF',
-{{/modules.compat.acf}}
-{{#modules.compat.polylang}}
-		'{{plugin.namespace}}\Compat\Polylang',
-{{/modules.compat.polylang}}
-{{#modules.compat.wpmu}}
-		'{{plugin.namespace}}\Compat\WPMU',
-{{/modules.compat.wpmu}}
-{{#modules.compat.regenerate_thumbnails}}
-		'{{plugin.namespace}}\Compat\RegenerateThumbnails',
-{{/modules.compat.regenerate_thumbnails}}
-{{/modules.compat}}
-{{#modules.model.items}}
-		'{{plugin.namespace}}\Model\Model{{component.classname}}',
-{{/modules.model.items}}
-{{#modules.posttype.items}}
-		'{{plugin.namespace}}\PostType\PostType{{component.classname}}',
-{{/modules.posttype.items}}
-{{#modules.taxonomy.items}}
-		'{{plugin.namespace}}\Taxonomy\Taxonomy{{component.classname}}',
-{{/modules.taxonomy.items}}
+{{#plugin.components.compat.children}}
+		'{{plugin.namespace}}\Compat\{{classname}}',
+{{/plugin.components.compat.children}}
+{{#plugin.components.model.children}}
+		'{{plugin.namespace}}\Model\{{classname}}',
+{{/plugin.components.model.children}}
+{{#plugin.components.cron}}
+		'{{plugin.namespace}}\Cron\Cron',
+{{/plugin.components.cron}}
+{{#plugin.components.posttype.children}}
+		'{{plugin.namespace}}\PostType\{{classname}}',
+{{/plugin.components.posttype.children}}
+{{#plugin.components.settings.children}}
+		'{{plugin.namespace}}\Settings\{{classname}}',
+{{/plugin.components.settings.children}}
+{{#plugin.components.taxonomy.children}}
+		'{{plugin.namespace}}\taxonomy\{{classname}}',
+{{/plugin.components.taxonomy.children}}
 	);
 
 	/**
@@ -62,19 +57,10 @@ class Plugin extends PluginComponent {
 		register_uninstall_hook( $this->get_plugin_file(), array( __CLASS__, 'uninstall' ) );
 
 		add_action( 'admin_init', array( $this, 'maybe_upgrade' ) );
-		add_filter( 'extra_plugin_headers', array( $this, 'add_plugin_header' ) );
 
 		add_action( 'plugins_loaded' , array( $this , 'load_textdomain' ) );
 
 		parent::__construct();
-	}
-
-	/**
-	 *	@filter extra_plugin_headers
-	 */
-	public function add_plugin_header( $headers ) {
-		$headers['GithubRepo'] = 'Github Repository';
-		return $headers;
 	}
 
 	/**

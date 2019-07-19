@@ -2,27 +2,26 @@ Plugin Scaffold ToDo
 ====================
 
  - [ ] Components
-     - [ ] Admin
-     - [ ] Ajax
-     - [ ] CLI
-     - [ ] Compat
-         - [ ] WPMU
-         - [ ] ACF
-         - [ ] ...
-     - [ ] Core
-     - [ ] Cron
-	 - [ ] MenuItemType
-     - [ ] Model
-     - [ ] PostType
-     - [ ] Rest
-     - [ ] Settings
-     - [ ] Shortcode
-     - [ ] Taxonomy
-     - [ ] Widget
+	 - js tpl
+     - [ ] [ ] Admin (Needs Major Cleanup!)
+     - [x] [ ] Ajax
+     - [ ] [ ] CLI
+     - [x] [x] Compat
+         - [x] [x] WPMU, ACF, ..
+         - [x] [x] Custom
+     - [x] [ ] Core
+	 - [x] [ ] Cron
+	 - [x] [x] Git
+     - [x] [ ] Model (@update multisite alias-domain)
+     - [ ] [ ] PostType
+     - [ ] [ ] Rest
+     - [ ] [ ] Settings
+     - [ ] [ ] Shortcode
+     - [ ] [ ] Taxonomy
+     - [ ] [ ] Widget
  - [ ] Component options
-     - [ ] Assets js/css
- - [ ] Component params
-     - [ ] slug, ...
+     - [x] Assets js/css
+
 
  - [ ] PHP docblock @since
 
@@ -32,3 +31,11 @@ Plugin Scaffold ToDo
      3. [ ] Prompt for components
      3. [ ] Gather template files - adapt vars
      4. [ ] Render Templates, save
+
+## Future
+- [ ] Components
+	- js tpl
+	- [ ] [ ] NetworkAdmin
+	- [ ] [ ] Block (wp-block)
+	- [ ] [ ] Media (wp-media js/css/loader)
+	- [ ] [ ] MenuItemType

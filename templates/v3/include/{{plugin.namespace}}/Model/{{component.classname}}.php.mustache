@@ -30,7 +30,7 @@ class {{component.classname}} extends Model {
 	/**
 	 *	@inheritdoc
 	 */
-	protected $_global_table = false;
+	protected $_global_table = {{#component.flagged.network}}true{{/component.flagged.network}}{{^component.flagged.network}}false{{/component.flagged.network}};
 
 	/**
 	 *	@inheritdoc

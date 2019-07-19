@@ -35,7 +35,7 @@ class WPRest extends Core\Singleton {
 	 */
 	public function rest_api_init(){
 {{#modules.wprest.items}}
-		WPRest{{component.classname}}::instance();
+		Endpoints\{{component.classname}}::instance();
 {{/modules.wprest.items}}
 	}
 
