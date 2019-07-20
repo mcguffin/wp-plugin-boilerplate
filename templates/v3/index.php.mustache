@@ -51,51 +51,49 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'include/autoload.php';
 
 Core\Core::instance( __FILE__ );
 
-{{#modules.model.items}}
-Model\Model{{component.classname}}::instance();
-{{/modules.model.items}}
+{{#plugin.components.model.children}}
+Model\{{classname}}::instance();
+{{/plugin.components.model.children}}
 
 
-{{#modules.posttype.items}}
-PostType\PostType{{component.classname}}::instance();
-{{/modules.posttype.items}}
+{{#plugin.components.posttype.children}}
+PostType\{{classname}}::instance();
+{{/plugin.components.posttype.children}}
 
-{{#modules.taxonomy.items}}
-Taxonomy\Taxonomy{{component.classname}}::instance();
-{{/modules.taxonomy.items}}
+{{#plugin.components.taxonomy.children}}
+Taxonomy\{{classname}}::instance();
+{{/plugin.components.taxonomy.children}}
 
-{{#modules.shortcode.items}}
-Shortcode\Shortcode{{component.classname}}::instance();
-{{/modules.shortcode.items}}
+{{#plugin.components.shortcode.children}}
+Shortcode\{{classname}}::instance();
+{{/plugin.components.shortcode.children}}
 
-{{#modules.widget}}
-Widget\Widgets::instance();
-{{/modules.widget}}
+{{#plugin.components.widget}}
+Widget\Widget::instance();
+{{/plugin.components.widget}}
 
-{{#modules.wprest}}
+{{#plugin.components.wprest}}
 WPRest\WPRest::instance();
-{{/modules.wprest}}
+{{/plugin.components.wprest}}
 
 if ( is_admin() || defined( 'DOING_AJAX' ) ) {
 
-{{#modules.admin}}
+{{#plugin.components.admin}}
 	Admin\Admin::instance();
-{{/modules.admin}}
+{{/plugin.components.admin}}
 
-{{#modules.admin_page.items}}
-	Admin\AdminPage{{component.classname}}::instance();
-{{/modules.admin_page.items}}
+{{#plugin.components.admin-page.children}}
+	Admin\Page\{{classname}}::instance();
+{{/plugin.components.admin-page.children}}
 
-{{#modules.settings.items}}
-	Settings\Settings{{component.classname}}::instance();
-{{/modules.settings.items}}
+{{#plugin.components.settings.children}}
+	Admin\Settings\{{classname}}::instance();
+{{/plugin.components.settings.children}}
 
 }
 
-{{#modules.cli}}
+{{#plugin.components.cli}}
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
-{{#modules.cli.items}}
 	WPCLI\WPCLI::instance();
-{{/modules.cli.items}}
 }
-{{/modules.cli}}
+{{/plugin.components.cli}}

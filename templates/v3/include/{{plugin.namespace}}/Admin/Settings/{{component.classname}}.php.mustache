@@ -1,0 +1,202 @@
+<?php
+/**
+ *	@package {{plugin.namespace}}\Admin\Settings
+ *	@version 1.0.0
+ *	2018-09-22
+ */
+
+namespace {{plugin.namespace}}\Admin\Settings;
+
+if ( ! defined('ABSPATH') ) {
+	die('FU!');
+}
+
+use {{plugin.namespace}}\Core;
+
+class {{component.classname}} extends Settings {
+
+	private $optionset = '{{component.slug}}';
+
+
+	/**
+	 *	@inheritdoc
+	 */
+	protected function __construct() {
+		$this->core = Core\Core::instance();
+{{#component.isWP}}
+		add_action( "load-options-{$this->optionset}.php" , array( $this, 'enqueue_assets' ) );
+{{/component.isWP}}
+{{^component.isWP}}
+		add_action( "settings_page_{$this->optionset}" , array( $this, 'enqueue_assets' ) );
+{{/component.isWP}}
+
+
+{{^component.isWP}}
+		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+{{/component.isWP}}
+
+		parent::__construct();
+
+	}
+
+{{^component.isWP}}
+	/**
+	 *	Add Settings page
+	 *
+	 *	@action admin_menu
+	 */
+	public function admin_menu() {
+		add_options_page( __('{{plugin.name}} Settings' , '{{plugin.textdomain}}' ),__('{{plugin.name}}' , '{{plugin.textdomain}}'),'manage_options',$this->optionset, array( $this, 'settings_page' ) );
+	}
+
+	/**
+	 *	Render Settings page
+	 */
+	public function settings_page() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
+		}
+		?>
+		<div class="wrap">
+			<h2><?php _e('{{plugin_name}} Settings', '{{plugin.textdomain}}') ?></h2>
+
+			<form action="options.php" method="post">
+				<?php
+				settings_fields(  $this->optionset );
+				do_settings_sections( $this->optionset );
+				submit_button( __('Save Settings' , '{{plugin.textdomain}}' ) );
+				?>
+			</form>
+		</div><?php
+	}
+{{/component.isWP}}
+
+
+	/**
+	 * Enqueue settings Assets
+	 *
+{{#component.isWP}}
+	 *	@action load-options-{$this->optionset}.php
+{{/component.isWP}}
+{{^component.isWP}}
+	 *	@action "settings_page_{$this->optionset}
+{{/component.isWP}}
+	 */
+	public function enqueue_assets() {
+{{#component.flagged.css}}
+		wp_enqueue_style( "{{plugin_slug}}-settings-{$this->optionset}", $this->core->get_asset_url( "css/settings-{$this->optionset}.css" ) );
+{{/component.flagged.css}}
+
+{{#component.flagged.js}}
+		wp_enqueue_script( "{{plugin_slug}}-settings-{$this->optionset}", $this->core->get_asset_url( "js/settings-{$this->optionset}.js" ) );
+		wp_localize_script("{{plugin_slug}}-settings-{$this->optionset}", '{{plugin_slug}}_settings' , array(
+		) );
+{{/component.flagged.js}}
+	}
+
+
+	/**
+	 *	Setup options.
+	 *
+	 *	@action admin_init
+	 */
+	public function register_settings() {
+
+		$settings_section	= '{{plugin_slug}}_settings';
+
+		add_settings_section( $settings_section, __( 'Section #1',  '{{plugin.textdomain}}' ), array( $this, 'section_1_description' ), $this->optionset );
+
+
+
+		// more settings go here ...
+		$option_name		= '{{plugin_slug}}_setting_1';
+		register_setting( $this->optionset , $option_name, array( $this , 'sanitize_setting_1' ) );
+		add_settings_field(
+			$option_name,
+			__( 'Setting #1',  '{{plugin.textdomain}}' ),
+			array( $this, 'setting_1_ui' ),
+			$this->optionset,
+			$settings_section,
+			array(
+				'option_name'			=> $option_name,
+				'option_label'			=> __( 'Setting #1',  '{{plugin.textdomain}}' ),
+				'option_description'	=> __( 'Setting #1 description',  '{{plugin.textdomain}}' ),
+			)
+		);
+	}
+
+	/**
+	 * Print some documentation for the optionset
+	 */
+	public function section_1_description( $args ) {
+
+		?>
+		<div class="inside">
+			<p><?php _e( 'Section 1 Description.' , '{{plugin.textdomain}}' ); ?></p>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Output Theme selectbox
+	 */
+	public function setting_1_ui( $args ) {
+
+		@list( $option_name, $label, $description ) = array_values( $args );
+
+		$option_value = get_option( $option_name );
+
+		?>
+			<label for="<?php echo $option_name ?>">
+				<input type="text" id="<?php echo $option_name ?>" name="<?php echo $option_name ?>" value="<?php esc_attr_e( $option_value ) ?>" />
+				<?php echo $label ?>
+			</label>
+			<?php
+			if ( ! empty( $description ) ) {
+				printf( '<p class="description">%s</p>', $description );
+			}
+			?>
+		<?php
+	}
+
+	/**
+	 * Sanitize value of setting_1
+	 *
+	 * @return string sanitized value
+	 */
+	public function sanitize_setting_1( $value ) {
+		// do sanitation here!
+		return $value;
+	}
+
+	/**
+	 *	@inheritdoc
+	 */
+	public function activate() {
+		add_option( '{{plugin.slug}}_{{component.slug}}_1' , 'Default Value' , '' , false );
+	}
+
+	/**
+	 *	@inheritdoc
+	 */
+	public function upgrade( $new_version, $old_version ) {
+
+	}
+
+	/**
+	 *	@inheritdoc
+	 */
+	public function deactivate() {
+
+	}
+
+	/**
+	 *	@inheritdoc
+	 */
+	public static function uninstall() {
+		delete_option( '{{plugin.slug}}_{{component.slug}}_1' );
+	}
+
+
+
+}

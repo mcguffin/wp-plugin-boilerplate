@@ -1,11 +1,11 @@
-tinymce.PluginManager.add( '{{module.slug_underscore}}_shortcode' , function( editor ) {
+tinymce.PluginManager.add( '{{component.prefix}}_shortcode' , function( editor ) {
 
 	var placeholder_img			= tinymce.Env.transparentSrc,
-		l10n					= mce_{{module.slug_underscore}}_shortcode.l10n,
+		l10n					= mce_{{component.prefix}}_shortcode.l10n,
 		placeholder_img			= 'data:image/svg+xml;base64,' + window.btoa('<svg version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="500px" height="40px" viewBox="0 0 500 40"><text transform="matrix(1 0 0 1 12.5127 22.9082)" font-family="-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Oxygen-Sans,Ubuntu,Cantarell,\'Helvetica Neue\',sans-serif" font-size="12" style="fill: #FFFFFF;stroke:none;font-weight:bold;">'+l10n.name+'</text></svg>'),
 
 		// https://stackoverflow.com/questions/34393501/regex-for-processing-wordpress-shortcode
-		the_shortcode			= /\[{{module.slug_underscore}}([^\]]*)\]([\s\S]*?)\[\/{{module.slug_underscore}}\]/g,
+		the_shortcode			= /\[{{component.prefix}}([^\]]*)\]([\s\S]*?)\[\/{{component.prefix}}\]/g,
 		the_visible_shortcode	= '<img title="'+l10n.name+'" data-attr="{attr}" data-wp-entity="cateringcalendar" src="'+placeholder_img+'" data-mce-resize="false" data-mce-placeholder="1" />';
 
 	function nodeStr( node ) {
@@ -29,7 +29,7 @@ tinymce.PluginManager.add( '{{module.slug_underscore}}_shortcode' , function( ed
 			if ( attr ) {
 				return '\
 \
-[{{module.slug_underscore}} ' + attr + ']\
+[{{component.prefix}} ' + attr + ']\
 \
 		';
 			}
@@ -45,9 +45,9 @@ tinymce.PluginManager.add( '{{module.slug_underscore}}_shortcode' , function( ed
 			},
 			str, wpsh;
 
-		if ( $sel.is('[data-wp-entity="{{module.slug_underscore}}"]') ) {
+		if ( $sel.is('[data-wp-entity="{{component.prefix}}"]') ) {
 			str		= restoreShortcodes( nodeStr( sel ) );
-			wpsh	= wp.shortcode.next( '{{module.slug_underscore}}', str );
+			wpsh	= wp.shortcode.next( '{{component.prefix}}', str );
 			d		= wpsh.shortcode.attrs.named;
 		}
 		editor.windowManager.open({
@@ -80,17 +80,17 @@ tinymce.PluginManager.add( '{{module.slug_underscore}}_shortcode' , function( ed
 		});
 	}
 
-	editor.addCommand( 'cmd_{{module.slug_underscore}}_shortcode', function() {
+	editor.addCommand( 'cmd_{{component.prefix}}_shortcode', function() {
 		openShortcodeDialog( function(e){
-			var shortcode = '[{{module.slug_underscore}}]';
+			var shortcode = '[{{component.prefix}}]';
 			editor.insertContent( shortcode );
 		} );
 	});
 
-	editor.addButton('{{module.slug_underscore}}_shortcode', {
-		icon: '{{module.slug_underscore}}-shortcode-icon',
+	editor.addButton('{{component.prefix}}_shortcode', {
+		icon: '{{component.prefix}}-shortcode-icon',
 		tooltip: l10n.insert,
-		cmd : 'cmd_{{module.slug_underscore}}_shortcode',
+		cmd : 'cmd_{{component.prefix}}_shortcode',
 		onPostRender: function() {
 			var btn = this;
 			editor.on( 'nodechange', function( event ) {

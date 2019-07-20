@@ -19,13 +19,14 @@ class WPCLI extends Core\Singleton {
 	 *	@inheritdoc
 	 */
 	protected function __construct() {
-		$command = Commands\{{component.classname}};
-		\WP_CLI::add_command( '{{module.slug}}', array( $command, 'bark' ), array(
+{{#component.children}}
+		\WP_CLI::add_command( '{{slug}}', array( new {{classname}}(), 'bark' ), array(
 //			'before_invoke'	=> 'a_callable',
 //			'after_invoke'	=> 'another_callable',
-			'shortdesc'		=> '{{plugin_name}} commands',
+			'shortdesc'		=> '{{plugin.name}} commands',
 //			'when'			=> 'before_wp_load',
 			'is_deferred'	=> false,
 		) );
+{{/component.children}}
 	}
 }

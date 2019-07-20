@@ -1,12 +1,9 @@
-
-
-@import '../../variables/variables';
-
-@import '../../mixins/mixins';
+@import 'variables/index';
+@import 'mixins/index';
 
 .mce-content-body {
 	img {
-		[data-mce-placeholder][data-wp-entity='{{module.slug_underscore}}'] {
+		[data-mce-placeholder][data-wp-entity='{{component.prefix}}'] {
 			&,
 			&[data-mce-selected] {
 				display:block;

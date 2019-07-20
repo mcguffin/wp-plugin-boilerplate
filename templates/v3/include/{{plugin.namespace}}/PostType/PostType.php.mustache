@@ -150,26 +150,30 @@ abstract class PostType extends Core\PluginComponent {
 
 
 
-	protected function add_custom_capabilities() {
-		if ( ! is_null( $this->post_type_caps ) ) {
-			$admin_role = get_role('administrator');
-			if ( ! is_null($admin_role) ) {
-				foreach ( $this->post_type_caps as $cap ) {
-					if ( ! $admin_role->has_cap($cap) ) {
-						$admin_role->add_cap($cap);
-						error_log('add cap: '.$cap);
-					}
+	protected function install_caps() {
+		if ( is_null( $this->post_type_caps ) ) {
+			return;
+		}
+		$admin_role = get_role('administrator');
+		if ( ! is_null($admin_role) ) {
+			foreach ( $this->post_type_caps as $cap ) {
+				if ( ! $admin_role->has_cap($cap) ) {
+					$admin_role->add_cap($cap);
+					error_log('add cap: '.$cap);
 				}
-			} else {
-				// error case!
 			}
+		} else {
+			// error case!
 		}
 	}
 
 	/**
-	 *	Remove custom capabilities from all roles
+	 *	Remove custom pt capabilities from all roles
 	 */
-	protected function remove_custom_capabilities() {
+	protected function uninstall_caps() {
+		if ( is_null( $this->post_type_caps ) ) {
+			return;
+		}
 		// all roles!
 		global $wp_roles;
 		$roles = $wp_roles->roles;

@@ -15,18 +15,24 @@ use {{plugin.namespace}}\Core;
 
 class {{component.classname}} extends Shortcode {
 
-	protected $shortcode = '{{module.slug}}';
+	protected $shortcode = '{{component.prefix}}';
 
-{{#module.mce}}
+{{#component.flagged.mce}}
 	private $mce = null;
 
+	/**
+	 *	@inheritdoc
+	 */
 	protected function __construct() {
 		parent::__construct();
 
 		$this->mce = Mce\{{component.classname}}::instance();
 	}
-{{/module.mce}}
+{{/component.flagged.mce}}
 
+	/**
+	 *	@inheritdoc
+	 */
 	public function do_shortcode( $atts, $content ) {
 		return sprintf( '<pre>%s</pre><p>%s</p>', var_export( $atts, true ), $content );
 	}

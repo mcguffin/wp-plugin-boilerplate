@@ -22,9 +22,9 @@ class {{component.classname}} extends \WP_Widget {
 	 */
 	public function __construct() {
 		$widget_ops = array(
-			'description'	=> __( '{{module.name}} Description...', '{{wp_plugin_slug}}' ),
+			'description'	=> __( '{{component.name}} Description...', '{{plugin.textdomain}}' ),
 		);
-		parent::__construct( '{{module.slug}}', __( '{{module.name}}', '{{wp_plugin_slug}}' ), $widget_ops );
+		parent::__construct( '{{component.prefix}}', __( '{{component.name}}', '{{plugin.textdomain}}' ), $widget_ops );
 	}
 
 	/**
@@ -55,7 +55,7 @@ class {{component.classname}} extends \WP_Widget {
 
 		?>
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php _e( esc_attr( 'Title:' ) ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_attr_e( 'Title:', '{{plugin.textdomain}}' ); ?></label>
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>">
 		</p>
 		<?php

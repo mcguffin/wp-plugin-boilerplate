@@ -17,7 +17,7 @@ class {{component.classname}} extends Taxonomy {
 	/**
 	 *	@inheritdoc
 	 */
-	protected $taxonomy_slug = '{{module.slug}}';
+	protected $taxonomy_slug = '{{component.slug}}';
 
 
 	/**
@@ -27,17 +27,17 @@ class {{component.classname}} extends Taxonomy {
 
 		// labels
 		$labels = array(
-			'name'              => _x( '{{module.name}}s', 'taxonomy general name' , '{{wp_plugin_slug}}' ),
-			'singular_name'     => _x( '{{module.name}}', 'taxonomy singular name' , '{{wp_plugin_slug}}' ),
-			'search_items'      => __( 'Search {{module.name}}s' , '{{wp_plugin_slug}}' ),
-			'all_items'         => __( 'All {{module.name}}s' , '{{wp_plugin_slug}}' ),
-			'parent_item'       => __( 'Parent {{module.name}}' , '{{wp_plugin_slug}}' ),
-			'parent_item_colon' => __( 'Parent {{module.name}}:' , '{{wp_plugin_slug}}' ),
-			'edit_item'         => __( 'Edit {{module.name}}' , '{{wp_plugin_slug}}' ),
-			'update_item'       => __( 'Update {{module.name}}' , '{{wp_plugin_slug}}' ),
-			'add_new_item'      => __( 'Add New {{module.name}}' , '{{wp_plugin_slug}}' ),
-			'new_item_name'     => __( 'New {{module.name}}' , '{{wp_plugin_slug}}' ),
-			'menu_name'         => __( '{{module.name}}s' , '{{wp_plugin_slug}}' ),
+			'name'              => _x( '{{component.name}}s', 'taxonomy general name' , '{{plugin.textdomain}}' ),
+			'singular_name'     => _x( '{{component.name}}', 'taxonomy singular name' , '{{plugin.textdomain}}' ),
+			'search_items'      => __( 'Search {{component.name}}s' , '{{plugin.textdomain}}' ),
+			'all_items'         => __( 'All {{component.name}}s' , '{{plugin.textdomain}}' ),
+			'parent_item'       => __( 'Parent {{component.name}}' , '{{plugin.textdomain}}' ),
+			'parent_item_colon' => __( 'Parent {{component.name}}:' , '{{plugin.textdomain}}' ),
+			'edit_item'         => __( 'Edit {{component.name}}' , '{{plugin.textdomain}}' ),
+			'update_item'       => __( 'Update {{component.name}}' , '{{plugin.textdomain}}' ),
+			'add_new_item'      => __( 'Add New {{component.name}}' , '{{plugin.textdomain}}' ),
+			'new_item_name'     => __( 'New {{component.name}}' , '{{plugin.textdomain}}' ),
+			'menu_name'         => __( '{{component.name}}s' , '{{plugin.textdomain}}' ),
 			'popular_items'		=> null,
 		);
 

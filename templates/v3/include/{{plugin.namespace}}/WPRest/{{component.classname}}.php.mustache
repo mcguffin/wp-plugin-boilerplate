@@ -6,7 +6,7 @@
  */
 
 
-namespace {{plugin.namespace}}\WPRest\Endpoints;
+namespace {{plugin.namespace}}\WPRest;
 
 use AccessAreas\Core;
 use AccessAreas\Model;
@@ -21,7 +21,7 @@ class {{component.classname}} extends Core\Singleton {
 
 		$namespace = WPRest::instance()->get_namespace();
 
-		register_rest_route( $namespace, '/{{module.slug}}', array(
+		register_rest_route( $namespace, '/{{component.slug}}', array(
 			array(
 				'methods'				=> \WP_REST_Server::READABLE,
 				'permission_callback'	=> array( $this, 'get_permissions' ),
@@ -36,7 +36,7 @@ class {{component.classname}} extends Core\Singleton {
 						'required' 			=> true,
 						'type'				=> 'string',
 						'sanitize_callback'	=> 'sanitize_textfield',
-						'description'		=> __( 'Name of the Item', '{{wp_plugin_slug}}' ),
+						'description'		=> __( 'Name of the Item', '{{plugin.textdomain}}' ),
 					),
 				),
 			),
@@ -48,6 +48,9 @@ class {{component.classname}} extends Core\Singleton {
 		) );
 	}
 
+	/**
+	 *
+	 */
 	public function get_permissions() {
 		return current_user_can( 'manage_options' );
 	}

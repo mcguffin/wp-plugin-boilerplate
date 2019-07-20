@@ -13,7 +13,7 @@ if ( ! defined('ABSPATH') ) {
 
 use {{plugin.namespace}}\Core;
 
-class Widgets extends Core\Singleton {
+class Widget extends Core\Singleton {
 
 	/**
 	 *	@inheritdoc
@@ -27,9 +27,9 @@ class Widgets extends Core\Singleton {
 	 *	@action widgets_init
 	 */
 	public function widgets_init(){
-{{#modules.widget.items}}
-		register_widget("{{plugin.namespace}}\Widget\Widget{{component.classname}}");
-{{/modules.widget.items}}
+{{#component.children}}
+		register_widget("{{plugin.namespace}}\Widget\{{classname}}");
+{{/component.children}}
 	}
 
 }

@@ -26,6 +26,11 @@ abstract class Shortcode extends Core\Singleton {
 		}
 	}
 
+	/**
+	 *	@param array $atts
+	 *	@param string $content
+	 *	@return string
+	 */
 	abstract function do_shortcode( $atts, $content );
 
 }

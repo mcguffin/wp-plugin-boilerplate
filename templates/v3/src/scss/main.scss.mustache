@@ -1,7 +1,19 @@
 @import 'variables/variables';
-
 @import 'mixins/mixins';
 
-{{#_modules.widget.items}}
-@import 'widget/{{module.slug}}';
-{{/_modules.widget.items}}
+{{#plugin.components.widget}}
+/* widgets */
+{{#plugin.components.widget.children}}
+@import 'widget/{{slug}}';
+{{/plugin.components.widget.children}}
+{{/plugin.components.widget}}
+
+
+{{#plugin.components.shortcode}}
+/* shortcodes */
+{{#plugin.components.shortcode.children}}
+{{#flagged.css}}
+@import 'shortcode/{{slug}}';
+{{/flagged.css}}
+{{/plugin.components.shortcode.children}}
+{{/plugin.components.shortcode}}

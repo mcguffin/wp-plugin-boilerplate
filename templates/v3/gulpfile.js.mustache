@@ -23,7 +23,8 @@ const config = {
 				var buffer = new Buffer( $string.getValue() );
 				return sass.types.String( buffer.toString('base64') );
 			}
-		}
+		},
+		includePaths:['src/scss/']
 	}
 }
 
@@ -86,7 +87,7 @@ gulp.task('dev:scss', cb => {
 	return gulp.src( './src/scss/**/*.scss' )
 		.pipe( sourcemaps.init() )
 		.pipe(
-			sass(config.sass)
+			sass( config.sass )
 		)
 		.pipe( autoprefixer( { browsers: package.browserlist } ) )
 		.pipe( sourcemaps.write( ) )

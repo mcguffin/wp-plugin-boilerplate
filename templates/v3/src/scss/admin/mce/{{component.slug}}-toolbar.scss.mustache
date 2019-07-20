@@ -1,9 +1,7 @@
+@import 'variables/index';
+@import 'mixins/index';
 
-@import '../../variables/variables';
-
-@import '../../mixins/mixins';
-
-.mce-i-{{module.slug_underscore}}-shortcode-icon {
+.mce-i-{{component.prefix}}-shortcode-icon {
 	&:before {
 		content: $dashicon-editor-code; /* https://developer.wordpress.org/resource/dashicons/ */
 		display: inline-block;
